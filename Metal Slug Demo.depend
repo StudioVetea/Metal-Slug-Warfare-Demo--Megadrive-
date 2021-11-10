@@ -1,0 +1,60 @@
+# depslib dependency file v1.0
+1632906559 source:c:\sgdk\projets\metal slug demo\src\animations.c
+	<genesis.h>
+	"main.h"
+	"gfx.h"
+	"Variables.h"
+	"Routines.h"
+	"dma.h"
+	"Sprites.h"
+	"Sound.h"
+	"Init.h"
+	"Animations.h"
+	"GestionPAD.h"
+
+1632906822 source:c:\sgdk\projets\metal slug demo\src\gestionpad.c
+	<genesis.h>
+	"main.h"
+	"gfx.h"
+	"Variables.h"
+	"Routines.h"
+	"dma.h"
+	"Sprites.h"
+	"Sound.h"
+	"Init.h"
+	"Animations.h"
+	"GestionPAD.h"
+
+1632914571 source:c:\sgdk\projets\metal slug demo\src\init.c
+	<genesis.h>
+	"main.h"
+	"gfx.h"
+	"Variables.h"
+	"Routines.h"
+	"dma.h"
+	"Sprites.h"
+	"Sound.h"
+	"Init.h"
+	"Animations.h"
+	"GestionPAD.h"
+
+1632914339 source:c:\sgdk\projets\metal slug demo\src\main.c
+	<genesis.h>
+	"main.h"
+	"gfx.h"
+	"Variables.h"
+	"Routines.h"
+	"dma.h"
+	"Sprites.h"
+	"Sound.h"
+	"Init.h"
+	"Animations.h"
+	"GestionPAD.h"
+
+1632906517 source:c:\sgdk\projets\metal slug demo\src\variables.c
+	<genesis.h>
+	"Variables.h"
+	"Routines.h"
+	"Init.h"
+	"Animations.h"
+

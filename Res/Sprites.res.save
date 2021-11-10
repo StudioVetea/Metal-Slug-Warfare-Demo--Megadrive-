@@ -1,0 +1,48 @@
+SPRITE Joe_Sprite "Sprites/Joe_48x40.png" 6 6 FAST 4
+SPRITE Airplane_Sprite "Sprites/Airplane.png" 12 8 FAST 5
+SPRITE SoldatType1_Sprite "Sprites/Soldat_Type1.png" 6 6 FAST 10
+SPRITE SoldatType2_Sprite "Sprites/Soldat_Type2.png" 6 6 FAST 10
+SPRITE Balle_Sprite "Sprites/Balle.png" 2 2 FAST 4
+SPRITE Bouclier_Sprite "Sprites/Bouclier_32x32.png" 4 4 FAST 2
+SPRITE HUDSante_Sprite "Sprites/Hud_1.png" 7 1 FAST 1
+SPRITE HUDCredit_Sprite "Sprites/Hud_2.png" 5 1 FAST 1
+SPRITE Nombre_Sprite "Sprites/NombreSprite.png" 1 1 FAST 1
+SPRITE Nombre1_Sprite "Sprites/NombreSprite_1.png" 1 1 FAST 1
+SPRITE HUDArme_Sprite "Sprites/Hud_3.png" 8 3 FAST 1
+SPRITE MetalSlug_Sprite "Sprites/MetalSlug_64x64.png" 8 8 FAST 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

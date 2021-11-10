@@ -1,0 +1,52 @@
+PALETTE Palette_Joe "Sprites/Joe_48x40.png"
+PALETTE Palette_BGA "Map/BG_A.png"
+PALETTE Palette_BGB "Map/BG_B.png"
+PALETTE Palette_Menu "Gfx/Mess_Menu.png"
+PALETTE Palette_Airplane "Sprites/Airplane.png"
+PALETTE Palette_EcranMS "Gfx/Ecran_MS_BGA.png"
+PALETTE Palette_LogoSgdk "Gfx/SgdkLogo.png"
+
+IMAGE bga_Ecran_MS "Gfx/Ecran_MS_BGA.png" NONE
+IMAGE bga_image "Map/BG_A.png" BEST
+IMAGE Image_LogoSgdk "Gfx/SgdkLogo.png" NONE
+
+TILESET bgb_tileset "Map/BG_B.png" BEST ALL
+TILESET bga_tileset_Menu "Gfx/Mess_Menu.png" BEST ALL
+
+MAP bgb_Map "Map/BG_B.png" bgb_tileset BEST 0
+MAP bga_Map_Menu "Gfx/Mess_Menu.png" bga_tileset_Menu BEST 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

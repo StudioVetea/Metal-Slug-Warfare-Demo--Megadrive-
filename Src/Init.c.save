@@ -1,0 +1,420 @@
+
+// Librairies Projet
+
+#include <genesis.h>
+#include "main.h"
+#include "gfx.h"
+#include "Variables.h"
+#include "Routines.h"
+#include "dma.h"
+#include "Sprites.h"
+#include "Sound.h"
+#include "Init.h"
+#include "Animations.h"
+#include "GestionPAD.h"
+
+
+
+///////////////////////////////
+//                  Init Intro
+///////////////////////////////
+void InitIntro()
+{
+	VDP_init();
+	// set all palette to black
+    VDP_setPaletteColors(0, (u16*) palette_black, 64);
+
+	if (!GameOver)
+	{
+		// Logo Sgdk
+		memcpy(&palette[0], Palette_LogoSgdk.data, 16 * 2);
+		ind = TILE_USERINDEX;
+		VDP_loadTileSet(Image_LogoSgdk.tileset, ind, DMA);
+		TileMap *bgaIntro1 = Image_LogoSgdk.tilemap;
+		VDP_setTileMapEx(BG_B, bgaIntro1, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 0, 0, 0, 2, 40, 30, CPU);
+
+		VDP_fadeInAll(palette,24,TRUE);
+		while(TRUE)
+		{
+
+			waitMs(2000);
+			break;
+			// Vblank
+			SYS_doVBlankProcess();
+		}
+		// Fade In Scene.
+		VDP_fadeOutAll(16,FALSE);
+		MEM_free(bgaIntro1);
+		ind=0;
+		SPR_end();
+		VDP_init();
+	}
+
+	GameOver=0;
+	// set all palette to black
+    VDP_setPaletteColors(0, (u16*) palette_black, 64);
+	ind=0;
+	memcpy(&palette[0], Palette_EcranMS.data, 16 * 2);
+	memcpy(&palette[16], Palette_Menu.data, 16 * 2);
+
+    ind = TILE_USERINDEX;
+    VDP_loadTileSet(bga_Ecran_MS.tileset, ind, DMA);
+
+    // init backgrounds
+    TileMap *bgaIntro = bga_Ecran_MS.tilemap;
+    VDP_setTileMapEx(BG_B, bgaIntro, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 0, 0, 0, 1, 40, 30, CPU);
+
+
+    // Chargement du Texte MENU déroulant
+    ind +=  bga_Ecran_MS.tileset->numTile;
+    bgBaseTileIndex[1] = ind;
+    VDP_loadTileSet(&bga_tileset_Menu, ind, DMA);
+
+    // init backgrounds
+    bgb = MAP_create(&bga_Map_Menu, BG_A, TILE_ATTR_FULL(PAL1, TRUE, FALSE, FALSE, bgBaseTileIndex[1]));
+	CamPosX=64;
+	CamPosY=-32;
+
+	// Fade In Scene.
+    VDP_fadeInAll(palette,32,TRUE);
+	// start music
+	XGM_startPlay(Menu_Music);
+    while(TRUE)
+	{
+		u16 value=JOY_readJoypad(JOY_1);
+		if (value & BUTTON_C) break;
+		if (value & BUTTON_B) break;
+		if (value & BUTTON_A) break;
+		if (value & BUTTON_START) break;
+
+		CamPosX+=4;
+
+		// Vblank
+		SYS_doVBlankProcess();
+		// set new camera position
+		if (CamPosX>13100)
+		{
+			VDP_clearPlane(BG_A,FALSE);
+			CamPosX=0;
+		}
+        MAP_scrollTo(bgb, CamPosX, 0);
+		VDP_setHorizontalScroll(BG_A,(-CamPosX));
+		VDP_setVerticalScroll(BG_A, CamPosY);
+	}
+	// Fade In Scene.
+	XGM_stopPlay();
+	SYS_doVBlankProcess();
+	VDP_clearPlane(BG_A,FALSE);
+    VDP_fadeOutAll(16,FALSE);
+    MEM_free(bgaIntro);
+    MEM_free(bgb);
+    ind=0;
+}
+
+///////////////////////////////
+//                  Init Scene
+///////////////////////////////
+void InitScene()
+{
+	// Fade & Palettes
+    memcpy(&palette[0], Palette_BGA.data, 16 * 2);
+	memcpy(&palette[16], Palette_BGB.data, 16 * 2);
+	memcpy(&palette[32],Palette_Joe.data, 16*2);
+	memcpy(&palette[48],Palette_Airplane.data,16*2);
+
+	// Init Scene
+    // Init son
+    SND_setPCM_XGM(SFX_GENERIC1, Magnum_SFX, sizeof(Magnum_SFX));
+    SND_setPCM_XGM(SFX_GENERIC2, Mort_SFX, sizeof(Mort_SFX));
+	SND_setPCM_XGM(SFX_GENERIC3, Mort1_SFX, sizeof(Mort1_SFX));
+	SND_setPCM_XGM(SFX_GENERIC4, Couteau_SFX, sizeof(Couteau_SFX));
+	SND_setPCM_XGM(SFX_GENERIC5, Crunch_SFX, sizeof(Crunch_SFX));
+	SND_setPCM_XGM(SFX_GENERIC6, Aie_SFX, sizeof(Aie_SFX));
+	SND_setPCM_XGM(SFX_GENERIC7, Tank_SFX, sizeof(Tank_SFX));
+	SND_setPCM_XGM(SFX_GENERIC8, Bombe_SFX, sizeof(Bombe_SFX));
+	SND_setPCM_XGM(SFX_GENERIC9, Explosion_SFX, sizeof(Explosion_SFX));
+
+
+    // init sprite engine with default parameters
+    SPR_initEx(512+236);
+
+	// camera position (force refresh)
+    CamPosX = -1;
+    CamPosY = -1;
+
+	// HUD
+	Sprite1_* SprHUD;
+	SprHUD= & SpriteHUD[0];
+	SprHUD->CoordX=FIX32(16);
+	SprHUD->CoordY=FIX32(16);
+	SprHUD->SpriteA = SPR_addSprite(&HUDSante_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setPosition(SprHUD->SpriteA,fix32ToInt(SprHUD->CoordX),fix32ToInt(SprHUD->CoordY));
+	SPR_setAnim(SprHUD->SpriteA,0);
+	SprHUD++;
+	SprHUD->CoordX=FIX32(16);
+	SprHUD->CoordY=FIX32(24);
+	SprHUD->SpriteA = SPR_addSprite(&HUDCredit_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setPosition(SprHUD->SpriteA,fix32ToInt(SprHUD->CoordX),fix32ToInt(SprHUD->CoordY));
+	SPR_setAnim(SprHUD->SpriteA,0);
+	SprHUD++;
+	SprHUD->CoordX=FIX32(72);
+	SprHUD->CoordY=FIX32(8);
+	SprHUD->SpriteA = SPR_addSprite(&HUDArme_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setPosition(SprHUD->SpriteA,fix32ToInt(SprHUD->CoordX),fix32ToInt(SprHUD->CoordY));
+	SPR_setAnim(SprHUD->SpriteA,0);
+	SprHUD++;
+
+	// Init Data
+	NombreBalle=6;
+	NombreBouclier=6;
+	NombreLettre=6;
+	NombreIA=6;
+	NombreDigitScore=5;
+	NombreIAScene=0;
+	NombreIASceneMax=NombreIA;
+
+	// Score
+	Sprite1_* SprScore=NombreScore;
+    SprScore=&NombreScore;
+    u8 i=NombreDigitScore;
+    u8 j=0;
+    u16 Pos=0;
+    while(i--)
+    {
+        Pos=64-(j<<3);
+        j++;
+        SprScore->SpriteA = SPR_addSprite(&Nombre_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+        SPR_setPriorityAttribut(SprScore->SpriteA, TRUE);
+        SPR_setAnim(SprScore->SpriteA,0);
+        SPR_setPosition(SprScore->SpriteA,Pos,8);
+        SprScore++;
+    }
+
+	Sprite1_* SprNombreUP;
+    SprNombreUP=&NombreUP;
+	SprNombreUP->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setPriorityAttribut(SprNombreUP->SpriteA, TRUE);
+	SPR_setAnim(SprNombreUP->SpriteA,4);
+	SPR_setPosition(SprNombreUP->SpriteA,52,24);
+
+	Sprite1_* SprNombreBombe;
+    SprNombreBombe=&NombreBombe;
+	SprNombreBombe->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setAnim(SprNombreBombe->SpriteA,0);
+	SPR_setPosition(SprNombreBombe->SpriteA,112,17);
+
+
+	// Joueur principal
+	Sprite1_* spr;
+	spr = &Sprites[0];
+	spr->CoordX=FIX32(48);
+	spr->CoordY=FIX32(140+24);
+	spr->MemDir=0;
+	spr->Vitesse=FIX32(1);
+	spr->AirUnit=0;
+	spr->StandBy=0;
+	spr->TypeIA=0;
+    spr->SpriteDYN=0;
+    spr->NombreUP=5;
+    spr->HitPointMax=6;
+    spr->HitPoint=spr->HitPointMax;
+	// ID Joueur = 99
+	spr->ID=99;
+	spr->Visible=1;
+
+     // BGB
+    updateCameraPosition(spr);
+    updateVDPScroll();
+	SYS_doVBlankProcess();
+    // BGA
+    VDP_setTileMapEx(BG_A, bga, TILE_ATTR_FULL(0, FALSE, FALSE, FALSE, bgBaseTileIndex[0]), 0, 0, 0, 0, 64, 32, DMA_QUEUE);
+
+    // Chargement Sprite Joe
+	spr->SpriteA = SPR_addSprite(&Joe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+
+	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+	SPR_setVisibility(spr->SpriteA,VISIBLE);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setAnim(spr->SpriteA,0);
+
+	// Airplane
+	spr++;
+	spr->CoordX=FIX32(-64);
+	spr->CoordY=FIX32(24);
+	spr->MemDir=0;
+	spr->AirUnit=1;
+	spr->Vitesse=FIX32(1);
+	spr->Direction=6;
+    spr->SpriteDYN=0;
+	spr->ID=1;
+	spr->TypeIA=0;
+	spr->Visible=1;
+	IDPlane=1;
+
+    // Chargement Sprites
+	spr->SpriteA = SPR_addSprite(&Airplane_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+	SPR_setVisibility(spr->SpriteA,VISIBLE);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setAnim(spr->SpriteA,0);
+	spr++;
+	IDUnite=IDPlane+1;
+
+	// Init sprites Dynamiques.
+	i=NombreIA;
+	//fix32 Xd;
+	//u8 Idi=1;
+	while(i--)
+    {
+    	RandomSeed();
+        spr->MemDir=0;
+        spr->AirUnit=0;
+        spr->StandBy=0;
+        spr->SpriteDYN=1;
+        spr->SpriteA=NULL;
+        spr->TempoRespawnMax=getRandomU16(100)+50;
+        spr->TypeIA=1;
+        spr->Visible=0;
+        spr->TypeBouclier=0;
+        spr++;
+    }
+
+    // Balles
+    i=NombreBalle;
+    IDBalle=NombreIA+IDUnite;
+	while(i--)
+    {
+        spr->CoordX=FIX32(0);
+        spr->CoordY=FIX32(0);
+        spr->MemDir=0;
+        spr->Vitesse=FIX32(8);
+        spr->SpriteDYN=0;
+        spr->AirUnit=0;
+        spr->ID=45;
+        spr->Visible=0;
+        spr->StandBy=1;
+        spr->TypeIA=0;
+        spr->TypeBouclier=0;
+        spr->SpriteA = SPR_addSprite(&Balle_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+        SPR_setVisibility(spr->SpriteA,FALSE);
+        SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+        SPR_setAnim(spr->SpriteA,0);
+        SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
+        spr++;
+    }
+
+    // Bouclier
+    i=NombreBouclier;
+    IDBouclier=IDBalle+NombreBalle;
+    while(i--)
+	{
+        spr->CoordX=FIX32(0);
+        spr->CoordY=FIX32(0);
+        spr->MemDir=0;
+        spr->Vitesse=FIX32(8);
+        spr->AirUnit=0;
+        spr->SpriteDYN=0;
+        spr->TypeBouclier=1;
+        spr->Visible=0;
+        spr->StandBy=1;
+        spr->TypeIA=0;
+        spr->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+        SPR_setVisibility(spr->SpriteA,FALSE);
+        SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+        SPR_setAnim(spr->SpriteA,0);
+        SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
+        spr++;
+	}
+
+	// Metal Slug !!
+	// Init Phase scène : 1 Arrivée du Tank , 2 - Largage de Marco, 3 - Départ du tank, 0 - Démarrage démo.
+	PhaseScene=1;
+	spr->SpriteA = SPR_addSprite(&MetalSlug_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setAnim(spr->SpriteA,1);
+	spr->CoordX=FIX32(-64);
+	spr->CoordY=FIX32(140+8);
+	spr->Vitesse=FIX32(0.3);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	spr->AirUnit=0;
+	spr->StandBy=0;
+	spr->Direction=6;
+	spr->TypeIA=0;
+    spr->SpriteDYN=0;
+	spr->Visible=1;
+	spr->ID=10;
+	spr++;
+
+	// Lettre START !
+	i=NombreLettre;
+	j=0;
+	fix32 VX=FIX32(0);
+	fix32 VY=FIX32(0);
+	PhaseAffichageScene=1;
+	while(i--)
+	{
+        spr->CoordX=FIX32(-32);
+        spr->CoordY=FIX32(80);
+        spr->MemDir=0;
+        spr->Vitesse=FIX32(1)+VX;
+        spr->AirUnit=0;
+        spr->TypeBouclier=0;
+        spr->Direction=0;
+        spr->Visible=1;
+        spr->TempoSprite=0;
+        spr->ID=11;
+        spr->StandBy=0;
+        spr->TypeIA=0;
+        spr->SpriteA = SPR_addSprite(&FontStart_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+        SPR_setVisibility(spr->SpriteA,FALSE);
+        SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+        SPR_setAnim(spr->SpriteA,j);
+        SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
+        j++;
+        VX+=FIX32(0.5);
+        VY+=FIX32(0.1);
+        spr->Acceleration=VY;
+        spr++;
+	}
+	NombreIASceneMax=1;
+	NombreIAScene=0;
+    MaxObjet=NombreLettre+NombreIA+NombreBalle+NombreDigitScore+5;
+	SPR_update();
+}
+
+
+////////////////////////////////////////
+//                  Init MAP
+////////////////////////////////////////
+void InitMAP()
+{
+
+    // load background tilesets in VRAM
+    ind = TILE_USERINDEX;
+    bgBaseTileIndex[0] = ind;
+    VDP_loadTileSet(bga_image.tileset, ind, DMA);
+    ind +=  bga_image.tileset->numTile;
+    bgBaseTileIndex[1] = ind;
+    VDP_loadTileSet(&bgb_tileset, ind, DMA);
+    ind += bgb_tileset.numTile;
+
+    // init backgrounds
+    bgb = MAP_create(&bgb_Map, BG_B, TILE_ATTR_FULL(1, TRUE, FALSE, FALSE, bgBaseTileIndex[1]));
+    bga = unpackTileMap(bga_image.tilemap, NULL);
+}
+
+
+///////////////////////////////
+//                  Init Routine
+///////////////////////////////
+void InitRoutine()
+{
+	// initialization
+    VDP_setScreenWidth320();
+
+    // set all palette to black
+    VDP_setPaletteColors(0, (u16*) palette_black, 64);
+}
+

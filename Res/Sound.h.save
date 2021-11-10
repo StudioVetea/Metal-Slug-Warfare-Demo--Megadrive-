@@ -1,0 +1,13 @@
+#ifndef _RES_SOUND_H_
+#define _RES_SOUND_H_
+
+extern const u8 Magnum_SFX[22016];
+extern const u8 Mort_SFX[17152];
+extern const u8 Mort1_SFX[8192];
+extern const u8 Couteau_SFX[1536];
+extern const u8 Crunch_SFX[7936];
+extern const u8 Aie_SFX[9216];
+extern const u8 Tank_SFX[61184];
+extern const u8 Demo_Music[26368];
+
+#endif // _RES_SOUND_H_

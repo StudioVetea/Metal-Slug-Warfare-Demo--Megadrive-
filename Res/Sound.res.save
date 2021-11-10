@@ -1,0 +1,46 @@
+XGM Demo_Music "Sound/ve.vgm"
+XGM Menu_Music "Sound/ACDC.vgm"
+WAV Magnum_SFX "Sound/Magnum357.wav" XGM
+WAV Mort_SFX "Sound/Mort.wav" XGM
+WAV Mort1_SFX "Sound/Mort1.wav" XGM
+WAV Couteau_SFX "Sound/Swing.wav" XGM
+WAV Crunch_SFX "Sound/Crunch.wav" XGM
+WAV Aie_SFX "Sound/AiePapi.wav" XGM
+WAV Tank_SFX "Sound/Tank.wav" XGM
+WAV Bombe_SFX "Sound/Bombe.wav" XGM
+WAV Explosion_SFX  "Sound/Explosion.wav" XGM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

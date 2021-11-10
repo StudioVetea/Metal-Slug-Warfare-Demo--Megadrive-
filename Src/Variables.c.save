@@ -1,0 +1,64 @@
+#include <genesis.h>
+#include "Variables.h"
+#include "Routines.h"
+#include "Init.h"
+#include "Animations.h"
+
+
+/////////////////////////////////////
+//              Global  structures
+////////////////////////////////////
+Sprite1_ Sprite_Scene[1];
+Sprite1_ Sprites[60];
+Sprite1_ SpriteHUD[10];
+Sprite1_ NombreScore[5];
+Sprite1_ NombreUP;
+Sprite1_ NombreBombe;
+
+///////////////////////////////////
+//		Variables principales
+///////////////////////////////////
+
+u16 IDPlane=0;
+u16 IDUnite=0;
+u16 IDBouclier=0;
+u16 IDBalle=0;
+u16 Test=0;
+u16 palette[64];
+u16 ind;
+u16 numTile;
+u16 MaxObjet;
+u16 RNDSEED=0;
+u16 NombreIA=0;
+u16 NombreIAScene=0;
+u16 NombreIASceneMax=0;
+u16 TempoRespawn=0;
+u16 Score=0;
+u16 PhaseScene=0;
+u16 PhaseAffichageScene=0;
+u16 NombreBalle=0;
+u16 NombreBouclier=0;
+u16 NombreLettre=0;
+u16 NombreDigitScore=0;
+u16 GameOver=0;
+
+
+
+// BG start tile index
+u16 bgBaseTileIndex[2];
+
+// maps (BGA and BGB) position (tile) for alternate method
+s16 mapMetaTilePosX[2];
+s16 mapMetaTilePosY[2];
+s16 CamPosX;
+s16 CamPosY;
+s16 VisCamX;
+s16 VisCamY;
+
+
+char Texte[64];
+
+// maps (BGA and BGB)
+Map *bgb;
+TileMap *bga;
+

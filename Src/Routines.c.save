@@ -1,0 +1,1611 @@
+#include <genesis.h>
+#include "main.h"
+#include "gfx.h"
+#include "Variables.h"
+#include "Routines.h"
+#include "dma.h"
+#include "Sprites.h"
+#include "Sound.h"
+#include "Init.h"
+#include "Animations.h"
+#include "GestionPAD.h"
+
+
+////////////////////////////////////////
+//                  CLEAR Variable
+////////////////////////////////////////
+void Clear_Variable()
+{
+    Test=0;
+    ind=0;
+    numTile=0;
+    RNDSEED=0;
+    NombreIA=0;
+    NombreIAScene=0;
+    NombreIASceneMax=0;
+    TempoRespawn=0;
+    Score=0;
+    PhaseScene=0;
+    PhaseAffichageScene=0;
+    NombreBalle=0;
+    NombreBouclier=0;
+    NombreLettre=0;
+    NombreDigitScore=0;
+    CamPosX=0;
+    CamPosY=0;
+    VisCamX=0;
+    VisCamY=0;
+
+	u16 i=60;
+	Sprite1_* spr=Sprites;
+	spr = &Sprites[0];
+	while(i--)
+    {
+        spr->Aggro=0;
+        spr->AggroG=0;
+        spr->RatioLoot=0;
+        spr->NombreUP=0;
+        spr->TypeLoot=0;
+        spr->Sens=0;
+        spr->SensY=0;
+        spr->SensExplosion=0;
+        spr->Couteau=0;
+        spr->NombreGrenade=0;
+        spr->TempoCouteau=0;
+        spr->Feu=0;
+        spr->CaC=0;
+        spr->Sniper=0;
+        spr->SpriteDYN=0;
+        spr->TypeIA=0;
+        spr->Hauteur=0;
+        spr->MemSprint=0;
+        spr->TirBusy=0;
+        spr->CreateSprite=0;
+        spr->Hit=0;
+        spr->HitB=0;
+        spr->DirectionTir=0;
+        spr->AnimationON=0;
+        spr->Reach=0;
+        spr->Transition=0;
+        spr->CalculTransition=0;
+        spr->DirectionG=0;
+        spr->TransitionTempo=0;
+        spr-> HitTempo=0;
+        spr->ClignoTempo=0;
+        spr->ClignoDuree=0;
+        spr->ClignoTic=0;
+        spr->ClignoON=0;
+        spr->ClignoReach=0;
+        spr->ClignoSprite=0;
+        spr->SensHit=0;
+        spr->NoAnimation=0;
+        spr->TirCouvert=0;
+        spr->Saut=0;
+        spr->TempoCouvert=0;
+        spr->TirBunker=0;
+        spr->TempoCountRafaleMax=0;
+        spr->TempoRespawn=0;
+        spr->CouvertBalle=0;
+        spr->ChauffeArmeMax=0;
+        spr->ChauffeArme1=0;
+        spr-> ChauffeArme2=0;
+        spr->ChauffeArme=0;
+        spr-> DeltaChauffe=0;
+        spr->TempoChauffeArme=0;
+        spr->Die=0;
+        spr->TempoRafale=0;
+        spr->TempoCountRafale=0;
+        spr-> SpeedArme=0;
+        spr->Rafale=0;
+        spr->IAFuite=0;
+        spr-> DegatArme=0;
+        spr->TypeBouclier=0;
+        spr-> CountRafale=0;
+        spr->SearchIA=0;
+        spr-> IntIA=0;
+        spr->AirUnit=0;
+        spr-> CoupCrosse=0;
+        spr->CriMort=0;
+        spr->HitPoint=0;
+        spr->HitPointMax=0;
+        spr->MortIA=0;
+        spr->Block=0;
+        spr->BlockH=0;
+        spr-> BlockB=0;
+        spr->SpeIA=0;
+        spr->BlockD=0;
+        spr->ID=0;
+        spr->Visible=0;
+        spr->IDList=0;
+        spr-> BlockG=0;
+        spr->Init=0;
+        spr->StandBy=0;//1 : Non visible, 0:Visible
+        spr-> Direction=0;//8 : H, 2: B, 4:G, 6:D  - 84 : HG, 86:HD, 24:BG, 26:BD  44 : Latéral Gauche 66 Latéral Droite
+        spr->MemDir=0;
+        spr->TypeUnit=0;
+        spr->Sprint=0;
+        spr->Animation=0;
+        spr-> TempoSprite=0;
+        spr-> TempoSpriteMax=0;
+        spr->TempoRespawnMax=0;
+        spr->ScoreUnit=0;
+        spr->TempoAggro=0;
+        spr->TempoAggroMax=0;
+        spr->CoordX=FIX32(0);
+        spr->ForceG=FIX32(0);
+        spr->ForceGY=FIX32(0);
+        spr->GrenadeY=FIX32(0);
+        spr-> BalleYRef=FIX32(0);
+        spr->Acceleration=FIX32(0);
+        spr->CoordY=FIX32(0);
+        spr-> RefY=FIX32(0);
+        spr->DeltaY=FIX32(0);
+        spr->OffsetX=FIX32(0);
+        spr->OffsetY=FIX32(0);
+        spr->Vitesse=FIX32(0);
+        spr->VitesseBalle=FIX32(0);
+        spr-> DistanceAggro=FIX32(0);
+        spr->VitesseBalleD=FIX32(0);
+        spr->VitesseD=FIX32(0);
+        spr->VitesseSprintD=FIX32(0);
+        spr->VitesseInit=FIX32(0);
+        spr->VitesseSprint=FIX32(0);
+        spr->PorteeTir=FIX32(0);
+        spr->PorteeTirMax=FIX32(0);
+        spr-> Spotting=FIX32(0);
+        spr->Boost=FIX32(0);
+        spr++;
+    }
+}
+
+
+////////////////////////////////////////
+//                  Gestion Scene
+////////////////////////////////////////
+void UpdateScene()
+{
+	//Déclaration pointeur tableau
+	u16 i=MaxObjet;
+	Sprite1_* spr=Sprites;
+	spr = &Sprites[0];
+
+	// Gestion UP
+	GestionUP(spr);
+
+    // Couteau joueur ?!
+	GestionCouteau(spr);
+
+    // Boucle Principale
+	while (i--)
+    {
+        // Phase scene en cours ?!
+        if (!PhaseScene)
+        {
+            // Visibilité Sprites / Joueur.
+            UpdateViewSprite(spr);
+
+            // Tir ?
+            GestionTir(spr);
+
+            // Projectiles ?
+            GestionBalles(spr);
+
+            // Largage Bombe Avion ?!
+            GestionBombe(spr);
+
+            // Gestion IA
+            GestionIA(spr);
+        }
+        else Phase_Scene(PhaseScene,spr);
+
+        // Sprite Clignote ?!
+        Cligno_Sprite(spr);
+
+        // Animation Sprite
+        AnimationSprite(spr);
+
+        // Déplacement
+        UpdateSprite(spr);
+
+        // Gestion Caméra
+        updateCameraPosition(spr);
+
+        // Affichage Sprite
+        DisplaySprite(spr);
+
+        // next sprite
+        spr++;
+    }
+}
+
+//////////////////////////////////////
+//                 Largage Bombes
+//////////////////////////////////////
+void GestionBombe(Sprite1_ *spr)
+{
+    // ID Airplane
+    Sprite1_* spr2=Sprites;
+    spr2 = &Sprites[IDPlane];
+
+    // Largage Bombe ?!
+    if (spr->ID==66 && spr->Visible)
+    {
+        // Bombe larguée !
+        if ( !spr->Hit)
+        {
+            fix32 VX=FIX32(0);
+            if (spr2->Direction==6) VX=FIX32(0.35);
+            else VX=FIX32(-0.35);
+            spr->CoordY+=spr->Vitesse;
+            spr->CoordX+=VX;
+            spr->Vitesse+=FIX32(0.05);
+            if (spr->CoordY>=FIX32(140+50))
+            {
+                spr->Hit=1;
+                spr->TempoSprite=0;
+            }
+        }
+
+       if (spr->Hit)
+        {
+            if (spr->TempoSprite==10)
+            {
+                // Massacre au sol !
+                // Joueur principal
+                Sprite1_* SpriteREF=Sprites;
+                SpriteREF = &Sprites[0];
+                u16 NbrIA=NombreIA;
+                Sprite1_* SprIA=Sprites;
+                SprIA=&Sprites[IDUnite];
+                fix32 DX_Joueur=abs(spr->CoordX - (SpriteREF->CoordX));
+                if (DX_Joueur<=FIX32(32))
+                {
+                    SND_startPlayPCM_XGM(SFX_GENERIC6, 1, SOUND_PCM_CH2);
+                    if (SpriteREF->HitPoint) SpriteREF->HitPoint--;
+
+                    if (!SpriteREF->HitPoint)
+                    {
+                        if (!SpriteREF->NombreUP)
+                        {
+                            SpriteREF->HitPoint=0;
+                            return;
+                        }
+                        SpriteREF->HitPoint=SpriteREF->HitPointMax;
+                        if (SpriteREF->NombreUP) SpriteREF->NombreUP--;
+                    }
+                    GestionHUDSante();
+                }
+                while(NbrIA--)
+                {
+                    if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA)
+                    {
+                        fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
+                        if (DX_IA<=FIX32(32))
+                        {
+                            RandomSeed();
+                            if (getRandomU16(100)<50) SprIA->Direction=6;
+                            else SprIA->Direction=4;
+                            u16 VV=getRandomU16(5);
+                            if (VV<2) VV=2;
+                            SprIA->Vitesse=FIX32(VV);
+                            SprIA->MortIA=2;
+                            SprIA->IntIA=10;
+                            RandomSeed();
+                            u16 VV1=getRandomU16(8);
+                            if (VV1<4) VV1=4;
+                            SprIA->Acceleration=FIX32(VV1);
+                            SprIA->RefY=FIX32(240+50);
+                            SprIA->SensY=1;
+                            SprIA->TirBusy=0;
+                            SprIA->TempoSprite=0;
+                            if (SprIA->ID==2)
+                            {
+                                // Bouclier !
+                                Sprite1_* SprBou=Sprites;
+                                SprBou=&Sprites[IDBouclier];
+                                u8 NrBou=6;
+                                while(NrBou--)
+                                {
+                                    if (!SprBou->Visible)
+                                    {
+                                        if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                        SprBou->Visible=1;
+                                        SprBou->CoordX=SprIA->CoordX;
+                                        SprBou->CoordY=SprIA->CoordY;
+                                        SprBou->Acceleration=FIX32(4);
+                                        SprBou->Direction=0;
+                                        SprBou->StandBy=0;
+                                        SprBou->TypeBouclier=1;
+                                        break;
+                                    }
+                                    SprBou++;
+                                }
+                            }
+                            if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
+                        }
+                    }
+                    SprIA++;
+                }
+            }
+        }
+    }
+
+    if (!spr->AirUnit) return;
+    if (!spr->Visible) return;
+    if (spr->PorteeTir) return;
+
+    // Calcul distance Joueur->Bombardier
+    spr->PorteeTir=1;
+    u8 Tes=0;
+    u16 i=NombreBalle,j=0;
+    Sprite1_* spr1=Sprites;
+    spr1 = &Sprites[IDBalle];
+    while(i--)
+    {
+        spr1 = &Sprites[IDBalle+j];
+        if (spr1->StandBy)
+        {
+            spr1->StandBy=0;
+            spr1->ID=66;
+            Tes=1;
+            spr1->Hit=0;
+            spr1->TempoSprite=0;
+            SND_startPlayPCM_XGM(SFX_GENERIC8, 1, SOUND_PCM_CH3);
+            SPR_setAnim(spr1->SpriteA,6);
+            spr1->Visible=1;
+            spr1->Vitesse=FIX32(2);
+            spr1->CoordX=spr->CoordX+FIX32(16);
+            spr1->CoordY=spr->CoordY+spr->DeltaY+FIX32(8);
+            spr1->OffsetY=FIX32(-7);
+            spr1->Direction=2;
+            break;
+        }
+        j++;
+    }
+    //if (!Tes) spr->PorteeTir=0;
+}
+
+
+//////////////////////////////////////
+//                  Test Game Over
+//////////////////////////////////////
+void TestGameOver()
+{
+	// Joueur principal
+	Sprite1_* SpriteREF=Sprites;
+	SpriteREF = &Sprites[0];
+
+    // Game Over ?!
+    if (!SpriteREF->NombreUP && !SpriteREF->HitPoint )
+    {
+        GameOver=1;
+        SpriteREF->HitPoint=0;
+        GestionHUDSante();
+        SpriteREF->NombreUP=0;
+        SpriteREF->Direction=0;
+        SpriteREF->Sprint=0;
+        SpriteREF->Saut=1;
+        SpriteREF->Acceleration=FIX32(6);
+        SpriteREF->RefY=FIX32(272);
+        SpriteREF->SensY=1;
+        return;
+    }
+}
+
+///////////////////////////////
+//                  Clignotement
+///////////////////////////////
+void Cligno_Sprite(Sprite1_ *spr)
+{
+    // Pas de cligno ?!
+    if (!spr->ClignoSprite || spr->ClignoReach) return;
+    spr->HitTempo++;
+
+    // Visibilité ?
+    if (spr->ClignoON) spr->Visible=1;
+    else spr->Visible=0;
+
+    if (spr->HitTempo==spr->ClignoTic)
+    {
+        if (!spr->ClignoON) spr->ClignoON=1;
+        else spr->ClignoON=0;
+        spr->ClignoTempo++;
+        spr->HitTempo=0;
+    }
+    // Fin ?
+    if (spr->ClignoTempo==spr->ClignoDuree)
+    {
+        spr->ClignoON=0;
+        spr->HitTempo=0;
+        spr->ClignoSprite=0;
+        spr->ClignoTempo=0;
+        spr->Visible=1;
+        spr->ClignoReach=1;
+    }
+}
+
+///////////////////////////////
+//                  Phase Scene
+///////////////////////////////
+void Phase_Scene(u8 Scene,Sprite1_ *spr)
+{
+    // MEtal Slug ?!
+    if (spr->ID!=10 && spr->ID!=11) return;
+    Sprite1_* SprFont=Sprites;
+    SprFont=&Sprites[MaxObjet-2];
+    u8 i=0;
+
+    // Création & Chargement Sprites Logo & gestion
+    if (spr->ID==11 )
+        {
+            if (PhaseScene>=2)
+            {
+                if (PhaseAffichageScene==1)
+                {
+                    if (SprFont->CoordX<=FIX32(240)) spr->Direction=6;
+                    else
+                    {
+                        PhaseAffichageScene=2;
+                        spr->Direction=0;
+                    }
+                }
+                if (PhaseAffichageScene==2)
+                {
+                    spr->Direction=0;
+                    spr->ClignoSprite=1;
+                    spr->ClignoDuree=10;
+                    spr->ClignoTic=5;
+                    spr->Acceleration=FIX32(6);
+                    spr->RefY=FIX32(240+24);
+                    spr->SensY=1;
+                    //spr->Vitesse=FIX32(1);
+                    i=6;
+                    fix32 j=FIX32(0);
+                    Sprite1_* SprFonte=Sprites;
+                    SprFonte=&Sprites[MaxObjet-7];
+                    while(i--)
+                    {
+                        SprFonte->Vitesse=FIX32(2)-j;
+                        j+=FIX32(1);
+                        SprFonte++;
+                    }
+                }
+                if (PhaseAffichageScene==3)
+                {
+                    //spr->Visible=1;
+                    spr->Direction=4;
+                    spr->Saut=1;
+                    spr->ClignoSprite=0;
+                    // Saut
+                    if (spr->Saut) Saut_Sprite(spr);
+                }
+                if (SprFont->CoordY>=SprFont->RefY && PhaseAffichageScene==3) PhaseAffichageScene=4;
+                // On efface Start !
+                if (PhaseAffichageScene==4)
+                {
+                    // On détruit les Fonts 32x32
+                    spr->Direction=0;
+                    i=MaxObjet;
+                    SprFont=&Sprites[0];
+                    while(i--)
+                    {
+                        if ((SprFont!=NULL) && SprFont->ID==11)
+                        {
+                            SPR_releaseSprite(SprFont->SpriteA);
+                            SprFont->SpriteA=NULL;
+                            SprFont->Visible=0;
+                            SprFont->StandBy=1;
+                            PhaseAffichageScene=5;
+                        }
+                        SprFont++;
+                    }
+                    //MaxObjet-=6;
+                }
+            }
+            return;
+        }
+
+    // Id Marco
+    Sprite1_* SprMarco=Sprites;
+    SprMarco=&Sprites[0];
+
+    switch(Scene)
+    {
+    case 1:
+        if (spr->CoordX<FIX32(80))
+        {
+            spr->Direction=6;
+            spr->Vitesse=FIX32(0.7);
+            PhaseScene=1;
+            // Son du tank
+            if (!spr->Init)
+            {
+                spr->Init=1;
+                SND_startPlayPCM_XGM(SFX_GENERIC7, 1, SOUND_PCM_CH2);
+            }
+        }
+        if (spr->CoordX>=FIX32(80))
+        {
+            spr->Direction=0;
+            PhaseScene=2;
+            SprMarco->Saut=1;
+            SprMarco->Acceleration=FIX32(4);
+            SprMarco->RefY=FIX32(140+24);
+            SprMarco->SensY=1;
+            SND_startPlayPCM_XGM(SFX_GENERIC4, 1, SOUND_PCM_CH2);
+        }
+        SprMarco->CoordX=spr->CoordX+FIX32(16);
+        SprMarco->CoordY=spr->CoordY-FIX32(30);
+
+        break;
+
+    case 2:
+       if (SprMarco->Saut) Saut_Sprite(SprMarco);
+       if (!SprMarco->Saut)
+       {
+           SprMarco->Direction=0;
+           if (SprMarco->CoordY==FIX32(140+24)) PhaseScene=3;
+       }
+        break;
+
+    case 3:
+        spr->Vitesse=FIX32(1.2);
+        spr->Direction=6;
+        if (spr->CoordX>=FIX32(200) &&  PhaseAffichageScene==2)  PhaseAffichageScene=3;
+
+        // Animation pente
+        if (spr->CoordX>=FIX32(236) && spr->CoordX<=FIX32(260))
+        {
+            spr->DeltaY=FIX32(20);
+            spr->Transition=1;
+        }
+        else spr->Transition=0;
+        // Son du tank
+        if (spr->Init==1)
+        {
+            spr->Init=2;
+            SND_startPlayPCM_XGM(SFX_GENERIC7, 1, SOUND_PCM_CH2);
+        }
+
+         if (spr->CoordX>FIX32(320))
+         {
+            if (spr->SpriteA!=NULL)
+            {
+                SPR_releaseSprite(spr->SpriteA);
+                spr->SpriteA=NULL;
+                spr->Visible=0;
+                PhaseScene=0;
+                Sprite1_* SprAvion=Sprites;
+                SprAvion=&Sprites[IDPlane];
+                SprAvion->Visible=1;
+                // start music
+                XGM_startPlay(Demo_Music);
+                return;
+            }
+         }
+        break;
+    }
+}
+
+
+///////////////////////////////
+//                  Gestion Tir
+///////////////////////////////
+void GestionTir(Sprite1_ *spr)
+{
+    // Pas de tir ou couteau en cours ?
+    if (!spr->Feu || spr->Couteau) return;
+
+    spr->TempoRafale++;
+    if (spr->TempoRafale>=17) spr->Feu=2;
+    if (spr->TempoRafale>18)
+    {
+        spr->Feu=0;
+        spr->TempoRafale=0;
+    }
+}
+
+
+////////////////////////////////////
+//                  Gestion Couteau
+////////////////////////////////////
+void GestionCouteau(Sprite1_ *spr)
+{
+
+    if (!spr->Couteau) return;
+
+    spr->TempoCouteau++;
+
+    // Fin animation
+    if (spr->TempoCouteau>35)
+    {
+        spr->Couteau=0;
+        spr->TempoCouteau=0;
+         spr->Feu=0;
+        return;
+    }
+
+    // Contact ?
+    if (spr->TempoCouteau==25)
+    {
+        // Test collision IA
+        u16 NbrIA=NombreIA;
+        Sprite1_* SprIA=Sprites;
+        SprIA=&Sprites[IDUnite];
+        while(NbrIA--)
+        {
+            if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA)
+            {
+                fix32 DX_IA=abs(spr->CoordX - SprIA->CoordX);
+                switch (spr->MemDir)
+                {
+                case 6:
+                    if (spr->CoordX<(SprIA->CoordX))
+                    {
+                        if (DX_IA<=FIX32(32))
+                        {
+                            SprIA->MortIA=2;
+                            Score+=25;
+                            SprIA->TirBusy=0;
+                            SprIA->TempoSprite=0;
+                            GestionScore();
+                            if (SprIA->ID==2)
+                            {
+                                // Bouclier !
+                                Sprite1_* SprBou=Sprites;
+                                SprBou=&Sprites[IDBouclier];
+                                u8 NrBou=6;
+                                while(NrBou--)
+                                {
+                                    if (!SprBou->Visible)
+                                    {
+                                        if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                        SprBou->Visible=1;
+                                        SprBou->CoordX=SprIA->CoordX;
+                                        SprBou->CoordY=SprIA->CoordY;
+                                        SprBou->Acceleration=FIX32(4);
+                                        SprBou->Direction=0;
+                                        SprBou->StandBy=0;
+                                        SprBou->TypeBouclier=1;
+                                        break;
+                                    }
+                                    SprBou++;
+                                }
+                            }
+                            if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
+                            return;
+                        }
+                    }
+
+                    break;
+
+                case 4:
+                    if (spr->CoordX>=SprIA->CoordX)
+                    {
+                        if (DX_IA<=FIX32(48))
+                        {
+                            SprIA->MortIA=2;
+                            Score+=25;
+                            GestionScore();
+                            if (SprIA->ID==2)
+                            {
+                                // Bouclier !
+                                Sprite1_* SprBou=Sprites;
+                                SprBou=&Sprites[IDBouclier];
+                                u8 NrBou=6;
+                                while(NrBou--)
+                                {
+                                    if (!SprBou->Visible)
+                                    {
+                                        if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                        SprBou->Visible=1;
+                                        SprBou->CoordX=SprIA->CoordX;
+                                        SprBou->CoordY=SprIA->CoordY;
+                                        SprBou->Acceleration=FIX32(4);
+                                        SprBou->Direction=0;
+                                        SprBou->StandBy=0;
+                                        SprBou->TypeBouclier=1;
+                                        break;
+                                    }
+                                    SprBou++;
+                                }
+                            }
+                            if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
+                            return;
+                        }
+                    }
+                    break;
+                }
+            }
+            SprIA++;
+        }
+    }
+}
+
+
+/////////////////////////////////////////
+//                  Gestion Score
+/////////////////////////////////////////
+void GestionScore()
+{
+    // Variables
+    Sprite1_ *sco;
+    char Buffer[5];
+    char *Car;
+
+    // Traitement Chaine.
+    uintToStr(Score,Texte,0);
+    u16 Lon=strlen(Texte);
+	strclr(Buffer);
+    strcat(Buffer,Texte);
+
+    // Score
+    sco=&NombreScore[0];
+    u8 i=Lon;
+    u8 j=0;
+    u16 Pos=0;
+    while(i--)
+    {
+        Pos=64-(j<<3);
+        j++;
+        Car=&Buffer[i];
+        NombreIA+3+6+7+1+6;
+        if (*Car=='0') SPR_setAnim(sco->SpriteA,0);
+        if (*Car=='1') SPR_setAnim(sco->SpriteA,1);
+        if (*Car=='2') SPR_setAnim(sco->SpriteA,2);
+        if (*Car=='3') SPR_setAnim(sco->SpriteA,3);
+        if (*Car=='4') SPR_setAnim(sco->SpriteA,4);
+        if (*Car=='5') SPR_setAnim(sco->SpriteA,5);
+        if (*Car=='6') SPR_setAnim(sco->SpriteA,6);
+        if (*Car=='7') SPR_setAnim(sco->SpriteA,7);
+        if (*Car=='8') SPR_setAnim(sco->SpriteA,8);
+        if (*Car=='9') SPR_setAnim(sco->SpriteA,9);
+        SPR_setPosition(sco->SpriteA,Pos,8);
+        sco++;
+    }
+}
+
+
+/////////////////////////////////////////
+//                  Gestion UP
+/////////////////////////////////////////
+void GestionUP(Sprite1_ *spr)
+{
+    // Variables
+    Sprite1_ *sco;
+    char Buffer[5];
+    char *Car;
+
+    // Traitement Chaine.
+    uintToStr(spr->NombreUP,Texte,0);
+	strclr(Buffer);
+    strcat(Buffer,Texte);
+
+    // Nombre UP
+    sco=&NombreUP;
+
+    Car=&Buffer[0];
+    if (*Car=='0') SPR_setAnim(sco->SpriteA,0);
+    if (*Car=='1') SPR_setAnim(sco->SpriteA,1);
+    if (*Car=='2') SPR_setAnim(sco->SpriteA,2);
+    if (*Car=='3') SPR_setAnim(sco->SpriteA,3);
+    if (*Car=='4') SPR_setAnim(sco->SpriteA,4);
+    if (*Car=='5') SPR_setAnim(sco->SpriteA,5);
+    if (*Car=='6') SPR_setAnim(sco->SpriteA,6);
+    if (*Car=='7') SPR_setAnim(sco->SpriteA,7);
+    if (*Car=='8') SPR_setAnim(sco->SpriteA,8);
+    if (*Car=='9') SPR_setAnim(sco->SpriteA,9);
+    SPR_setPosition(sco->SpriteA,52,24);
+}
+
+
+///////////////////////////////
+//                  Gestion Balles
+///////////////////////////////
+void GestionBalles(Sprite1_ *spr)
+{
+    // Sécurité
+    if (spr->StandBy  || spr->Hit ||GameOver)  return;
+    if (spr->SpriteA==NULL) return;
+
+    // Type balles diff. ? Out !
+    if (spr->ID!=46 && spr->ID!=45) return;
+
+    // ID Ref joueur
+    Sprite1_* SpriteREF=Sprites;
+    SpriteREF=&Sprites[0];
+
+    // Game Over ?!
+    if (!SpriteREF->NombreUP && !SpriteREF->HitPoint )
+    {
+        GameOver=1;
+        SpriteREF->HitPoint=0;
+        GestionHUDSante();
+        SpriteREF->NombreUP=0;
+        SpriteREF->Direction=0;
+        SpriteREF->Sprint=0;
+        SpriteREF->Saut=1;
+        SpriteREF->Acceleration=FIX32(6);
+        SpriteREF->RefY=FIX32(240);
+        SpriteREF->SensY=1;
+        return;
+    }
+
+    // Couteau ?!
+    if (SpriteREF->Couteau) return;
+
+    // Algoririthme de traitement
+    fix32 DX=abs(SpriteREF->CoordX - spr->CoordX);
+
+    // Limite ?!
+    if (DX>FIX32(280) || spr->CoordX<=FIX32(0) || spr->CoordX>FIX32(2016))
+    {
+        spr->StandBy=1;
+        spr->Visible=0;
+        return;
+    }
+
+    // Balles Joueurs
+    if (spr->ID==45)
+    {
+        // Test collision IA
+        u16 NbrIA=NombreIA;
+        Sprite1_* SprIA=Sprites;
+        SprIA=&Sprites[IDUnite];
+        while(NbrIA--)
+        {
+            if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA)
+            {
+                fix32 DX_IA=abs(spr->CoordX - SprIA->CoordX);
+                fix32 DY_IA=abs(spr->CoordY - SprIA->CoordY);
+                if (DX_IA<=FIX32(8) && DY_IA<=FIX32(30))
+                {
+                    SprIA->HitPoint--;
+                    if (spr->Direction==6) spr->OffsetX=FIX32(0);
+                    else spr->OffsetX=FIX32(-16);
+
+                    if (!SprIA->HitPoint)
+                    {
+                        // Les soldats bouclier se cassent !!
+                        if (SprIA->ID==2 && !SprIA->IAFuite)
+                        {
+                            spr->Hit=0;
+                            spr->StandBy=1;
+                            spr->Visible=0;
+                            SprIA->IAFuite=1;
+                            SprIA->HitPoint++;
+                            switch (SprIA->Direction)
+                            {
+                            case 4:
+                                SprIA->Direction=6;
+                                break;
+
+                            case 6:
+                                SprIA->Direction=4;
+                                break;
+                            }
+
+                            if (SprIA->Direction==98) SprIA->Direction=4;
+                            if (!SprIA->Direction) SprIA->Direction=6;
+
+                            SprIA->Vitesse=FIX32(2.5);
+                            // Bouclier !
+                            Sprite1_* SprBou=Sprites;
+                            SprBou=&Sprites[IDBouclier];
+                            u8 NrBou=6;
+                            while(NrBou--)
+                            {
+                                if (!SprBou->Visible)
+                                {
+                                    if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                    SprBou->Visible=1;
+                                    SprBou->CoordX=SprIA->CoordX;
+                                    SprBou->CoordY=SprIA->CoordY;
+                                    SprBou->Acceleration=FIX32(4);
+                                    SprBou->Direction=0;
+                                    SprBou->StandBy=0;
+                                    SprBou->TypeBouclier=1;
+                                    break;
+                                }
+                                SprBou++;
+                            }
+                            return;
+                        }
+                        SprIA->MortIA=1;
+                        spr->Hit=2;
+                        Score+=25;
+                        GestionScore();
+                        spr->Direction=0;
+                        if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2))
+                        {
+                            if (getRandomU16(100)<50) SND_startPlayPCM_XGM(SFX_GENERIC2, 1, SOUND_PCM_CH2);
+                            else SND_startPlayPCM_XGM(SFX_GENERIC3, 1, SOUND_PCM_CH2);
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        spr->Hit=1;
+                        spr->Direction=0;
+                        return;
+                    }
+                }
+            }
+            SprIA++;
+        }
+    }
+
+    // Balles IA
+    if (spr->ID==46)
+    {
+        fix32 DX_IA=abs(spr->CoordX - SpriteREF->CoordX);
+        fix32 DY_IA=abs(spr->CoordY - SpriteREF->CoordY);
+        u8 COL=1;
+        u8 Test=0;
+        fix32 PosYJoueur=(SpriteREF->CoordY+SpriteREF->DeltaY);
+        // Cas de collision.
+        if (spr->CoordY==PosYJoueur)
+        {
+            if (SpriteREF->Direction==2 || SpriteREF->Direction==24 || SpriteREF->Direction==26) COL=0;
+            if (SpriteREF->Couteau) COL=1;
+            Test=1;
+        }
+
+        if (spr->CoordY<PosYJoueur && !Test)
+        {
+            if (SpriteREF->Direction==2 || SpriteREF->Direction==24 || SpriteREF->Direction==26) COL=0;
+            if (SpriteREF->Couteau) COL=1;
+            Test=1;
+        }
+        if (spr->CoordY>PosYJoueur && !Test)
+        {
+            if (SpriteREF->Direction==2 || SpriteREF->Direction==24 || SpriteREF->Direction==26) COL=1;
+            if (SpriteREF->Couteau) COL=1;
+        }
+        if (DX_IA<=FIX32(8) && DY_IA<=FIX32(30) && COL)
+        {
+            spr->Hit=2;
+            spr->Direction=0;
+            SND_startPlayPCM_XGM(SFX_GENERIC6, 1, SOUND_PCM_CH2);
+            if (SpriteREF->HitPoint) SpriteREF->HitPoint--;
+
+            if (!SpriteREF->HitPoint)
+            {
+                if (!SpriteREF->NombreUP)
+                {
+                    SpriteREF->HitPoint=0;
+                    return;
+                }
+                SpriteREF->HitPoint=SpriteREF->HitPointMax;
+                if (SpriteREF->NombreUP) SpriteREF->NombreUP--;
+            }
+            GestionHUDSante();
+        }
+    }
+
+}
+
+//////////////////////////////////////
+//                  Gestion HUD Santé
+//////////////////////////////////////
+void GestionHUDSante()
+{
+	Sprite1_* SprHUD=SpriteHUD;
+	SprHUD= & SpriteHUD[0];
+
+	Sprite1_* SpriteRef=Sprites;
+	SpriteRef=&Sprites[0];
+
+	SPR_setAnim(SprHUD->SpriteA,6-SpriteRef->HitPoint);
+}
+
+
+///////////////////////////////
+//                  Gestion IA
+///////////////////////////////
+void GestionIA(Sprite1_  *spr)
+{
+    // On vire le joueur et l'airplane.
+    if (spr->ID==99 || spr->ID==1 ||spr->ID==45 || spr->StandBy || spr->ID==46 ) return;
+
+    // Mort IA ?!
+    if (spr->SpriteDYN && spr->MortIA)
+    {
+        spr->TempoSprite++;
+        if (spr->TempoSprite>110)
+        {
+            spr->TempoSprite=0;
+            spr->MortIA=0;
+            spr->IntIA=0;
+            //spr->Visible=0;
+            if (spr->SpriteA!=NULL)
+            {
+                SPR_releaseSprite(spr->SpriteA);
+                NombreIAScene--;
+                spr->SpriteA=NULL;
+                spr->StandBy=1;
+                spr->Visible=0;
+                spr->IntIA=0;
+            }
+        }
+        return;
+    }
+    // Fuite ?
+    if (spr->IAFuite || spr->MortIA) return;
+
+    //Game Over ?
+    if (GameOver)
+    {
+        spr->TirBusy=0;
+        spr->CoupCrosse=0;
+        if (spr->Direction==4) spr->Direction=6;
+        if (spr->Direction==6) spr->Direction=4;
+        if (!spr->Direction) spr->Direction=6;
+        return;
+    }
+
+    // Les unités Snipers tirent quand elles sont en position
+    if (spr->ID==2 && spr->Reach && !spr->TirBusy)
+    {
+        spr->TempoCountRafale++;
+        if (spr->TempoCountRafale>spr->TempoCountRafaleMax)
+        {
+            spr->TempoCountRafale=0;
+            if (spr->IAFuite) return;
+            spr->TirBusy=1;
+        }
+    }
+
+    // Tir ? On locke
+    if (spr->TirBusy) return;
+
+	// Joueur principal
+	Sprite1_* SpriteREF=Sprites;
+	SpriteREF = &Sprites[0];
+
+    // Game Over ?!
+    if (!SpriteREF->NombreUP && !SpriteREF->HitPoint )
+    {
+        GameOver=1;
+        SpriteREF->HitPoint=0;
+        GestionHUDSante();
+        SpriteREF->NombreUP=0;
+        SpriteREF->Direction=0;
+        SpriteREF->Sprint=0;
+        SpriteREF->Saut=1;
+        SpriteREF->Acceleration=FIX32(6);
+        SpriteREF->RefY=FIX32(240);
+        SpriteREF->SensY=1;
+        return;
+    }
+
+    // Algoririthme de traitement
+    // Distance joueur / IA
+    fix32 DistanceIA;
+    DistanceIA=abs(SpriteREF->CoordX - (spr->CoordX+FIX32(16)));
+
+    // Attaque Corps à corps Soldat 3.
+    if (spr->ID==3)
+    {
+        if (spr->CoupCrosse)
+        {
+            fix32 COL_X=abs(SpriteREF->CoordX-spr->CoordX);
+            fix32 OF_X;
+            if (spr->CoupCrosse==50) OF_X=FIX32(0);
+            else OF_X=FIX32(32);
+            spr->CoupCrosse=0;
+            if (COL_X<=FIX32(16)+OF_X)
+            {
+                SND_startPlayPCM_XGM(SFX_GENERIC6, 1, SOUND_PCM_CH2);
+                if (SpriteREF->HitPoint) SpriteREF->HitPoint--;
+                if (!SpriteREF->HitPoint)
+                {
+                    if (!SpriteREF->NombreUP) return;
+                    SpriteREF->HitPoint=SpriteREF->HitPointMax;
+                    if (SpriteREF->NombreUP) SpriteREF->NombreUP--;
+                    if (!SpriteREF->NombreUP) SpriteREF->NombreUP=0;
+                }
+                GestionHUDSante();
+            }
+            return;
+        }
+        if (DistanceIA<=FIX32(32))
+        {
+            if (SpriteREF->CoordX<=spr->CoordX) spr->Direction=50;
+            else spr->Direction=51;
+            spr->Reach=1;
+            return;
+        }
+    }
+
+
+    // Suffisamment proche, l'IA stoppe !
+    if (DistanceIA<=spr->DistanceAggro-FIX32(32))
+    {
+        if (SpriteREF->CoordX<=spr->CoordX) spr->Direction=0;
+        else spr->Direction=98;
+        spr->Reach=1;
+        return;
+    }
+
+    if (DistanceIA>spr->DistanceAggro)
+    {
+        // Reach ? Tempo !InitIntro
+        if (spr->Reach)
+        {
+            spr->TempoAggro++;
+            if (spr->TempoAggro>25)
+            {
+                spr->TempoAggro=0;
+                spr->Reach=0;
+            }
+        }
+        if (!spr->Reach)
+        {
+            if (SpriteREF->CoordX<=spr->CoordX) spr->Direction=4;
+            else spr->Direction=6;
+        }
+    }
+
+}
+
+//////////////////////////
+//  Random SEED
+//////////////////////////
+void RandomSeed()
+{
+    RNDSEED++;
+    if (RNDSEED>65000) RNDSEED=0;
+    setRandomSeed(RNDSEED);
+}
+
+
+///////////////////////////////////////////
+//           Fonction RANDOM
+///////////////////////////////////////////
+// range = interval (should be power of 2)
+// returned value is between [0,range-1]
+u16 getRandomU16(u16 range)
+{
+    return random() & (range - 1);
+}
+
+
+fix32 getRandomF32(fix32 range)
+{
+    return ((random() << 16) | random()) & (range - 1);
+}
+
+
+///////////////////////////////
+//                  Scrolling
+///////////////////////////////
+void updateVDPScroll()
+{
+    VDP_setHorizontalScroll(BG_A,(-CamPosX)>>1);
+    VDP_setHorizontalScroll(BG_B, -CamPosX);
+    VDP_setVerticalScroll(BG_A, CamPosY>>1);
+    VDP_setVerticalScroll(BG_B, CamPosY);
+}
+
+///////////////////////////////////////////////////
+//                  Gestion Camera / Scrolling
+///////////////////////////////////////////////////
+void setCameraPosition(s16 x, s16 y)
+{
+    if ((x != CamPosX) || (y != CamPosY))
+    {
+        CamPosX = x;
+        CamPosY = y;
+
+        // scroll maps
+        MAP_scrollTo(bgb, x, y);
+    }
+}
+
+///////////////////////////////////////////////////
+//                  Gestion Caméra position
+///////////////////////////////////////////////////
+void updateCameraPosition(Sprite1_ *spr)
+{
+    // Si Sprite différent du joueur, on quitte !
+    if (spr->ID!=99 ||GameOver) return;
+    if (PhaseScene) return;
+
+    // get player position (pixel)
+    fix32 posX=spr->CoordX;
+    fix32 posY=spr->CoordY;
+    s16 px = fix32ToInt(posX);
+    s16 py = fix32ToInt(posY);
+
+    // current sprite position on screen
+    s16 px_scr = px - CamPosX;
+    s16 py_scr = py - CamPosY;
+
+    s16 npx_cam, npy_cam;
+
+    // adjust new camera position
+    if (px_scr > 160) npx_cam = px - 160;
+    else if (px_scr <= 160) npx_cam = px - 160;
+    else npx_cam = CamPosX;
+    if (py_scr > 140) npy_cam = py - 140;
+    else if (py_scr < 60) npy_cam = py - 60;
+    else npy_cam = CamPosY;
+
+    VisCamX=0;
+    // clip camera position
+    if (npx_cam < 0)
+    {
+        npx_cam = 0;
+        VisCamX=1;
+    }
+    else if (npx_cam > (MAP_WIDTH - 320))
+    {
+        npx_cam = (MAP_WIDTH - 320);
+        VisCamX=1;
+    }
+    if (npy_cam < 0) npy_cam = 0;
+    else if (npy_cam > (MAP_HEIGHT - 224)) npy_cam = (MAP_HEIGHT - 224);
+
+    // set new camera position
+    setCameraPosition(npx_cam, npy_cam);
+}
+
+
+
+///////////////////////////////////////
+//           Fonction Visibilité Zone Sprite
+///////////////////////////////////////
+void UpdateViewSprite(Sprite1_ *spr)
+{
+    // ID Ref joueur
+    Sprite1_* SpriteREF=Sprites;
+    SpriteREF=&Sprites[0];
+
+    // Algoririthme de traitement
+    fix32 DX=abs((SpriteREF->CoordX -FIX32(24))- spr->CoordX);
+    u8 DET=0;
+
+    fix32 CurrentFrame;
+    if (VisCamX) CurrentFrame=FIX32(308);
+    else CurrentFrame=FIX32(200);
+    if (spr->CoordX>FIX32(2048) || spr->CoordX<FIX32(0)) DET=1;
+
+
+    // ID Joueur ? On quitte !
+    if (!spr->SpriteDYN)
+    {
+        // Sprites en dehors des limites ?!
+        if (DX>=CurrentFrame)
+        {
+            spr->Visible=0;
+            if (spr->ID==66) spr->StandBy=1;
+        }
+        if (spr->AirUnit)
+        {
+            if (DX<CurrentFrame) spr->Visible=1;
+            else spr->PorteeTir=0;
+        }
+        return;
+    }
+
+    // Sprites en dehors des limites ?!
+    if (DX>=CurrentFrame || DET)
+    {
+        if (spr->SpriteA!=NULL)
+        {
+            SPR_releaseSprite(spr->SpriteA);
+            NombreIAScene--;
+            spr->SpriteA=NULL;
+            spr->Visible=0;
+            return;
+        }
+    }
+
+    // Plus de Sprite ?! On les créer !
+    if (NombreIAScene>NombreIA) return;
+    if (spr->SpriteA==NULL )
+    {
+            spr->TempoRespawn++;
+            if (spr->TempoRespawn>50)
+            {
+                spr->TempoRespawn=0;
+                // Type ?
+                RandomSeed();
+                if (getRandomU16(100)<50) spr->ID=2;
+                else spr->ID=3;
+                // Bouclier unité
+                if (spr->ID==2)
+                {
+                    spr->SpriteA = SPR_addSprite(&SoldatType1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                    spr->HitPointMax=2;
+                    NombreIAScene++;
+                }
+                else if (spr->ID==3)
+                // Fantassin
+                {
+                    spr->SpriteA = SPR_addSprite(&SoldatType2_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                    spr->HitPointMax=1;
+                    NombreIAScene++;
+                }
+                CreateSpriteDYN(spr,spr->ID);
+                SPR_setVisibility(spr->SpriteA,VISIBLE);
+                SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+                spr->Visible=1;
+                spr->StandBy=0;
+                spr->IAFuite=0;
+                spr->TypeBouclier=0;
+                spr->TempoCountRafaleMax=getRandomU16(50)+15;
+                spr->HitPoint=spr->HitPointMax;
+                spr->TypeIA=1;
+                spr->Reach=0;
+                spr->MortIA=0;
+            }
+    }
+}
+
+
+///////////////////////////////
+//            Liste Sprite DYN
+///////////////////////////////
+void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
+{
+        RandomSeed();
+        spr->MemDir=0;
+        spr->AirUnit=0;
+        spr->StandBy=0;
+        spr->SpriteDYN=1;
+        spr->TypeIA=1;
+        spr->CoordY=FIX32(140+24);
+        // Spé unités.
+        spr->ID=Type;
+        if (spr->ID==2)
+		{
+			spr->Vitesse=FIX32(0.8)+getRandomF32(FIX32(0.5));
+			RandomSeed();
+			spr->CaC=0;
+			spr->Sniper=1;
+			spr->DistanceAggro=SniperRange;
+		}
+		else
+		{
+			//RandomSeed();
+			spr->CaC=1;
+			spr->Sniper=0;
+             spr->DistanceAggro=FIX32(0);
+             spr->Vitesse=FIX32(1)+getRandomF32(FIX32(0.5));
+		}
+
+		// Init Coordonnées
+		// Cas No Scrolling
+		Sprite1_* SpriteRef=Sprites;
+		SpriteRef=&Sprites[0];
+		RandomSeed();
+
+
+		if (VisCamX)
+        {
+            if (SpriteRef->CoordX<FIX32(200)) spr->CoordX=FIX32(320);
+            else spr->CoordX=FIX32(2048-3);
+        }
+        else
+        {
+            if (getRandomU16(100)<50) spr->CoordX=SpriteRef->CoordX+FIX32(140);
+            else spr->CoordX=SpriteRef->CoordX-FIX32(170);
+        }
+}
+
+
+////////////////////////////////////////
+//                  Display Sprites
+////////////////////////////////////////
+void DisplaySprite(Sprite1_ *spr)
+{
+    //Phase scene en cours ?!
+    if (PhaseScene)
+    {
+        switch(PhaseScene)
+        {
+        case 1:
+            if (spr->ID!=10 && spr->ID!=11) spr->Visible=0;
+            else spr->Visible=1;
+            break;
+
+        case 2:
+            if (spr->ID==99) spr->Visible=1;
+            break;
+        }
+    }
+
+    // on positionne le sprite relativement à la camera
+    s16 x = fix32ToInt(spr->CoordX-spr->OffsetX) - CamPosX;
+    s16 y = fix32ToInt(spr->CoordY+spr->DeltaY-spr->OffsetY) - CamPosY;
+
+    if (spr->SpriteA != NULL )
+    {
+        if (spr->Visible==1) SPR_setVisibility(spr->SpriteA,VISIBLE);
+        else SPR_setVisibility(spr->SpriteA,HIDDEN);
+    }
+
+    // Affichage
+    SPR_setPosition(spr->SpriteA, x, y);
+}
+
+////////////////////////////////////////
+//                  Gestion Sprites
+////////////////////////////////////////
+void UpdateSprite(Sprite1_ *spr)
+{
+    if (PhaseScene && spr->ID!=10 && spr->ID!=11) return;
+    if (spr->StandBy) return;
+    if (spr->ID==66) return;
+
+    // Mémorisation du sprint avant un saut de Marco
+    if (spr->MemSprint && spr->Saut) spr->Boost=FIX32(1);
+
+    // Bouclier qui vole ?
+    if (spr->TypeBouclier && spr->Visible)
+    {
+        spr->CoordY-=spr->Acceleration;
+        spr->Acceleration-= FIX32(0.2);
+        spr->Direction=0;
+        if (spr->CoordY>FIX32(240))
+        {
+            if (spr->SpriteA!=NULL)
+            {
+                SPR_releaseSprite(spr->SpriteA);
+                spr->SpriteA=NULL;
+                spr->Visible=0;
+                spr->StandBy=1;
+                return;
+            }
+        }
+    }
+
+    // Mort par bombe ?!
+    if (spr->IntIA==10)
+    {
+        switch(spr->Direction)
+        {
+            case 4:
+                spr->CoordX-=spr->Vitesse+spr->Boost;
+                break;
+
+            case 6:
+               spr->CoordX+=spr->Vitesse+spr->Boost;
+                break;
+        }
+        Saut_Sprite(spr);
+    }
+
+    // Ia Morte ? On vire !
+    if (spr->MortIA && spr->SpriteDYN) return;
+
+    // Déplacement ( Couteau ?! OFF ! )
+    if (!spr->Couteau)
+    {
+        switch(spr->Direction)
+        {
+            case 4:
+                spr->CoordX-=spr->Vitesse+spr->Boost;
+                break;
+
+            case 6:
+               spr->CoordX+=spr->Vitesse+spr->Boost;
+                break;
+
+            case 24:
+                // Si tir en accroupi, alors on avance pas !
+                if (!spr->Feu) spr->CoordX-=spr->Vitesse-FIX32(0.8);
+                break;
+
+            case 26:
+                if (!spr->Feu) spr->CoordX+=spr->Vitesse-FIX32(0.8);
+                break;
+        }
+    }
+
+    if (spr->ID==45 || spr->ID==46 || spr->ID==10  || spr->ID==11) return;
+
+    // Trajectoire Airplane
+    if (spr->AirUnit)
+    {
+        // Joueur principal
+        Sprite1_* SpriteREF=Sprites;
+        SpriteREF = &Sprites[0];
+        fix32 DistAir=abs(SpriteREF->CoordX-spr->CoordX);
+        if (spr->SensY) spr->CoordY+=FIX32(0.1);
+        else  spr->CoordY-=FIX32(0.1);
+        if (spr->CoordY>=FIX32(80) && spr->SensY==1) spr->SensY=0;
+        if (spr->CoordY<FIX32(10) && !spr->SensY) spr->SensY=1;
+        // Calcul Distance / Joueur
+        if (DistAir>FIX32(256))
+        {
+            //spr->PorteeTir=0;
+            if (spr->Direction==6 && (spr->CoordX>=SpriteREF->CoordX)) spr->Direction=4;
+            if (spr->Direction==4 && (spr->CoordX<SpriteREF->CoordX)) spr->Direction=6;
+        }
+        if (spr->CoordX>FIX32(2016) && spr->Direction==6) spr->Direction=4;
+        if (spr->CoordX<FIX32(-100) && spr->Direction==4) spr->Direction=6;
+    }
+
+    // Saut
+    if (spr->Saut) Saut_Sprite(spr);
+
+    // Limite et collision sol
+    if (!spr->AirUnit)
+    {
+            // Limite sprites
+        if (!spr->IAFuite)
+        {
+            if (spr->CoordX<=FIX32(0)) spr->CoordX=FIX32(0);
+            if (spr->CoordX>FIX32(2016)) spr->CoordX=FIX32(2016);
+        }
+
+        if (!spr->Saut)
+        {
+            // Collision Sol MAP.
+            if (spr->CoordX<FIX32(276)) {spr->DeltaY=FIX32(0);return;}
+            if (spr->CoordX>=FIX32(276) && spr->CoordX<FIX32(792)) {spr->DeltaY=FIX32(16);return;}
+            if (spr->CoordX>FIX32(792) && spr->CoordX<FIX32(1400)) {spr->DeltaY=FIX32(0);return;}
+            if (spr->CoordX>=FIX32(1400) && spr->CoordX<FIX32(1700)) {spr->DeltaY=FIX32(-16);return;}
+            if (spr->CoordX>=FIX32(1700)) spr->DeltaY=FIX32(0);
+        }
+    }
+}
+
+
+//////////////////////////////////////////
+//                  Routine Saut Sprite
+/////////////////////////////////////////
+void Saut_Sprite(Sprite1_ *spr)
+{
+    fix32 S=FIX32(0.25);
+    if (GameOver) S=FIX32(0.2);
+    spr->CoordY-=spr->Acceleration;
+    spr->Acceleration-= S;
+    if (spr->CoordY>spr->RefY)
+    {
+        spr->CoordY=spr->RefY;
+        spr->Saut=0;
+        if (spr->IntIA==10)
+        {
+            if (spr->SpriteA!=NULL)
+            {
+                SPR_releaseSprite(spr->SpriteA);
+                NombreIAScene--;
+                spr->SpriteA=NULL;
+                spr->StandBy=1;
+                spr->Visible=0;
+                spr->IntIA=0;
+            }
+        }
+        spr->MemSprint=0;
+        spr->Boost=FIX32(0);
+        if (GameOver)
+        {
+            VDP_fadeOutAll(32,FALSE);
+            GameOver=2;
+        }
+    }
+}
+
+//////////////////////////////////////////
+//                  Routine PRINT DATA
+/////////////////////////////////////////
+void PrintFix32(fix32 D,u8 X,u8 Y)
+{
+    sprintf(Texte,"D :%d",fix32ToInt(D));
+    VDP_drawText(Texte,X,Y);
+}
+void PrintU8(u8 D,u8 X,u8 Y)
+{
+    sprintf(Texte,"D :%d",D);
+    VDP_drawText(Texte,X,Y);
+}
+
+void PrintU16(u16 D,u8 X,u8 Y)
+{
+    sprintf(Texte,"D :%d",D);
+    VDP_drawText(Texte,X,Y);
+}

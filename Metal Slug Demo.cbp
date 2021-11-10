@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Metal Slug Demo" />
+		<Option makefile="C:/SGDK/makefile.gen" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="megadrive_compiler" />
+		<MakeCommands>
+			<Build command="$make -f $makefile $target debug" />
+			<CompileFile command="$make -f $makefile $file" />
+			<Clean command="$make -f $makefile clean$target" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="$make -q -f $makefile $target" />
+			<SilentBuild command="$make -f $makefile $target debug &gt; $(CMD_NULL)" />
+		</MakeCommands>
+		<Build>
+			<Target title="default">
+				<Option output="out/rom.bin" prefix_auto="0" extension_auto="0" />
+				<Option object_output="out/" />
+				<Option type="1" />
+				<Option compiler="megadrive_compiler" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="CodeBlockEmu_1.bat" />
+				</ExtraCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="Res/Animations.h" />
+		<Unit filename="Res/GestionPAD.h" />
+		<Unit filename="Res/Gfx/Ecran_MS_BGA.png" />
+		<Unit filename="Res/Gfx/Mess_Menu.png" />
+		<Unit filename="Res/Gfx/SgdkLogo.png" />
+		<Unit filename="Res/Init.h" />
+		<Unit filename="Res/Main.h" />
+		<Unit filename="Res/Map/BG_A.png" />
+		<Unit filename="Res/Map/BG_B.png" />
+		<Unit filename="Res/Routines.h" />
+		<Unit filename="Res/Sound.h" />
+		<Unit filename="Res/Sound.res" />
+		<Unit filename="Res/Sprites.h" />
+		<Unit filename="Res/Sprites.res" />
+		<Unit filename="Res/Sprites/Joe_48x40.png" />
+		<Unit filename="Res/Variables.h" />
+		<Unit filename="Res/gfx.h" />
+		<Unit filename="Res/gfx.res" />
+		<Unit filename="Src/Animations.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/GestionPAD.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/Init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/Main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/Routines.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/Variables.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
