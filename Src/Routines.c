@@ -3256,7 +3256,7 @@ void Saut_Sprite(Sprite1_ *spr)
 /////////////////////////////////////////
 void PrintFix32(fix32 D,u8 X,u8 Y)
 {
-    sprintf(Texte,"D :%d",fix32ToInt(D));
+    sprintf(Texte,"D :%ld",fix32ToInt(D));
     VDP_drawText(Texte,X,Y);
 }
 void PrintU8(u8 D,u8 X,u8 Y)
