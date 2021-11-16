@@ -283,7 +283,7 @@ void InitIntro()
 		// set new camera position
 		if (CamPosX>13100)
 		{
-			VDP_clearPlane(BG_A,FALSE);
+			VDP_clearPlane(BG_A,TRUE);
 			CamPosX=0;
 		}
         MAP_scrollTo(bgb, CamPosX, 0);
@@ -294,7 +294,7 @@ void InitIntro()
 	XGM_pausePlay();
 	XGM_stopPlay();
 	SYS_doVBlankProcess();
-	VDP_clearPlane(BG_A,FALSE);
+	VDP_clearPlane(BG_A,TRUE);
     VDP_fadeOutAll(16,FALSE);
     MEM_free(bgaIntro);
     MEM_free(bgb);
