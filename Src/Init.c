@@ -22,6 +22,8 @@ void Clear_Variable()
 {
     Test=0;
     ind=0;
+    StatutJoy=0;
+    PauseGame=0;
     numTile=0;
     RNDSEED=0;
     NombreIA=0;
@@ -335,7 +337,7 @@ void InitScene()
 
 
     u16 MemVram=208;
-    if (NumeroZone) MemVram=332;
+    if (NumeroZone) MemVram=308;
     SPR_initEx(512+MemVram);
 
 	// camera position (force refresh)
@@ -389,7 +391,7 @@ void InitScene()
 	SPR_setVisibility(SprCivil->SpriteA,HIDDEN);
 
 	// Init Data
-	NombreBalle=6;
+	NombreBalle=8;
 	NombreBouclier=6;
 	NombreLettre=6;
 	NombreIA=5;
@@ -678,7 +680,7 @@ void InitMAP()
     VDP_fadeInAll(palette,15,TRUE);
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
-	//NumeroZone=0;
+	//NumeroZone=1;
 	ind = TILE_USERINDEX;
 	bgBaseTileIndex[0] = ind;
 

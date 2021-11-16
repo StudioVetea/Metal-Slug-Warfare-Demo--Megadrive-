@@ -58,14 +58,11 @@ void MainLoop()
 {
 	while(TRUE)
 	{
-		// Gestion PAD
-		GestionPAD();
-
 		// Scene principale
 		UpdateScene();
 
         // update sprites
-        SPR_update();
+        if (!PauseGame) SPR_update();
 
 		// Vblank
 		SYS_doVBlankProcess();

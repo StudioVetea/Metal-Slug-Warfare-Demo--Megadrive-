@@ -235,6 +235,8 @@ extern u16 GameOver;
 extern u16 TempoMax;
 extern u16 Bombardement;
 extern u16 NombrePara;
+extern u16 PauseGame;
+extern u16 StatutJoy;
 
 extern fix32 Civil_CoordX;
 extern fix32 Civil_CoordY;

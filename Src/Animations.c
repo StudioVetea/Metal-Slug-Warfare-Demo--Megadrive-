@@ -638,9 +638,9 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=NombreBalle,j=0;
+                    u16 i=4,j=0;
                     Sprite1_* spr1=Sprites;
-                    spr1 = &Sprites[IDBalle];
+                    spr1 = &Sprites[IDBalle+4];
                     while(i--)
                     {
                         spr1 = &Sprites[IDBalle+j];
@@ -694,9 +694,9 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=NombreBalle,j=0;
+                    u16 i=4,j=0;
                     Sprite1_* spr1=Sprites;
-                    spr1 = &Sprites[IDBalle];
+                    spr1 = &Sprites[IDBalle+4];
                     while(i--)
                     {
                         spr1 = &Sprites[IDBalle+j];

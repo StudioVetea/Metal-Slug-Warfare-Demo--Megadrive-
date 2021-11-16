@@ -14,24 +14,40 @@
 ////////////////////////////////////////
 //                  Gestion PAD
 ////////////////////////////////////////
-void GestionPAD()
+void GestionPAD(Sprite1_ *spr)
 {
     // Phase scene en cours ? On quitte !
-    if (PhaseScene ||GameOver) return;
+    if (PhaseScene || GameOver || spr->LancerGrenade) return;
 
     u16 value=JOY_readJoypad(JOY_1);
 
-    // Init Joueur
-    Sprite1_* spr=Sprites;
+    // Pause en jeu ?!
+    if (!value) StatutJoy++;
+    if (StatutJoy>4) StatutJoy=4;
+    if (StatutJoy>2)
+    {
+        if (value & BUTTON_START && !PauseGame)
+        {
+            PauseGame=1;
+            StatutJoy=0;
+            SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
+            return;
+        }
 
-    // Lancer de grenade en cours ?! On quitte !
-    if (spr->LancerGrenade) return;
+        if (value & BUTTON_START && PauseGame)
+        {
+            PauseGame=0;
+            StatutJoy=0;
+            SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
+            return;
+        }
+    }
 
-	spr = &Sprites[0];
+    if (PauseGame) return;
+
+
+    // Init
     spr->Direction=0;
-    spr->DirectionTir=0;
-    //spr->Sprint=0;
-    //spr->Boost=FIX32(0);
 
     // Lancer grenade joueur & Saut
     if (!spr->Saut)
@@ -41,7 +57,7 @@ void GestionPAD()
         {
             spr->LancerGrenade=1;
             spr->TempoSprite=0;
-            u16 i=NombreBalle,j=0;
+            u16 i=4,j=0;
             Sprite1_* spr1=Sprites;
             spr1 = &Sprites[IDBalle];
             while(i--)
@@ -80,14 +96,11 @@ void GestionPAD()
         // Saut ?
         if (value & BUTTON_B)
         {
-            if (!spr->Saut && !spr->Feu)
-            {
-                //if (spr->MemSprint) spr->Boost=FIX32(2);
-                spr->Saut=1;
-                spr->Acceleration=FIX32(6);
-                spr->RefY=spr->CoordY;
-                spr->SensY=1;
-            }
+            //if (spr->MemSprint) spr->Boost=FIX32(2);
+            spr->Saut=1;
+            spr->Acceleration=FIX32(6);
+            spr->RefY=spr->CoordY;
+            spr->SensY=1;
         }
     }
     // Déplacement
@@ -163,14 +176,12 @@ void GestionPAD()
             // Tir au pistolet ?
             if (!spr->Couteau)
             {
-                u16 i=NombreBalle,j=0;
+                u16 i=4,j=0;
                 Sprite1_* spr1=Sprites;
                 spr1 = &Sprites[IDBalle];
 
                 // Tir en haut ?!
-                if (value & BUTTON_UP) spr->Direction=88;
-                if (value & BUTTON_RIGHT && spr->Direction==88) spr->Direction=56;
-                if (value & BUTTON_LEFT && spr->Direction==88) spr->Direction=54;
+                //if (value & BUTTON_UP) spr->Direction=88;
                 while(i--)
                 {
                     spr1 = &Sprites[IDBalle+j];
@@ -195,20 +206,24 @@ void GestionPAD()
                         spr1->Visible=1;
                         spr1->Vitesse=FIX32(8);
                         spr1->CoordY=spr->CoordY+spr->DeltaY+FIX32(48);
+                        // Tir en haut !
                         if (spr->Direction>40)
                         {
+                            //if (value & BUTTON_RIGHT && spr->Direction==88) spr->DirectionTir=56;
+                            //if (value & BUTTON_LEFT && spr->Direction==88) spr->DirectionTir=54;
                             spr1->OffsetY=FIX32(24);
                             spr1->Direction=8;
-                            spr1->OffsetX=FIX32(-24);
-                            if (spr->Direction==56) spr1->OffsetX=FIX32(-16);
-                            if (spr->Direction==54) spr1->OffsetX=FIX32(-32);
-                            spr1->CoordX=spr->CoordX+spr1->OffsetX;
+                            if (!spr->MemDir || spr->MemDir==6) spr1->OffsetX=FIX32(8);
+                            else spr1->OffsetX=FIX32(-8);
+                            //if (spr->DirectionTir==56) spr1->OffsetX=FIX32(-16);
+                            //if (spr->DirectionTir==54) spr1->OffsetX=FIX32(-32);
+                            spr1->CoordX=spr->CoordX;
                             break;
                         }
                         else
                         {
                             spr1->OffsetY=FIX32(-7);
-                            spr1->OffsetX=FIX32(0);
+                            spr1->OffsetX=FIX32(8);
                             spr1->Direction=spr->MemDir;
                             if (!spr->MemDir) spr1->Direction=6;
                             if (spr1->Direction==6)
@@ -217,7 +232,7 @@ void GestionPAD()
                                 else spr1->OffsetX=FIX32(-16);
                                 SPR_setAnim(spr->SpriteA,9);
                             }
-                           spr1->CoordX=spr->CoordX+spr1->OffsetX;
+                           spr1->CoordX=spr->CoordX;
                             if (spr->Direction==26 || spr->Direction==24 || spr->Direction==2) spr1->OffsetY=FIX32(-17);
                         }
                         break;

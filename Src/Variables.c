@@ -64,6 +64,8 @@ u16 ScanIA=0;
 u16 CivilVisible=0;
 u16 GoCivil=0;
 u16 NumeroZone=0;
+u16 PauseGame=0;
+u16 StatutJoy=0;
 
 fix32 Civil_CoordX=FIX32(0);
 fix32 Civil_CoordY=FIX32(0);

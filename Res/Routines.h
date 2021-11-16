@@ -11,7 +11,6 @@ extern void GestionNombreBallesShotgun();
 extern void GestionNombreGrenades();
 extern void GestionBallesIA(Sprite1_ *spr);
 extern void GestionVague();
-extern void CreateIA();
 extern void MarcheJoe(Sprite1_ *spr);
 extern void InitRoutine();
 extern void InitScene();
@@ -51,6 +50,6 @@ extern void MoveSprite(Sprite1_ *spr);
 extern void CollisionGroundMAP(Sprite1_ *spr);
 extern void DisplayMedals();
 extern void GestionBonus(Sprite1_ *spr);
-
+extern void CreateIANew(Sprite1_ *spr);
 
 #endif // _MAIN
