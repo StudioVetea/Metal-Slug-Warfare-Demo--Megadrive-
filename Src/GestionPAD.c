@@ -29,6 +29,7 @@ void GestionPAD(Sprite1_ *spr)
         if (value & BUTTON_START && !PauseGame)
         {
             PauseGame=1;
+            XGM_pausePlay();
             StatutJoy=0;
             SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
             return;
@@ -37,13 +38,17 @@ void GestionPAD(Sprite1_ *spr)
         if (value & BUTTON_START && PauseGame)
         {
             PauseGame=0;
+            XGM_resumePlay();
             StatutJoy=0;
+            TestPause=0;
+            VDP_fadeInAll(palette,4,FALSE);
             SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
             return;
         }
     }
 
     if (PauseGame) return;
+
 
 
     // Init

@@ -44,7 +44,7 @@ void StartMain()
 	InitScene();
 
 	// Fade In Scene.
-    VDP_fadeInAll(palette,15,TRUE);
+    VDP_fadeInAll(palette,15,FALSE);
 
     // Main Loop
     MainLoop();
@@ -59,10 +59,16 @@ void MainLoop()
 	while(TRUE)
 	{
 		// Scene principale
+		RandomSeed();
 		UpdateScene();
 
-        // update sprites
-        if (!PauseGame) SPR_update();
+		// Pause
+		if (PauseGame)
+		{
+			TestPause++;
+			if (TestPause<10) PAL_fadeOutAll(6,TRUE);
+			else PAL_interruptFade();
+		}
 
 		// Vblank
 		SYS_doVBlankProcess();

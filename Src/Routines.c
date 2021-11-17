@@ -95,6 +95,13 @@ void UpdateScene()
         // next sprite
         spr++;
     }
+
+    // update sprites
+    if (!PauseGame) SPR_update();
+
+    // set new camera position
+    setCameraPosition(PCamX, PCamY);
+
 }
 
 
@@ -105,7 +112,7 @@ void GestionBonus(Sprite1_ *spr)
 {
     Sprite1_* SpriteB=Sprites;
     SpriteB = &Sprites[IDBonus];
-    if (SpriteB->StandBy) return;
+    if (!SpriteB->Init) return;
 
     // Attribution des bonus ?!
     fix32 DistanceIA;
@@ -114,6 +121,7 @@ void GestionBonus(Sprite1_ *spr)
     {
         SpriteB->Visible=0;
         SpriteB->StandBy=1;
+        SpriteB->Init=0;
         SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
         GoCivil=1;
         switch(SpriteB->Transition)
@@ -230,7 +238,7 @@ void GestionCivil(Sprite1_ *spr)
     // Civil déjà présent ?!
     Sprite1_* SprCivil;
     SprCivil=&SpriteCivil;
-    if (CivilON)
+    if (CivilON && NombreCivil)
     {
         // Distance joueur / IA
         fix32 DistanceIA;
@@ -273,13 +281,12 @@ void GestionCivil(Sprite1_ *spr)
     // On manque de truc ?!
     if (spr->HitPoint<=2 || !NombreBalleShotgun || !NombreGrenade || Chance)
     {
-        RandomSeed();
+        //RandomSeed();
         if (getRandomU16(100)<(1+Difficulte))
         {
             CivilON=1;
             SprCivil->TempoSprite=0;
             Civil_CoordY=FIX32(140-48);
-            SND_startPlayPCM_XGM(SFX_GENERIC13, 2, SOUND_PCM_CH4);
 
             // Extreme MAP ?!
             if (spr->CoordX<=FIX32(400))
@@ -295,7 +302,7 @@ void GestionCivil(Sprite1_ *spr)
                 return;
             }
 
-            RandomSeed();
+            //RandomSeed();
             fix32 CX;
             if (getRandomU16(100)<50)
             {
@@ -324,24 +331,24 @@ void GestionVague()
     Sprite1_* spr2=Sprites;
 	spr2 = &Sprites[IDPlane];
     // Paramétrage difficulté / Médailles
-    TempoRegen=150-(Difficulte<<1);
+    TempoRegen=105-(Difficulte<<1)-(NumeroZone<<2);
 
 	switch(Difficulte)
 	{
     case 0:
-        NombreIASceneMax=2;
+        NombreIASceneMax=1;
         break;
     case 1:
         NombreIASceneMax=2;
         break;
     case 2:
-        NombreIASceneMax=3;
+        NombreIASceneMax=2;
         break;
     case 3:
         NombreIASceneMax=3;
         break;
     case 4:
-        NombreIASceneMax=4;
+        NombreIASceneMax=3;
         break;
     case 5:
         NombreIASceneMax=4;
@@ -352,7 +359,11 @@ void GestionVague()
 
 	}
 	if (Difficulte>6) NombreIASceneMax=5;
-	if (spr2->Phase) NombreIASceneMax=1;
+	if (spr2->Phase)
+	{
+	    if (!Difficulte) NombreIASceneMax=1;
+	    else NombreIASceneMax=2;
+	}
 }
 
 
@@ -362,77 +373,86 @@ void GestionVague()
 //////////////////////////////////////
 void CreateIANew(Sprite1_ *spr)
 {
+
     if (!spr->SpriteDYN || PhaseScene) return;
     if (NombreIAScene>=NombreIASceneMax) return;
     if (spr->SpriteA!=NULL) return;
-    u16 Choix=getRandomU16(100);
+
     spr->TempoRespawn++;
     if (spr->TempoRespawn>TempoRegen)
     {
         spr->TempoRespawn=0;
+        ChoixUnite++;
+        if (ChoixUnite>5) ChoixUnite=1;
         // Type ?
-        RandomSeed();
+        //RandomSeed();
         while (TRUE)
         {
             if (CivilON && !NombreCivil)
             {
                 spr->ID=6;
+                spr->SpriteA = SPR_addSpriteSafe(&Civil_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
                 NombreCivil=1;
                 break;
             }
-            if (Choix<60) {spr->ID=2;break;}
-            if (Choix<50) {spr->ID=3;break;}
-            if (Choix<35 && !GrenadierON)
+            switch (ChoixUnite)
             {
-                GrenadierON=1;
-                spr->ID=4;
-                break;
+                // Bouclier
+                case 1:
+                    spr->ID=2;
+                    spr->SpriteA = SPR_addSpriteSafe(&SoldatType1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                    spr->HitPointMax=4;
+                    break;
+                // Fantassin
+                case 2:
+                    spr->ID=3;
+                    spr->SpriteA = SPR_addSpriteSafe(&SoldatType2_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                    spr->HitPointMax=1;
+                    break;
+                // Grenadier
+                case 3:
+                    if (NumeroZone)
+                    {
+                        spr->ID=4;
+                        spr->SpriteA = SPR_addSpriteSafe(&SoldatType3_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                        spr->HitPointMax=1;
+                    }
+                    else
+                    {
+                        spr->ID=3;
+                        spr->SpriteA = SPR_addSpriteSafe(&SoldatType2_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                        spr->HitPointMax=1;
+                    }
+
+                    break;
+                // Parachutiste
+                case 5:
+                    spr->ID=5;
+                    spr->SpriteA = SPR_addSpriteSafe(&SoldatType4_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                    spr->HitPointMax=2;
+                    break;
             }
-            // Pas plus de 2 Paras maxi !
-            NombrePara++;
-            if (NombrePara>2)
-            {
-                NombrePara=2;
-                spr->ID=2;
-            }
-            else spr->ID=5;
-            break;
-        }
-
-        // Bouclier unité
-        switch (spr->ID)
-        {
-            case 2:
-            spr->SpriteA = SPR_addSpriteSafe(&SoldatType1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-            spr->HitPointMax=4;
-            break;
-
-            case 3:
-            spr->SpriteA = SPR_addSpriteSafe(&SoldatType2_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-            spr->HitPointMax=1;
-            break;
-
-            case 4:
-            spr->SpriteA = SPR_addSpriteSafe(&SoldatType3_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-            spr->HitPointMax=1;
-            break;
-
-            case 5:
-            spr->SpriteA = SPR_addSpriteSafe(&SoldatType4_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-            spr->HitPointMax=2;
-            break;
-
-            case 6:
-            spr->SpriteA = SPR_addSpriteSafe(&Civil_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
             break;
         }
 
         // Sécurité !
         if (spr->SpriteA==NULL)
         {
+            // Civil non crée ?!
+            if (spr->ID==6)
+            {
+                NombreCivil=0;
+                CivilON=0;
+                spr->TempoSprite=0;
+            }
             SPR_releaseSprite(spr->SpriteA);
             return;
         }
+
+        // On entend les civils hurler !!
+        if (spr->ID==6) SND_startPlayPCM_XGM(SFX_GENERIC13, 2, SOUND_PCM_CH4);
+
+        // Incrémentation unité scène.
         NombreIAScene++;
 
         CreateSpriteDYN(spr,spr->ID);
@@ -598,7 +618,7 @@ void GestionBombe(Sprite1_ *spr)
                 fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
                 if (DX_IA<=FIX32(32))
                 {
-                    RandomSeed();
+                    //RandomSeed();
                     if (getRandomU16(100)<50) SprIA->Direction=6;
                     else SprIA->Direction=4;
                     u16 VV=getRandomU16(5);
@@ -608,7 +628,7 @@ void GestionBombe(Sprite1_ *spr)
                     SprIA->TempoInScene=0;
                     SprIA->InScene=0;
                     SprIA->IntIA=10;
-                    RandomSeed();
+                    //RandomSeed();
                     u16 VV1=getRandomU16(8);
                     if (VV1<4) VV1=4;
                     SprIA->Acceleration=FIX32(VV1);
@@ -672,8 +692,8 @@ void GestionAttaqueHelico(Sprite1_ *spr)
         Sprite1_* SpriteREF=Sprites;
         SpriteREF = &Sprites[0];
         fix32 DX=abs(SpriteREF->CoordX-spr->CoordX);
-        if (!Bombardement  && DX<=FIX32(120)) spr->TempoAggro++;
-        if (spr->TempoAggro>(40-(Difficulte<<2)) && DX<=FIX32(120))
+        if (DX<=FIX32(120)) spr->TempoAggro++;
+        if (spr->TempoAggro>(90 - (Difficulte<<2)))
         {
             spr->TempoAggro=0;
             u16 i=4,j=0;
@@ -713,7 +733,7 @@ void GestionAttaqueHelico(Sprite1_ *spr)
 ///////////////////////////////
 void Result_Screen()
 {
-	VDP_init();
+	//VDP_init();
 	// set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
     memcpy(&palette[0], Palette_JoeEnd.data, 16 * 2);
@@ -817,11 +837,11 @@ void Result_Screen()
 	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
 	SPR_setAnim(spr->SpriteA,0);
 
-    // update sprites
-    SPR_update();
-    VDP_fadeInAll(palette,32,TRUE);
+    VDP_fadeInAll(palette,32,FALSE);
     // start music
     XGM_startPlay(Thunder_Music);
+    // update sprites
+    SPR_update();
 
     // Vblank
     SYS_doVBlankProcess();
@@ -1601,7 +1621,7 @@ void GestionGrenades(Sprite1_ *spr)
                         fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
                         if (DX_IA<=FIX32(48))
                         {
-                            RandomSeed();
+                            //RandomSeed();
                             if (getRandomU16(100)<50) SprIA->Direction=6;
                             else SprIA->Direction=4;
                             u16 VV=getRandomU16(5);
@@ -1611,7 +1631,7 @@ void GestionGrenades(Sprite1_ *spr)
                             SprIA->TempoInScene=0;
                             SprIA->InScene=0;
                             SprIA->IntIA=10;
-                            RandomSeed();
+                            //RandomSeed();
                             u16 VV1=getRandomU16(8);
                             if (VV1<4) VV1=4;
                             SprIA->Acceleration=FIX32(VV1);
@@ -2021,8 +2041,8 @@ void GestionBallesIA(Sprite1_ *spr)
                     else
                     {
                         spr1->Direction=16;
-                        if (!h) {spr1->OffsetX=FIX32(-20);SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);}
-                        else spr1->OffsetX=FIX32(2);
+                        if (!h) {spr1->OffsetX=FIX32(-38);SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);}
+                        else spr1->OffsetX=FIX32(-20);
                     }
                     if (h) break;
                     h++;
@@ -2098,19 +2118,17 @@ void GestionIA(Sprite1_  *spr, Sprite1_ *SpriteREF)
             // Libéré ?!
             if (spr->MortIA==20)
             {
-                if (spr->TempoSprite==2) SND_startPlayPCM_XGM(SFX_GENERIC13, 2, SOUND_PCM_CH4);
-                if  (spr->TempoSprite>80)
+                Sprite1_* SpriteB=Sprites;
+                SpriteB = &Sprites[IDBonus];
+                if (spr->TempoSprite==35)
                 {
-                    spr->MortIA=21;
-                    Sprite1_* SpriteB=Sprites;
-                    SpriteB = &Sprites[IDBonus];
-                    SpriteB->CoordX=spr->CoordX;
+                    SpriteB->CoordX=spr->CoordX+FIX32(8);
                     SpriteB->CoordY=spr->CoordY+FIX32(16);
                     SpriteB->Visible=1;
-                    SpriteB->StandBy=0;
                     SND_startPlayPCM_XGM(SFX_GENERIC15, 2, SOUND_PCM_CH4);
+                    SpriteB->StandBy=0;
                     // Attribution des bonus !
-                    RandomSeed();
+                    //RandomSeed();
                     while (TRUE)
                     {
                         if (getRandomU16(100)<15) {SpriteB->Transition=4;break;}
@@ -2120,6 +2138,12 @@ void GestionIA(Sprite1_  *spr, Sprite1_ *SpriteREF)
                         SpriteB->Transition=3;
                         break;
                     }
+                }
+                if (spr->TempoSprite==2) SND_startPlayPCM_XGM(SFX_GENERIC13, 2, SOUND_PCM_CH4);
+                if  (spr->TempoSprite>80)
+                {
+                    spr->MortIA=21;
+                    SpriteB->Init=1;
                     GoCivil=0;
                 }
             }
@@ -2467,8 +2491,8 @@ void updateCameraPosition(Sprite1_ *spr)
     if (npy_cam < 0) npy_cam = 0;
     else if (npy_cam > (MAP_HEIGHT - 224)) npy_cam = (MAP_HEIGHT - 224);
 
-    // set new camera position
-    setCameraPosition(npx_cam, npy_cam);
+    PCamX=npx_cam;
+    PCamY=npy_cam;
 }
 
 
@@ -2551,10 +2575,18 @@ void UpdateViewSprite(Sprite1_ *spr)
                 spr->TempoAggro=0;
                 SPR_releaseSprite(spr->SpriteA);
                 // Choix de l'hélico
-                RandomSeed();
+                //RandomSeed();
 
                 // Hélico léger
-                if (getRandomU16(100)<80-(Difficulte<<3) && VisCamX!=2)
+                u8 Choix=getRandomU16(100);
+                if (NumeroZone)
+                {
+                    if (Choix<50) Choix=1;
+                    else Choix=0;
+                    if (VisCamX==2) Choix=0;
+                }
+                else Choix=1;
+                if (Choix)
                 {
                     spr->AirUnit=10;
                     spr->SpeIA=0;
@@ -2572,6 +2604,7 @@ void UpdateViewSprite(Sprite1_ *spr)
             }
         }
 
+        // Trajectoire Hélico
         if (spr->AirUnit)
         {
             CurrentFrame=FIX32(70);
@@ -2589,13 +2622,25 @@ void UpdateViewSprite(Sprite1_ *spr)
             if (!spr->Phase)
             {
                 spr->Direction=6;
-                spr->Vitesse=FIX32(0.5);
-                if (DX>FIX32(200))
+                if (!NumeroZone)
                 {
-                    if (spr->CoordX<=SpriteREF->CoordX) {spr->Vitesse=FIX32(1.85);spr->Visible=0;}
-                    if (spr->CoordX>SpriteREF->CoordX) {spr->CoordX=SpriteREF->CoordX-FIX32(160);spr->Visible=1;}
+                    spr->Vitesse=FIX32(0.5);
+                    if (DX>FIX32(200))
+                    {
+                        if (spr->CoordX<=SpriteREF->CoordX) {spr->Vitesse=SpriteREF->Vitesse+FIX32(1.5);spr->Visible=0;}
+                        else {spr->Visible=1;}
+                    }
+                    else spr->Visible=1;
                 }
-                else spr->Visible=1;
+                else
+                {
+                    spr->Visible=1;
+                    if (!VisCamX) spr->CoordX=SpriteREF->CoordX-FIX32(200);
+                    if (VisCamX==2) spr->CoordX=FIX32(1600);
+                    if (VisCamX==1) spr->CoordX=FIX32(-96);
+                }
+
+
                 return;
             }
 
@@ -2738,7 +2783,7 @@ void UpdateViewSprite(Sprite1_ *spr)
 ///////////////////////////////
 void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
 {
-        RandomSeed();
+        //RandomSeed();
         spr->MemDir=0;
         spr->AirUnit=0;
         spr->StandBy=0;
@@ -2813,10 +2858,10 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
         {
             case 2:
 			spr->Vitesse=FIX32(0.8)+getRandomF32(FIX32(0.5))+spr->Boost;
-			RandomSeed();
+			//RandomSeed();
 			spr->CaC=0;
 			spr->Sniper=1;
-			RandomSeed();
+			//RandomSeed();
 			spr->DistanceAggro=getRandomF32(FIX32(48))+FIX32(48)+FIX32(40);
 			spr->Spotting=FIX32(0);
             spr->VitesseInit=FIX32(0);
@@ -2847,7 +2892,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             spr->DistanceAggro=FIX32(0);
             spr->Vitesse=FIX32(0.20)+getRandomF32(FIX32(0.15));
             spr->CoordY=FIX32(-64);
-            RandomSeed();
+            //RandomSeed();
             spr->VitesseInit=getRandomF32(FIX32(0.25))+FIX32(0.1);
             if (getRandomU16(100)<50) spr->CoordX=SpriteRef->CoordX+getRandomF32(FIX32(150));
             else  spr->CoordX=SpriteRef->CoordX-getRandomF32(FIX32(150));
@@ -2885,7 +2930,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
                     spr->CoordX=SpriteRef->CoordX-FIX32(320);
                     return;
                 }
-                RandomSeed();
+                //RandomSeed();
                 if (getRandomU16(100)<50)
                 {
                     spr->CoordX=SpriteRef->CoordX+FIX32(180);
@@ -2901,7 +2946,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
         }
         else if (VisCamX==1)
         {
-            RandomSeed();
+            //RandomSeed();
             if (getRandomU16(100)<50)
             {
                 spr->CoordX=FIX32(0);
@@ -3026,11 +3071,10 @@ void UpdateSprite(Sprite1_ *spr)
         // Phase d'hélicoptère.
         if (!spr->Phase)
         {
-            fix32 T1=FIX32(160);
-            u16 T2=450;
-            if (VisCamX==2)  {T1=FIX32(400);T2=50;}
-            if (DistAir<=FIX32(T1)) spr->TempoCouvert++;
-            if (spr->TempoCouvert>(T2-(Difficulte<<3)) && NombreIAScene<3)
+            u16 T2=300;
+            if (VisCamX==2) T2=50;
+            if (spr->Visible) spr->TempoCouvert++;
+            if (spr->TempoCouvert>(T2-(Difficulte<<3)) && NombreIAScene<3 && spr->Visible && !VisCamX)
             {
                 spr->Phase=1;
                 spr->TempoCouvert=0;

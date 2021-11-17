@@ -24,6 +24,9 @@ Sprite1_ SpriteBonus;
 //		Variables principales
 ///////////////////////////////////
 
+s16 PCamX=0;
+s16 PCamY=0;
+
 u16 TempoRegen=0;
 u16 IDPlane=0;
 u16 IDUnite=0;
@@ -31,7 +34,7 @@ u16 ApparitionMedailles=0;
 u16 IDBouclier=0;
 u16 IDBonus=0;
 u16 IDBalle=0;
-u16 Test=0;
+u16 TestPause=0;
 u16 palette[64];
 u16 NombreGrenade=0;
 u16 NombreBalleShotgun=0;
@@ -66,6 +69,7 @@ u16 GoCivil=0;
 u16 NumeroZone=0;
 u16 PauseGame=0;
 u16 StatutJoy=0;
+u16 ChoixUnite=0;
 
 fix32 Civil_CoordX=FIX32(0);
 fix32 Civil_CoordY=FIX32(0);

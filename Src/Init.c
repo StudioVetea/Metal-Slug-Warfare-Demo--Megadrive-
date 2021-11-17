@@ -20,7 +20,6 @@
 ////////////////////////////////////////
 void Clear_Variable()
 {
-    Test=0;
     ind=0;
     StatutJoy=0;
     PauseGame=0;
@@ -31,6 +30,7 @@ void Clear_Variable()
     NombreIASceneMax=0;
     CivilON=0;
     IDBonus=0;
+    TestPause=0;
     ApparitionMedailles=0;
     NombreGrenade=10;
     TempoRespawn=0;
@@ -190,7 +190,7 @@ void Clear_Variable()
 ///////////////////////////////
 void InitIntro()
 {
-	VDP_init();
+	//VDP_init();
 	// set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
 
@@ -203,7 +203,7 @@ void InitIntro()
 		TileMap *bgaIntro1 = Image_LogoSgdk.tilemap;
 		VDP_setTileMapEx(BG_B, bgaIntro1, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 0, 0, 0, 2, 40, 30, CPU);
 
-		VDP_fadeInAll(palette,24,TRUE);
+		VDP_fadeInAll(palette,24,FALSE);
 		while(TRUE)
 		{
 
@@ -217,7 +217,7 @@ void InitIntro()
 		MEM_free(bgaIntro1);
 		ind=0;
 		SPR_end();
-		VDP_init();
+		//VDP_init();
 	}
 
 	GameOver=0;
@@ -256,7 +256,7 @@ void InitIntro()
 	SPR_setVisibility(SprLvl->SpriteA,VISIBLE);
 	u16 Anim=0;
 	// Fade In Scene.
-    VDP_fadeInAll(palette,32,TRUE);
+    VDP_fadeInAll(palette,32,FALSE);
 	// start music
 	XGM_startPlay(Menu_Music);
     while(TRUE)
@@ -330,6 +330,8 @@ void InitScene()
 	spr->CoordY=FIX32(140-48);
      // BGB
     updateCameraPosition(spr);
+	// set new camera position
+    setCameraPosition(PCamX, PCamY);
     updateVDPScroll();
 	SYS_doVBlankProcess();
     // BGA
@@ -475,7 +477,7 @@ void InitScene()
 	spr->StandBy=0;
 	spr->TypeIA=0;
     spr->SpriteDYN=0;
-    spr->NombreUP=1;
+    spr->NombreUP=5;
     spr->Slot1=0;
     spr->HitPointMax=6;
     spr->HitPoint=spr->HitPointMax;
@@ -677,7 +679,7 @@ void InitScene()
 void InitMAP()
 {
 	// Fade In Scene.
-    VDP_fadeInAll(palette,15,TRUE);
+    //VDP_fadeInAll(palette,15,FALSE);
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
 	//NumeroZone=1;
@@ -689,7 +691,7 @@ void InitMAP()
 
 		case 0:
 		// load background tilesets in VRAM
-		VDP_init();
+		//VDP_init();
 		VDP_loadTileSet(bga_image.tileset, ind, DMA);
 		ind +=  bga_image.tileset->numTile;
 		bgBaseTileIndex[1] = ind;
@@ -703,7 +705,7 @@ void InitMAP()
 
 		case 1:
 		// load background tilesets in VRAM
-		VDP_init();
+		//VDP_init();
 		VDP_loadTileSet(bga_image_1.tileset, ind, DMA);
 		ind +=  bga_image_1.tileset->numTile;
 		bgBaseTileIndex[1] = ind;

@@ -192,6 +192,9 @@ extern Sprite1_ Marche_Joe;
 extern Sprite1_ SpriteCivil;
 extern Sprite1_ SpriteBonus;
 
+extern s16 PCamX;
+extern s16 PCamY;
+
 
 extern u16 NumeroZone;
 extern u16 GoCivil;
@@ -212,7 +215,7 @@ extern u16 IDUnite;
 extern u16 IDBouclier;
 extern u16 IDBalle;
 extern u16 NombreBalleShotgun;
-extern u16 Test;
+extern u16 TestPause;
 extern u16 palette[64];
 extern u16 ind;
 extern u16 numTile;
@@ -237,6 +240,7 @@ extern u16 Bombardement;
 extern u16 NombrePara;
 extern u16 PauseGame;
 extern u16 StatutJoy;
+extern u16 ChoixUnite;
 
 extern fix32 Civil_CoordX;
 extern fix32 Civil_CoordY;
