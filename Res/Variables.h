@@ -196,6 +196,7 @@ extern s16 PCamX;
 extern s16 PCamY;
 
 
+extern u16 IDCivil;
 extern u16 NumeroZone;
 extern u16 GoCivil;
 extern u16 IDBonus;

@@ -1,8 +1,6 @@
 #ifndef _ROUTINES_H
 #define _ROUTINES_H
 
-
-extern void GestionIANEW();
 extern void GestionBombe(Sprite1_ *spr);
 extern void GestionProjectiles();
 extern void GestionHelico();
@@ -25,7 +23,7 @@ extern void GestionGrenades(Sprite1_ *spr);
 extern void UpdateViewSprite(Sprite1_ *spr);
 extern void GestionCouteau(Sprite1_ *spr);
 extern void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF);
-extern void GestionIA(Sprite1_  *spr, Sprite1_ *SpriteREF);
+extern void GestionIA(Sprite1_  *spr);
 extern void TimerChanged(Sprite* sprite);
 extern void TimerChangedIA(Sprite* sprite);
 extern void TimerChangedIA1(Sprite* sprite);

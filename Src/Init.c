@@ -394,7 +394,7 @@ void InitScene()
 
 	// Init Data
 	NombreBalle=8;
-	NombreBouclier=6;
+	NombreBouclier=2;
 	NombreLettre=6;
 	NombreIA=5;
 	NombreDigitScore=5;
@@ -666,7 +666,7 @@ void InitScene()
 	}
 	NombreIASceneMax=1;
 	NombreIAScene=0;
-    MaxObjet=NombreLettre+NombreIA+NombreBalle+NombreDigitScore+5+1;
+    MaxObjet=NombreLettre+NombreIA+NombreBalle+NombreDigitScore+NombreBouclier;
 	GestionNombreBallesShotgun();
 
 	SPR_update();

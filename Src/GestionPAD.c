@@ -256,5 +256,4 @@ void GestionPAD(Sprite1_ *spr)
         if (spr->MemDir==24 || spr->MemDir==84) spr->MemDir=4;
         if (spr->MemDir==26 || spr->MemDir==86) spr->MemDir=6;
     }
-
 }

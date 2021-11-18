@@ -22,6 +22,10 @@ void UpdateScene()
 	Sprite1_* spr=Sprites;
 	spr = &Sprites[0];
 
+	// Avec le ShotGun, le joueur ira moins vite.
+	if (spr->Slot1) spr->VitesseD=FIX32(0.2);
+	else  spr->VitesseD=FIX32(0);
+
     // Gestion PAD
     GestionPAD(spr);
 
@@ -30,10 +34,6 @@ void UpdateScene()
 
     // Gestion Caméra
     updateCameraPosition(spr);
-
-	// Avec le ShotGun, le joueur ira moins vite.
-	if (spr->Slot1) spr->VitesseD=FIX32(0.2);
-	else  spr->VitesseD=FIX32(0);
 
 	// Gestion Bonus
 	GestionBonus(spr);
@@ -64,8 +64,6 @@ void UpdateScene()
 	// Medailles ?!
     if (ApparitionMedailles) DisplayMedals();
 
-    // Gestion IA
-    GestionIANEW();
 
     // Gestion Balles
     GestionProjectiles();
@@ -79,6 +77,9 @@ void UpdateScene()
 
         // Création vague IA.
         CreateIANew(spr);
+
+        // Gestion IA
+        GestionIA(spr);
 
         // Sprite Clignote ?!
         Cligno_Sprite(spr);
@@ -101,6 +102,7 @@ void UpdateScene()
 
     // set new camera position
     setCameraPosition(PCamX, PCamY);
+
 
 }
 
@@ -156,30 +158,6 @@ void GestionBonus(Sprite1_ *spr)
     }
 
 
-}
-
-
-//////////////////////////////////////
-//       Gestion IA New
-//////////////////////////////////////
-void GestionIANEW()
-{
-    Sprite1_* spr1=Sprites;
-    spr1 = &Sprites[IDUnite];
-
-    // ID Ref joueur
-    Sprite1_* SpriteREF=Sprites;
-    SpriteREF=&Sprites[0];
-
-    GestionIA(spr1,SpriteREF);
-    spr1++;
-    GestionIA(spr1,SpriteREF);
-    spr1++;
-    GestionIA(spr1,SpriteREF);
-    spr1++;
-    GestionIA(spr1,SpriteREF);
-    spr1++;
-    GestionIA(spr1,SpriteREF);
 }
 
 
@@ -298,7 +276,7 @@ void GestionCivil(Sprite1_ *spr)
             if (spr->CoordX>=FIX32(1800))
             {
                 Civil_CoordX=spr->CoordX-getRandomF32(FIX32(1300))+FIX32(320);
-                if (Civil_CoordX<FIX32(0)) Civil_CoordX=FIX32(48);
+                if (Civil_CoordX<FIX32(0)) Civil_CoordX=FIX32(100);
                 return;
             }
 
@@ -314,7 +292,7 @@ void GestionCivil(Sprite1_ *spr)
             {
                 CX=getRandomF32(FIX32(160))+FIX32(320);
                 Civil_CoordX=spr->CoordX-CX;
-                if (Civil_CoordX<FIX32(0)) Civil_CoordX=FIX32(48);
+                if (Civil_CoordX<FIX32(0)) Civil_CoordX=FIX32(100);
             }
         }
     }
@@ -331,7 +309,7 @@ void GestionVague()
     Sprite1_* spr2=Sprites;
 	spr2 = &Sprites[IDPlane];
     // Paramétrage difficulté / Médailles
-    TempoRegen=105-(Difficulte<<1)-(NumeroZone<<2);
+    TempoRegen=100-(Difficulte<<1)-(NumeroZone<<2);
 
 	switch(Difficulte)
 	{
@@ -359,11 +337,7 @@ void GestionVague()
 
 	}
 	if (Difficulte>6) NombreIASceneMax=5;
-	if (spr2->Phase)
-	{
-	    if (!Difficulte) NombreIASceneMax=1;
-	    else NombreIASceneMax=2;
-	}
+	if (spr2->Phase) NombreIASceneMax=1;
 }
 
 
@@ -413,6 +387,15 @@ void CreateIANew(Sprite1_ *spr)
                 case 3:
                     if (NumeroZone)
                     {
+                        Sprite1_* spr2=Sprites;
+                        spr2=&Sprites[IDPlane];
+                        if (spr2->Phase)
+                        {
+                            spr->ID=3;
+                            spr->SpriteA = SPR_addSpriteSafe(&SoldatType2_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                            spr->HitPointMax=1;
+                            break;
+                        }
                         spr->ID=4;
                         spr->SpriteA = SPR_addSpriteSafe(&SoldatType3_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
                         spr->HitPointMax=1;
@@ -641,7 +624,7 @@ void GestionBombe(Sprite1_ *spr)
                         // Bouclier !
                         Sprite1_* SprBou=Sprites;
                         SprBou=&Sprites[IDBouclier];
-                        u8 NrBou=6;
+                        u8 NrBou=2;
                         while(NrBou--)
                         {
                             if (!SprBou->Visible)
@@ -1161,7 +1144,7 @@ void GestionCouteau(Sprite1_ *spr)
                                 // Bouclier !
                                 Sprite1_* SprBou=Sprites;
                                 SprBou=&Sprites[IDBouclier];
-                                u8 NrBou=6;
+                                u8 NrBou=2;
                                 while(NrBou--)
                                 {
                                     if (!SprBou->Visible)
@@ -1206,7 +1189,7 @@ void GestionCouteau(Sprite1_ *spr)
                                 // Bouclier !
                                 Sprite1_* SprBou=Sprites;
                                 SprBou=&Sprites[IDBouclier];
-                                u8 NrBou=6;
+                                u8 NrBou=2;
                                 while(NrBou--)
                                 {
                                     if (!SprBou->Visible)
@@ -1563,6 +1546,7 @@ void GestionGrenades(Sprite1_ *spr)
                 if (DX_IA<=FIX32(16))
                 {
                     spr->Hit=1;
+                    spr->Direction=0;
                     spr->TempoSprite=0;
                     spr->Saut=0;
                     break;
@@ -1575,7 +1559,7 @@ void GestionGrenades(Sprite1_ *spr)
     // Explosion ?!
     if (spr->Hit)
         {
-            if (spr->TempoSprite==14)
+            if (spr->TempoSprite==10)
             {
                 // Massacre au sol !
                 // Marco ?!
@@ -1652,7 +1636,7 @@ void GestionGrenades(Sprite1_ *spr)
                                 // Bouclier !
                                 Sprite1_* SprBou=Sprites;
                                 SprBou=&Sprites[IDBouclier];
-                                u8 NrBou=6;
+                                u8 NrBou=2;
                                 while(NrBou--)
                                 {
                                     if (!SprBou->Visible)
@@ -1679,11 +1663,11 @@ void GestionGrenades(Sprite1_ *spr)
         }
 
     // Physique
-    if (spr->Saut)
-    {
-        MoveSprite(spr);
-        Saut_Sprite(spr);
-    }
+    //if (spr->Saut)
+    //{
+        //MoveSprite(spr);
+        //Saut_Sprite(spr);
+    //}
 
     return;
 }
@@ -1810,7 +1794,7 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                             // Bouclier !
                             Sprite1_* SprBou=Sprites;
                             SprBou=&Sprites[IDBouclier];
-                            u8 NrBou=4;
+                            u8 NrBou=2;
                             while(NrBou--)
                             {
                                 if (!SprBou->Visible)
@@ -2103,10 +2087,13 @@ void GestionBallesIA(Sprite1_ *spr)
 ///////////////////////////////
 //                  Gestion IA
 ///////////////////////////////
-void GestionIA(Sprite1_  *spr, Sprite1_ *SpriteREF)
+void GestionIA(Sprite1_  *spr)
 {
     // On vire le joueur et l'airplane.
-    if (spr->StandBy) return;
+    if (spr->StandBy || !spr->SpriteDYN) return;
+
+	Sprite1_* SpriteREF=Sprites;
+	SpriteREF=&Sprites[0];
 
     // Mort IA ?!
     if (spr->MortIA)
@@ -2127,6 +2114,7 @@ void GestionIA(Sprite1_  *spr, Sprite1_ *SpriteREF)
                     SpriteB->Visible=1;
                     SND_startPlayPCM_XGM(SFX_GENERIC15, 2, SOUND_PCM_CH4);
                     SpriteB->StandBy=0;
+                    UpdateSprite(SpriteB);
                     // Attribution des bonus !
                     //RandomSeed();
                     while (TRUE)
@@ -2216,6 +2204,8 @@ void GestionIA(Sprite1_  *spr, Sprite1_ *SpriteREF)
         if (!spr->Direction) spr->Direction=6;
         return;
     }
+
+    if (spr->ID==6) return;
 
 
     // Les unités Snipers tirent quand elles sont en position
@@ -2635,8 +2625,8 @@ void UpdateViewSprite(Sprite1_ *spr)
                 else
                 {
                     spr->Visible=1;
-                    if (!VisCamX) spr->CoordX=SpriteREF->CoordX-FIX32(200);
-                    if (VisCamX==2) spr->CoordX=FIX32(1600);
+                    if (!VisCamX) spr->CoordX=SpriteREF->CoordX-FIX32(220);
+                    if (VisCamX==2) spr->CoordX=FIX32(1500);
                     if (VisCamX==1) spr->CoordX=FIX32(-96);
                 }
 
@@ -2879,10 +2869,10 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             case 4:
 			spr->CaC=0;
 			spr->Sniper=0;
-             spr->DistanceAggro=FIX32(0);
-			 spr->Spotting=FIX32(0);
-             spr->Vitesse=FIX32(1)+getRandomF32(FIX32(0.5));
-             spr->VitesseInit=FIX32(0);
+            spr->DistanceAggro=FIX32(0);
+            spr->Spotting=FIX32(0);
+            spr->Vitesse=FIX32(1)+getRandomF32(FIX32(0.5));
+            spr->VitesseInit=FIX32(0);
             break;
 
             case 5:
@@ -2915,7 +2905,6 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
         {
             spr->CoordX=Civil_CoordX;
             spr->Visible=0;
-            CollisionGroundMAP(spr);
             return;
         }
 
@@ -2978,7 +2967,10 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
 ////////////////////////////////////////
 void DisplaySprite(Sprite1_ *spr)
 {
-    if (spr->SpriteA == NULL )     return;
+
+    // Sécurité
+    if (spr->SpriteA == NULL )  return;
+
     //Phase scene en cours ?!
     if (PhaseScene)
     {
@@ -2999,12 +2991,10 @@ void DisplaySprite(Sprite1_ *spr)
     s16 x = fix32ToInt(spr->CoordX-spr->OffsetX) - CamPosX;
     s16 y = fix32ToInt(spr->CoordY+spr->DeltaY-spr->OffsetY) - CamPosY;
 
-    if (spr->SpriteA != NULL )
-    {
-        if (spr->Visible==1) SPR_setVisibility(spr->SpriteA,VISIBLE);
-        else SPR_setVisibility(spr->SpriteA,HIDDEN);
-    }
+    if (spr->Visible==1) SPR_setVisibility(spr->SpriteA,VISIBLE);
+    else SPR_setVisibility(spr->SpriteA,HIDDEN);
 
+    // Traitement priorité hélico
     if (spr->AirUnit)
     {
         if (!spr->Phase) {SPR_setAlwaysOnTop(spr->SpriteA,FALSE);SPR_setPriorityAttribut(spr->SpriteA, FALSE);}
@@ -3023,7 +3013,7 @@ void UpdateSprite(Sprite1_ *spr)
 
     if (PhaseScene && spr->ID!=10 && spr->ID!=11) return;
     if (spr->StandBy) return;
-    if (spr->ID==66 || spr->ID==88) return;
+    //if (spr->ID==66 || spr->ID==88) return;
     if (spr->SpriteA==NULL) return;
 
     // Bouclier qui vole ?
@@ -3071,7 +3061,7 @@ void UpdateSprite(Sprite1_ *spr)
         // Phase d'hélicoptère.
         if (!spr->Phase)
         {
-            u16 T2=300;
+            u16 T2=500;
             if (VisCamX==2) T2=50;
             if (spr->Visible) spr->TempoCouvert++;
             if (spr->TempoCouvert>(T2-(Difficulte<<3)) && NombreIAScene<3 && spr->Visible && !VisCamX)
@@ -3262,6 +3252,7 @@ void Saut_Sprite(Sprite1_ *spr)
             }
             else
             {
+                spr->Direction=0;
                 spr->Hit=1;
                 spr->TempoSprite=0;
                 TremblementON=1;

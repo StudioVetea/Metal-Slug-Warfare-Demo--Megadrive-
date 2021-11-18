@@ -27,6 +27,7 @@ Sprite1_ SpriteBonus;
 s16 PCamX=0;
 s16 PCamY=0;
 
+u16 IDCivil=0;
 u16 TempoRegen=0;
 u16 IDPlane=0;
 u16 IDUnite=0;
