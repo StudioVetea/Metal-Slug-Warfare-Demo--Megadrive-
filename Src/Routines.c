@@ -16,10 +16,10 @@
 ////////////////////////////////////////
 void UpdateScene()
 {
+	u16 i;
+	Sprite1_* spr;
 
-	//Déclaration pointeur tableau
-	u16 i=MaxObjet;
-	Sprite1_* spr=Sprites;
+	// sprite joueur
 	spr = &Sprites[0];
 
 	// Avec le ShotGun, le joueur ira moins vite.
@@ -31,9 +31,6 @@ void UpdateScene()
 
     // Pause en jeu ?
     if (PauseGame) return;
-
-    // Gestion Caméra
-    updateCameraPosition(spr);
 
 	// Gestion Bonus
 	GestionBonus(spr);
@@ -53,9 +50,6 @@ void UpdateScene()
     // Couteau joueur ?!
 	GestionCouteau(spr);
 
-	// Gestion de la marche de Joe
-    MarcheJoe(spr);
-
     // Gestion hélico
     Sprite1_* spr2=Sprites;
     spr2=&Sprites[IDPlane];
@@ -64,9 +58,42 @@ void UpdateScene()
 	// Medailles ?!
     if (ApparitionMedailles) DisplayMedals();
 
-
     // Gestion Balles
     GestionProjectiles();
+
+    // Routine de visibilité globale des sprites
+    if (!PhaseScene) UpdateViewSprite(spr);
+    else Phase_Scene(PhaseScene,spr);
+
+    // Création vague IA.
+    CreateIANew(spr);
+
+    // Gestion IA
+    GestionIA(spr);
+
+    // Sprite Clignote ?!
+    Cligno_Sprite(spr);
+
+    // Animation Sprite
+    AnimationSprite(spr);
+
+    // Déplacement (important, c'est ici qu'on met à jour la position du joueur)
+    UpdateSprite(spr);
+
+ 	// Gestion de la marche de Joe (en raccord avec la nouvelle position du joueur)
+    MarcheJoe(spr);
+
+    // Gestion Caméra (on met à jour la position de la caméra en fonction de la position du joueur)
+    updateCameraPosition(spr);
+    // set new camera position (c'est là que CamPosX et CamPosY sont mis à jour, donc important de le faire maintenant !)
+    setCameraPosition(PCamX, PCamY);
+
+    // Affichage Sprite (on peut maintenant afficher le sprite en fonction de la position de la caméra)
+    DisplaySprite(spr);
+
+	// maintenant on peut gérer les autres sprites
+	spr = &Sprites[1];
+	i = MaxObjet - 1;
 
     // Boucle Principale
 	while (i--)
@@ -99,11 +126,6 @@ void UpdateScene()
 
     // update sprites
     if (!PauseGame) SPR_update();
-
-    // set new camera position
-    setCameraPosition(PCamX, PCamY);
-
-
 }
 
 
@@ -2401,8 +2423,10 @@ fix32 getRandomF32(fix32 range)
 void updateVDPScroll()
 {
     VDP_setHorizontalScroll(BG_A,(-CamPosX)>>1);
-    VDP_setHorizontalScroll(BG_B, -CamPosX);
     VDP_setVerticalScroll(BG_A, CamPosY>>1);
+
+    // BG_B est déjà mis à jour via MAP_scrollTo(..) mais pourquoi pas..
+    VDP_setHorizontalScroll(BG_B, -CamPosX);
     VDP_setVerticalScroll(BG_B, CamPosY);
 
     // Tremblement écran !!
@@ -2410,14 +2434,14 @@ void updateVDPScroll()
     {
         TempoTremblement++;
         // Fin tremblement
-        if (TempoTremblement==TempoMax)
+        if (TempoTremblement>=TempoMax)
         {
             TempoTremblement=0;
             TremblementON=0;
             VDP_setVerticalScroll(BG_B, CamPosY);
             return;
         }
-        if (TempoTremblement % 2)  VDP_setVerticalScroll(BG_B,CamPosY -3);
+        if (TempoTremblement & 1)  VDP_setVerticalScroll(BG_B,CamPosY -3);
         else VDP_setVerticalScroll(BG_B,CamPosY+3);
     }
 }
