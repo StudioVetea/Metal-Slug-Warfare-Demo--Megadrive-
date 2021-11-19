@@ -3,3 +3,4 @@ Out/
 Res/gfx.h
 Res/Sound.h
 Res/Sprites.h
+*.layout

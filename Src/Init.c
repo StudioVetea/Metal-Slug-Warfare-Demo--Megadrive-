@@ -58,7 +58,7 @@ void Clear_Variable()
 	ScanIA=0;
 
 	u16 i=60;
-	Sprite1_* spr=Sprites;
+	Sprite1_* spr;
 	spr = &Sprites[0];
 	while(i--)
     {
@@ -682,7 +682,7 @@ void InitMAP()
     //VDP_fadeInAll(palette,15,FALSE);
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
-	//NumeroZone=1;
+	NumeroZone=1;
 	ind = TILE_USERINDEX;
 	bgBaseTileIndex[0] = ind;
 

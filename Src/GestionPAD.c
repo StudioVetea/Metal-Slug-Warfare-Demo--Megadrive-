@@ -63,7 +63,7 @@ void GestionPAD(Sprite1_ *spr)
             spr->LancerGrenade=1;
             spr->TempoSprite=0;
             u16 i=4,j=0;
-            Sprite1_* spr1=Sprites;
+            Sprite1_* spr1;
             spr1 = &Sprites[IDBalle];
             while(i--)
             {
@@ -145,7 +145,7 @@ void GestionPAD(Sprite1_ *spr)
             if (!spr->Saut)
             {
                 u16 NbrIA=NombreIA;
-                Sprite1_* SprIA=Sprites;
+                Sprite1_* SprIA;
                 SprIA=&Sprites[IDUnite];
                 while(NbrIA--)
                 {
@@ -182,7 +182,7 @@ void GestionPAD(Sprite1_ *spr)
             if (!spr->Couteau)
             {
                 u16 i=4,j=0;
-                Sprite1_* spr1=Sprites;
+                Sprite1_* spr1;
                 spr1 = &Sprites[IDBalle];
 
                 // Tir en haut ?!
