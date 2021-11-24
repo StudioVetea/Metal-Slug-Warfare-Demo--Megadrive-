@@ -11,10 +11,13 @@ PALETTE Palette_JoeEnd "Sprites/Joe_End_48x48.png"
 PALETTE Palette_Score "Sprites/Score_Sprite.png"
 PALETTE Palette_Warfare "Gfx/Warfare.png"
 
+
 IMAGE bga_Ecran_MS "Gfx/Ecran_MS_BGA_old.png" NONE
 IMAGE bga_image "Map/BG_A.png" BEST
 IMAGE bga_image_1 "Map/BG_A1.png" BEST
 IMAGE Image_LogoSgdk "Gfx/SgdkLogo.png" NONE
+IMAGE Town_ "Sprites/Town_160x128.png" BEST ALL
+IMAGE Jungle_ "Sprites/Jungle_160x128.png" BEST ALL
 
 TILESET bgb_tileset "Map/BG_B.png" BEST ALL
 TILESET bgb_tileset_1 "Map/BG_B1.png" BEST ALL

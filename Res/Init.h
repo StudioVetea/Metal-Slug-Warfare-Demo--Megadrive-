@@ -6,5 +6,6 @@ extern void InitScene();
 extern void InitMAP();
 extern void InitIntro();
 extern void Clear_Variable();
+extern void InitEcranZone();
 
 #endif // _MAIN

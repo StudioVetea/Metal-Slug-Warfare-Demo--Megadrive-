@@ -4,9 +4,10 @@ SPRITE Airplane_Sprite "Sprites/Airplane_96x64.png" 12 8 FAST 6
 SPRITE AirplaneLight_Sprite "Sprites/Airplane_1_64x96.png" 8 12 FAST 6
 SPRITE AirplaneMedium_Sprite "Sprites/Airplane_2_64x96.png" 8 12 FAST 6
 SPRITE SoldatType1_Sprite "Sprites/Soldat_Type1.png" 6 6 FAST 10
-SPRITE SoldatType2_Sprite "Sprites/Soldat_Type2.png" 6 6 FAST 10
-SPRITE SoldatType3_Sprite "Sprites/Soldat_Type3.png" 6 6 FAST 10
-SPRITE SoldatType4_Sprite "Sprites/Soldat_Type4.png" 6 12 FAST 9
+SPRITE SoldatType2_Sprite "Sprites/Soldat_Type2.png" 6 6 FAST 9
+SPRITE SoldatType3_Sprite "Sprites/Soldat_Type3.png" 6 6 FAST 8
+SPRITE SoldatType4_Sprite "Sprites/Soldat_Type4.png" 6 12 FAST 7
+SPRITE SoldatType5_Sprite "Sprites/Soldat_Type5.png" 6 6 FAST 6
 SPRITE Balle_Sprite "Sprites/Balle_32x32.png" 4 4 FAST 4
 SPRITE Bouclier_Sprite "Sprites/Bouclier_32x32.png" 4 4 FAST 2
 SPRITE Medailles_Sprite "Sprites/Medailles_32x32.png" 4 4 FAST 10

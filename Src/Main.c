@@ -37,6 +37,9 @@ void StartMain()
 	// Ecran intro
 	InitIntro();
 
+	// Ecran sélection Zone
+	InitEcranZone();
+
 	// Init MAP
 	InitMAP();
 

@@ -62,12 +62,11 @@ void GestionPAD(Sprite1_ *spr)
         {
             spr->LancerGrenade=1;
             spr->TempoSprite=0;
-            u16 i=4,j=0;
-            Sprite1_* spr1;
-            spr1 = &Sprites[IDBalle];
+            u16 i=4;
+            Sprite1_* spr1 = &Sprites[IDBalle];
             while(i--)
             {
-                spr1 = &Sprites[IDBalle+j];
+                //spr1 = &Sprites[IDBalle+j];
                 if (spr1->StandBy)
                 {
                     NombreGrenade--;
@@ -93,7 +92,7 @@ void GestionPAD(Sprite1_ *spr)
                     spr1->SensY=1;
                     break;
                 }
-                j++;
+                spr1++;
             }
             return;
         }
@@ -145,11 +144,10 @@ void GestionPAD(Sprite1_ *spr)
             if (!spr->Saut)
             {
                 u16 NbrIA=NombreIA;
-                Sprite1_* SprIA;
-                SprIA=&Sprites[IDUnite];
+                Sprite1_* SprIA=&Sprites[IDUnite];
                 while(NbrIA--)
                 {
-                    if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA && SprIA->ID!=5)
+                    if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA && SprIA->ID!=5 && SprIA->ID!=7)
                     {
                         if (spr->MemDir==6 || !spr->MemDir || spr->Direction==6)
                         {
@@ -181,15 +179,14 @@ void GestionPAD(Sprite1_ *spr)
             // Tir au pistolet ?
             if (!spr->Couteau)
             {
-                u16 i=4,j=0;
-                Sprite1_* spr1;
-                spr1 = &Sprites[IDBalle];
+                u16 i=4;
+                Sprite1_* spr1 = &Sprites[IDBalle];
 
                 // Tir en haut ?!
                 //if (value & BUTTON_UP) spr->Direction=88;
                 while(i--)
                 {
-                    spr1 = &Sprites[IDBalle+j];
+                    //spr1 = &Sprites[IDBalle];
                     if (spr1->StandBy)
                     {
                         if (spr->Slot1)
@@ -242,7 +239,7 @@ void GestionPAD(Sprite1_ *spr)
                         }
                         break;
                     }
-                    j++;
+                    spr1++;
                 }
             }
         }

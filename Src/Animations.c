@@ -20,8 +20,7 @@ void AnimationSprite(Sprite1_ *spr)
     if  (!spr->Visible  || spr->SpriteA==NULL  || spr->StandBy ) return;
 
     // ID Airplane
-    Sprite1_* SpriteREF=Sprites;
-    SpriteREF = &Sprites[0];
+    Sprite1_* SpriteREF = &Sprites[0];
     u16 AnimArme=0;
 
     // Tank Metal Slug du début de scène ?
@@ -65,6 +64,8 @@ void AnimationSprite(Sprite1_ *spr)
                 SPR_setAnim(spr->SpriteA,11);
                 return;
             }
+            // Balles sniper ?
+            if (spr->Sniper) {SPR_setAnim(spr->SpriteA,1);return;}
             if (spr->IDList==1) SPR_setAnim(spr->SpriteA,1);
             else SPR_setAnim(spr->SpriteA,8);
 		return;
@@ -206,7 +207,14 @@ void AnimationSprite(Sprite1_ *spr)
                     {
                         SPR_setAnim(spr->SpriteA,3);
                     }
-                    else SPR_setAnim(spr->SpriteA,0);
+                    //else SPR_setAnim(spr->SpriteA,0);
+                    else
+                    {
+                        if (spr->HitPoint>=15+(Difficulte<<1)) SPR_setAnim(spr->SpriteA,0);
+                        else if  (spr->HitPoint<15+(Difficulte<<1) && spr->HitPoint>=10+(Difficulte<<1)) SPR_setAnim(spr->SpriteA,6);
+                        else if  (spr->HitPoint<10+(Difficulte<<1) && spr->HitPoint>=5+(Difficulte<<1)) SPR_setAnim(spr->SpriteA,7);
+                        else SPR_setAnim(spr->SpriteA,8);
+                    }
 
                     break;
 
@@ -226,7 +234,14 @@ void AnimationSprite(Sprite1_ *spr)
                     {
                         SPR_setAnim(spr->SpriteA,3);
                     }
-                    else SPR_setAnim(spr->SpriteA,0);
+                    //else SPR_setAnim(spr->SpriteA,0);
+                    else
+                    {
+                        if (spr->HitPoint>=15+(Difficulte<<1)) SPR_setAnim(spr->SpriteA,0);
+                        else if  (spr->HitPoint<15+(Difficulte<<1) && spr->HitPoint>=10+(Difficulte<<1)) SPR_setAnim(spr->SpriteA,6);
+                        else if  (spr->HitPoint<10+(Difficulte<<1) && spr->HitPoint>=5+(Difficulte<<1)) SPR_setAnim(spr->SpriteA,7);
+                        else SPR_setAnim(spr->SpriteA,8);
+                    }
                     break;
                 }
                 return;
@@ -638,12 +653,11 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=4,j=0;
-                    Sprite1_* spr1=Sprites;
-                    spr1 = &Sprites[IDBalle+4];
+                    u16 i=4;
+                    Sprite1_*  spr1 = &Sprites[IDBalle+4];
                     while(i--)
                     {
-                        spr1 = &Sprites[IDBalle+j];
+                        //spr1 = &Sprites[IDBalle+j];
                         if (spr1->StandBy)
                         {
                             spr1->StandBy=0;
@@ -667,7 +681,7 @@ void AnimationSprite(Sprite1_ *spr)
                             spr1->SensY=1;
                             break;
                         }
-                        j++;
+                        spr1++;
                     }
                 }
             }
@@ -694,12 +708,11 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=4,j=0;
-                    Sprite1_* spr1=Sprites;
-                    spr1 = &Sprites[IDBalle+4];
+                    u16 i=4;
+                    Sprite1_* spr1 = &Sprites[IDBalle+4];
                     while(i--)
                     {
-                        spr1 = &Sprites[IDBalle+j];
+                        //spr1 = &Sprites[IDBalle+j];
                         if (spr1->StandBy)
                         {
                             spr1->StandBy=0;
@@ -723,7 +736,7 @@ void AnimationSprite(Sprite1_ *spr)
                             spr1->SensY=1;
                             break;
                         }
-                        j++;
+                        spr1++;
                     }
                 }
             }
@@ -807,6 +820,51 @@ void AnimationSprite(Sprite1_ *spr)
         }
         SPR_setAnim(spr->SpriteA,0);
         return;
+        break;
+
+    // Sniper Zone 2
+    case 7:
+
+        if (spr->MortIA)
+        {
+            SPR_setHFlip(spr->SpriteA,FALSE);
+            spr->OffsetX=FIX32(0);
+            SPR_setAnim(spr->SpriteA,7);
+            SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
+            return;
+        }
+        // Les civils se dévoilent
+        if (spr->Reach==1)
+        {
+            spr->TempoSprite++;
+            SPR_setAnim(spr->SpriteA,0);
+            if (spr->TempoSprite>25)
+            {
+                spr->TempoSprite=0;
+                spr->Reach=2;
+            }
+        }
+        else if (spr->Reach==2)
+        {
+            switch (spr->Animation)
+            {
+            case 1:
+                spr->OffsetX=FIX32(16);
+                break;
+
+            case 2:
+                spr->OffsetX=FIX32(-11);
+                break;
+
+            case 3:
+                spr->OffsetX=FIX32(0);
+                break;
+            }
+            if (spr->TempoRafale>15 && spr->TempoRafale<25) SPR_setAnim(spr->SpriteA,spr->Animation+3);
+            else SPR_setAnim(spr->SpriteA,spr->Animation);
+            return;
+        }
+
         break;
 
     // Bonus !
@@ -1311,8 +1369,7 @@ void TimerChangedIA1(Sprite* sprite)
 /////////////////////////////////////////
 void TimerChanged(Sprite* sprite)
 {
-    Sprite1_* spr;
-	spr = &Sprites[0];
+    Sprite1_* spr = &Sprites[0];
 
 	// Lancer Grenade ?!
 	if (spr->LancerGrenade)

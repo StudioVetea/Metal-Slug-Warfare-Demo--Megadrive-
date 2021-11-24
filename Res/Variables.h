@@ -44,6 +44,7 @@
     4 : Grenadier ( Court tout en lancant des grenades )
     5 : Parachutistes ( Descente jusqu'au sol tout en planant et tirant sur le joueur )
     6 : Civil à sauver
+    7 : Sniper fenêtre Zone 2.
     40 : Bonus
     66 : Bombes
     88 : Grenades
@@ -195,6 +196,14 @@ extern Sprite1_ SpriteBonus;
 extern s16 PCamX;
 extern s16 PCamY;
 
+extern u16 BlankPalette[16];
+extern u16 PaletteZone2[16];
+extern u16 PaletteZone2_1[16];
+extern u16 PaletteZone2_2[16];
+extern u16 PaletteZone2_3[16];
+extern u16 PaletteZone2_4[16];
+extern u16 PaletteZone2_5[16];
+extern u16 PaletteZone2_6[16];
 
 extern u16 IDCivil;
 extern u16 NumeroZone;
@@ -206,7 +215,8 @@ extern u16 ScanIA;
 extern u16 CivilON;
 extern u16 NombreGrenade;
 extern u16 TempoRegen;
-extern u16 BlankPalette[16];
+
+extern u16 TempoPaletteBG;
 extern u16 GrenadierON;
 extern u16 ApparitionMedailles;
 extern u16 TremblementON;
@@ -245,6 +255,8 @@ extern u16 ChoixUnite;
 
 extern fix32 Civil_CoordX;
 extern fix32 Civil_CoordY;
+
+extern const Vect2D_f32 PositionSniper[10];
 
 // maps (BGA and BGB) position (tile) for alternate method
 extern s16 mapMetaTilePosX[2];

@@ -58,8 +58,7 @@ void Clear_Variable()
 	ScanIA=0;
 
 	u16 i=60;
-	Sprite1_* spr;
-	spr = &Sprites[0];
+	Sprite1_* spr = &Sprites[0];
 	while(i--)
     {
         spr->Aggro=0;
@@ -186,6 +185,35 @@ void Clear_Variable()
 }
 
 ///////////////////////////////
+//    Ecran sélection Zone
+///////////////////////////////
+void InitEcranZone()
+{
+	return;
+	VDP_setPaletteColors(0, (u16*) palette_black, 64);
+	memcpy(&palette[0], palette_black, 16 * 2);
+	memcpy(&palette[16], Palette_BGB_1.data, 16 * 2);
+	memcpy(&palette[32], Palette_BGB.data, 16 * 2);
+
+	ind = TILE_USERINDEX;
+	VDP_loadTileSet(Town_.tileset, ind, DMA);
+	TileMap *Zone1 = Town_.tilemap;
+	VDP_setTileMapEx(BG_B, Zone1, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, ind), 20, 6, 0, 0, 20, 14, CPU);
+	ind +=256;
+	VDP_loadTileSet(Jungle_.tileset, ind, DMA);
+	TileMap *Zone2 = Jungle_.tilemap;
+	VDP_setTileMapEx(BG_B, Zone2, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ind), 0, 6, 0, 0, 20, 14, CPU);
+
+	VDP_fadeInAll(palette,24,FALSE);
+	while(TRUE)
+	{
+
+		// Vblank
+		SYS_doVBlankProcess();
+	}
+}
+
+///////////////////////////////
 //                  Init Intro
 ///////////////////////////////
 void InitIntro()
@@ -247,8 +275,7 @@ void InitIntro()
 
     // init sprite engine with default parameters
     SPR_init();
-	Sprite1_* SprLvl;
-	SprLvl= &NombreLevel;
+	Sprite1_* SprLvl= &NombreLevel;
 	SprLvl->SpriteA = SPR_addSprite(&Warfare_Sprite, 0, 0, TILE_ATTR(PAL0, TRUE, FALSE, FALSE));
 	SPR_setPosition(SprLvl->SpriteA,100,17);
 	SPR_setAlwaysOnTop(SprLvl->SpriteA,TRUE);
@@ -324,8 +351,7 @@ void InitScene()
 	memcpy(&palette[48],Palette_Airplane.data,16*2);
 
     // init sprite engine with default parameters
-	Sprite1_* spr;
-	spr = &Sprites[0];
+	Sprite1_* spr = &Sprites[0];
 	spr->CoordX=FIX32(48);
 	spr->CoordY=FIX32(140-48);
      // BGB
@@ -347,8 +373,7 @@ void InitScene()
     CamPosY = -1;
 
     // Medaille Difficulté
-	Sprite1_* SprLvl;
-	SprLvl= &NombreLevel;
+	Sprite1_* SprLvl= &NombreLevel;
 	//SprLvl->CoordX=FIX32(-6);
 	SprLvl->CoordX=FIX32(320);
 	SprLvl->CoordY=FIX32(0);
@@ -360,8 +385,7 @@ void InitScene()
 	SPR_setVisibility(SprLvl->SpriteA,HIDDEN);
 
 	// HUD
-	Sprite1_* SprHUD;
-	SprHUD= &SpriteHUD[0];
+	Sprite1_* SprHUD= &SpriteHUD[0];
 	SprHUD->CoordX=FIX32(16);
 	SprHUD->CoordY=FIX32(16);
 	SprHUD->SpriteA = SPR_addSprite(&HUDSante_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
@@ -385,8 +409,7 @@ void InitScene()
 	SprHUD++;
 
 	// Icone Civile
-	Sprite1_* SprCivil;
-	SprCivil=&SpriteCivil;
+	Sprite1_* SprCivil=&SpriteCivil;
 	SprCivil->SpriteA = SPR_addSprite(&IconeCivil_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setAlwaysOnTop(SprCivil->SpriteA,TRUE);
 	SPR_setPosition(SprCivil->SpriteA,300,100);
@@ -404,8 +427,7 @@ void InitScene()
 	GoCivil=1;
 
 	// Score
-	Sprite1_* SprScore;
-    SprScore=&NombreScore[0];
+	Sprite1_* SprScore=&NombreScore[0];
     u8 i=NombreDigitScore;
     u8 j=0;
     u16 Pos=0;
@@ -422,8 +444,7 @@ void InitScene()
     }
 
     // Nombre UP
-	Sprite1_* SprNombreUP;
-    SprNombreUP=&NombreUP;
+	Sprite1_* SprNombreUP=&NombreUP;
 	SprNombreUP->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPriorityAttribut(SprNombreUP->SpriteA, TRUE);
 	SPR_setAnim(SprNombreUP->SpriteA,4);
@@ -431,8 +452,7 @@ void InitScene()
 	SPR_setAlwaysOnTop(SprNombreUP->SpriteA,TRUE);
 
 	// Nombre Grenades
-	Sprite1_* SprNombreGrenade;
-    SprNombreGrenade=&NombreGrenades[0];
+	Sprite1_* SprNombreGrenade=&NombreGrenades[0];
     i=2;
     //j=0;
     Pos=0;
@@ -451,8 +471,7 @@ void InitScene()
 
     // Nombre Balles Shotgun
 	// Nombre Grenades
-	Sprite1_* SprNombreBalleShotGun;
-    SprNombreBalleShotGun=&NombreBallesShot[0];
+	Sprite1_* SprNombreBalleShotGun=&NombreBallesShot[0];
     i=2;
     //j=0;
     Pos=0;
@@ -477,7 +496,7 @@ void InitScene()
 	spr->StandBy=0;
 	spr->TypeIA=0;
     spr->SpriteDYN=0;
-    spr->NombreUP=5;
+    spr->NombreUP=1;
     spr->Slot1=0;
     spr->HitPointMax=6;
     spr->HitPoint=spr->HitPointMax;
@@ -489,8 +508,7 @@ void InitScene()
 
     // Chargement Sprite Joe
     // Jambes
-	Sprite1_* SprMarcheJoe;
-	SprMarcheJoe=&Marche_Joe;
+	Sprite1_* SprMarcheJoe=&Marche_Joe;
 
 	SprMarcheJoe->SpriteA = SPR_addSprite(&MarcheJoe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	spr->SpriteA = SPR_addSprite(&Joe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
@@ -682,7 +700,7 @@ void InitMAP()
     //VDP_fadeInAll(palette,15,FALSE);
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
-	NumeroZone=1;
+	//NumeroZone=1;
 	ind = TILE_USERINDEX;
 	bgBaseTileIndex[0] = ind;
 

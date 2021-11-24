@@ -1,6 +1,8 @@
 #ifndef _ROUTINES_H
 #define _ROUTINES_H
 
+
+extern  void PaletteEffectZone2();
 extern void GestionBombe(Sprite1_ *spr);
 extern void GestionProjectiles();
 extern void GestionHelico();
