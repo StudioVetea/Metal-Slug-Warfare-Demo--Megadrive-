@@ -363,7 +363,7 @@ void InitScene()
     // BGA
     VDP_setTileMapEx(BG_A, bga, TILE_ATTR_FULL(0, FALSE, FALSE, FALSE, bgBaseTileIndex[0]), 0, 0, 0, 0, 64, 32, DMA_QUEUE);
 
-
+    // Allocation VRAM SE.
     u16 MemVram=208;
     if (NumeroZone) MemVram=308;
     SPR_initEx(512+MemVram);

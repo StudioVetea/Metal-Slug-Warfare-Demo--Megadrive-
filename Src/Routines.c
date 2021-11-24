@@ -340,22 +340,6 @@ void GestionCivil(Sprite1_ *spr)
         {
             CivilON=1;
             SprCivil->TempoSprite=0;
-            Civil_CoordY=FIX32(140-48);
-
-            //RandomSeed();
-            fix32 CX;
-            if (getRandomU16(100)<50)
-            {
-                CX=getRandomF32(FIX32(320))+FIX32(320);
-                Civil_CoordX=spr->CoordX+CX;
-                if (Civil_CoordX>FIX32(2048)) Civil_CoordX=spr->CoordX-CX;
-            }
-            else
-            {
-                CX=getRandomF32(FIX32(320))+FIX32(320);
-                Civil_CoordX=spr->CoordX-CX;
-                if (Civil_CoordX<FIX32(0)) Civil_CoordX=spr->CoordX+CX;
-            }
         }
     }
 }
@@ -2112,7 +2096,7 @@ void GestionBallesIA(Sprite1_ *spr)
                         spr1->IDList=2;
                         spr1->Sniper=0;
                         spr1->SpeIA=0;
-                        spr1->CoordX=spr->CoordX;
+                        spr1->CoordX=spr->CoordX+spr->VitesseInit;
                         spr1->DeltaY=FIX32(0);
                         spr1->CoordY=spr->CoordY;
                         spr1->OffsetX=FIX32(-10);
@@ -2896,8 +2880,21 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             spr->InScene=0;
             //RandomSeed();
             spr->VitesseInit=getRandomF32(FIX32(0.25))+FIX32(0.1);
-            if (getRandomU16(100)<50) spr->CoordX=SpriteRef->CoordX+getRandomF32(FIX32(150));
-            else  spr->CoordX=SpriteRef->CoordX-getRandomF32(FIX32(150));
+            // Calcul position IA / Joueur
+            const Vect2D_f32* posPara = &PositionPara[0];
+            u8 j=16;
+            while(j--)
+            {
+                fix32 Dist=abs(SpriteRef->CoordX-posPara->x);
+                if (Dist<=FIX32(128))
+                {
+                    spr->CoordX=posPara->x;
+                    spr->CoordY=FIX32(-64);
+                    break;
+                }
+                posPara++;
+            }
+            return;
             break;
 
             case 6:
@@ -2911,8 +2908,25 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             spr->VitesseInit=FIX32(0);
             spr->Direction=0;
             spr->InScene=0;
-            spr->CoordX=Civil_CoordX;
+            //spr->CoordX=Civil_CoordX;
             spr->Visible=0;
+            // Calcul position IA / Joueur
+            const Vect2D_f32* posCivil = &PositionCivil[0];
+            j=10;
+            while(j--)
+            {
+                fix32 Dist=abs(SpriteRef->CoordX-posCivil->x);
+                if (Dist>=FIX32(960)+getRandomF32(320))
+                {
+                    spr->CoordX=posCivil->x;
+                    spr->CoordY=posCivil->y;
+                    Civil_CoordX= spr->CoordX;
+                    Civil_CoordY= spr->CoordY;
+                    break;
+                }
+                posCivil++;
+            }
+
             return;
             break;
 
@@ -2930,7 +2944,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
 
             // Calcul position IA / Joueur
             const Vect2D_f32* pos = &PositionSniper[0];
-            u8 j=10;
+            j=10;
             while(j--)
             {
                 fix32 Dist=abs(SpriteRef->CoordX-pos->x);
@@ -2942,9 +2956,6 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
                 }
                 pos++;
             }
-
-            //spr->CoordX=FIX32(1922);
-            //spr->CoordY=FIX32(84);
             spr->Init=0;
             return;
             break;
@@ -2954,11 +2965,6 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
         {
             if (SpriteRef->CoordX>FIX32(2048-160))
             {
-                if (Type==5)
-                {
-                    spr->CoordX=SpriteRef->CoordX-FIX32(320);
-                    return;
-                }
                 //RandomSeed();
                 if (getRandomU16(100)<50)
                 {
