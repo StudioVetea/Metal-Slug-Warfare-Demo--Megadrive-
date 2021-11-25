@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////
 //    Positions MAP IA Zones
 //////////////////////////////////////////////
-const Vect2D_f32 PositionSniper[10] = {{FIX32(220), FIX32(84)}, {FIX32(364), FIX32(16)}, {FIX32(428), FIX32(84)}, {FIX32(700), FIX32(84)}, {FIX32(924), FIX32(60)}, {FIX32(1170), FIX32(84)}, {FIX32(1300), FIX32(16)}, {FIX32(1442), FIX32(16)}, {FIX32(1650), FIX32(84)}, {FIX32(1922), FIX32(84)}};
+const Vect2D_f32 PositionSniper[11] = {{FIX32(118), FIX32(84)},{FIX32(220), FIX32(84)}, {FIX32(364), FIX32(16)}, {FIX32(428), FIX32(84)}, {FIX32(700), FIX32(84)}, {FIX32(924), FIX32(60)}, {FIX32(1170), FIX32(84)}, {FIX32(1300), FIX32(16)}, {FIX32(1442), FIX32(16)}, {FIX32(1650), FIX32(84)}, {FIX32(1922), FIX32(84)}};
 const Vect2D_f32 PositionCivil[10] = {{FIX32(64), FIX32(164)}, {FIX32(320), FIX32(164)}, {FIX32(576), FIX32(164)}, {FIX32(832), FIX32(164)}, {FIX32(1088), FIX32(164)}, {FIX32(1344), FIX32(164)}, {FIX32(832), FIX32(164)}, {FIX32(1600), FIX32(164)}, {FIX32(1856), FIX32(164)}, {FIX32(1984), FIX32(164)}};
 const Vect2D_f32 PositionPara[16] = {{FIX32(64), FIX32(-32)}, {FIX32(192), FIX32(-32)}, {FIX32(320), FIX32(-32)}, {FIX32(448), FIX32(-32)}, {FIX32(576), FIX32(-32)}, {FIX32(704), FIX32(-32)}, {FIX32(832), FIX32(-32)}, {FIX32(960), FIX32(-32)}, {FIX32(1088), FIX32(-32)}, {FIX32(1216), FIX32(-32)}, {FIX32(1344), FIX32(-32)}, {FIX32(1472), FIX32(-32)}, {FIX32(1600), FIX32(-32)}, {FIX32(1728), FIX32(-32)}, {FIX32(1856), FIX32(-32)}, {FIX32(1984), FIX32(-32)}};
 
@@ -35,6 +35,7 @@ Sprite1_ SpriteBonus;
 s16 PCamX=0;
 s16 PCamY=0;
 
+u16 RequisZone=0;
 u16 TempoPaletteBG=0;
 u16 IDCivil=0;
 u16 TempoRegen=0;
@@ -69,7 +70,7 @@ u16 GameOver=0;
 u16 TempoTremblement=0;
 u16 TremblementON=0;
 u16 TempoMax=0;
-u16 GrenadierON=0;
+u16 SniperON=0;
 u16 Bombardement=0;
 u16 NombrePara=0;
 u16 CivilON=0;

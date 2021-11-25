@@ -43,7 +43,7 @@ void Clear_Variable()
     NombreBalle=0;
     NombreBouclier=0;
     GoCivil=0;
-    GrenadierON=0;
+    SniperON=0;
     NombreLettre=0;
     NombreDigitScore=0;
     CamPosX=0;
@@ -189,12 +189,15 @@ void Clear_Variable()
 ///////////////////////////////
 void InitEcranZone()
 {
-	return;
+	u16 Tempo=0;
+	// Init
+	VDP_init();
 	VDP_setPaletteColors(0, (u16*) palette_black, 64);
-	memcpy(&palette[0], palette_black, 16 * 2);
+	memcpy(&palette[48], Palette_Font.data, 16 * 2);
 	memcpy(&palette[16], Palette_BGB_1.data, 16 * 2);
 	memcpy(&palette[32], Palette_BGB.data, 16 * 2);
 
+	// Init Scene.
 	ind = TILE_USERINDEX;
 	VDP_loadTileSet(Town_.tileset, ind, DMA);
 	TileMap *Zone1 = Town_.tilemap;
@@ -204,13 +207,61 @@ void InitEcranZone()
 	TileMap *Zone2 = Jungle_.tilemap;
 	VDP_setTileMapEx(BG_B, Zone2, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ind), 0, 6, 0, 0, 20, 14, CPU);
 
+    // Données Textes / FONT
 	VDP_fadeInAll(palette,24,FALSE);
+	VDP_setTextPalette(PAL3);
+	VDP_loadTileSet(Font1.tileset, TILE_FONTINDEX+1, TRUE);
+	VDP_drawText("<JUNGLE ZONE>",4,21);
+	VDP_drawText(" TOWN ZONE ",25,21);
+	if (!RequisZone) VDP_drawText("! NEED RANK 7 !",23,13);
+	XGM_startPlay(ChoixZone_Music);
+
+	// Boucle principale.
 	while(TRUE)
 	{
+		// Zone 2 débloquée ?
+		if (!RequisZone)
+		{
+			Tempo++;
+			if (Tempo<5) VDP_drawText("                ",23,13);
+			else VDP_drawText("! NEED RANK 7 !",23,13);
+			if (Tempo>10) Tempo=0;
+		}
+
+		// Init joy
+		u16 value=JOY_readJoypad(JOY_1);
+		if (value & BUTTON_RIGHT && RequisZone)
+		{
+			VDP_drawText("<TOWN ZONE>",25,21);
+			VDP_drawText(" JUNGLE ZONE ",4,21);
+			NumeroZone=1;
+		}
+		if (value & BUTTON_LEFT)
+		{
+			VDP_drawText(" TOWN ZONE ",25,21);
+			VDP_drawText("<JUNGLE ZONE>",4,21);
+			NumeroZone=0;
+		}
+
+		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START))
+		{
+			SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
+			break;
+		}
 
 		// Vblank
 		SYS_doVBlankProcess();
 	}
+
+	XGM_pausePlay();
+	XGM_stopPlay();
+	SYS_doVBlankProcess();
+	VDP_clearPlane(BG_A,TRUE);
+    VDP_fadeOutAll(16,FALSE);
+    MEM_free(Zone1);
+    MEM_free(Zone2);
+    SPR_reset();
+    SPR_end();
 }
 
 ///////////////////////////////
@@ -289,10 +340,7 @@ void InitIntro()
     while(TRUE)
 	{
 		u16 value=JOY_readJoypad(JOY_1);
-		if (value & BUTTON_C) break;
-		if (value & BUTTON_B) break;
-		if (value & BUTTON_A) break;
-		if (value & BUTTON_START) break;
+		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START)) break;
 
 		// Animation Warfare !
         SprLvl->TempoSprite++;
@@ -363,14 +411,14 @@ void InitScene()
     // BGA
     VDP_setTileMapEx(BG_A, bga, TILE_ATTR_FULL(0, FALSE, FALSE, FALSE, bgBaseTileIndex[0]), 0, 0, 0, 0, 64, 32, DMA_QUEUE);
 
-    // Allocation VRAM SE.
-    u16 MemVram=208;
-    if (NumeroZone) MemVram=308;
-    SPR_initEx(512+MemVram);
-
 	// camera position (force refresh)
     CamPosX = -1;
     CamPosY = -1;
+
+    // Allocation VRAM SE.
+    u16 MemVram=208;
+    if (NumeroZone) MemVram=288;
+    SPR_initEx(512+MemVram);
 
     // Medaille Difficulté
 	Sprite1_* SprLvl= &NombreLevel;
@@ -524,7 +572,8 @@ void InitScene()
 	// Airplane
 	spr++;
 	spr->CoordX=FIX32(-64);
-	spr->CoordY=FIX32(8);
+	if (NumeroZone) spr->CoordY=FIX32(24);
+	else spr->CoordY=FIX32(8);
 	spr->MemDir=0;
 	spr->AirUnit=10;
 	spr->Vitesse=FIX32(0.5);
@@ -696,8 +745,8 @@ void InitScene()
 ////////////////////////////////////////
 void InitMAP()
 {
-	// Fade In Scene.
-    //VDP_fadeInAll(palette,15,FALSE);
+	// Init
+	VDP_init();
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
 	//NumeroZone=1;

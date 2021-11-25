@@ -216,8 +216,9 @@ extern u16 CivilON;
 extern u16 NombreGrenade;
 extern u16 TempoRegen;
 
+extern u16 RequisZone;
 extern u16 TempoPaletteBG;
-extern u16 GrenadierON;
+extern u16 SniperON;
 extern u16 ApparitionMedailles;
 extern u16 TremblementON;
 extern u16 TempoTremblement;
@@ -256,7 +257,7 @@ extern u16 ChoixUnite;
 extern fix32 Civil_CoordX;
 extern fix32 Civil_CoordY;
 
-extern const Vect2D_f32 PositionSniper[10];
+extern const Vect2D_f32 PositionSniper[11];
 extern const Vect2D_f32 PositionCivil[10];
 extern const Vect2D_f32 PositionPara[16];
 

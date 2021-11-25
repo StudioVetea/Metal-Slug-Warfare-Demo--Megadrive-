@@ -1,6 +1,8 @@
 XGM Demo_Music "Sound/ve.vgm"
 XGM Menu_Music "Sound/ACDC.vgm"
 XGM Thunder_Music  "Sound/Thunder.vgm"
+XGM ChoixZone_Music "Sound/ChoiceZone.vgm"
+XGM Zone2_Music  "Sound/MusicZone2.vgm"
 WAV Magnum_SFX "Sound/Magnum357.wav" XGM
 WAV Mort_SFX "Sound/Mort.wav" XGM
 WAV Mort1_SFX "Sound/Mort1.wav" XGM
