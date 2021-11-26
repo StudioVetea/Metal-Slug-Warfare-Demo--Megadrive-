@@ -85,8 +85,12 @@ void AnimationSprite(Sprite1_ *spr)
 		if (spr->Hit)
 		{
 			spr->TempoSprite++;
-			if (spr->Hit==1) SPR_setAnim(spr->SpriteA,2);
-			if (spr->Hit==2) SPR_setAnim(spr->SpriteA,3);
+			if (SpriteREF->Slot1==10) SPR_setAnim(spr->SpriteA,16);
+			else
+            {
+                if (spr->Hit==1) SPR_setAnim(spr->SpriteA,2);
+                if (spr->Hit==2) SPR_setAnim(spr->SpriteA,3);
+            }
 			if (spr->TempoSprite>15)
 			{
 				spr->Hit=0;
@@ -97,7 +101,7 @@ void AnimationSprite(Sprite1_ *spr)
 			return;
 		}
 		else
-            if (SpriteREF->Slot1)
+            if (SpriteREF->Slot1==1)
             {
                 if (spr->Direction!=8)
                 {
@@ -115,6 +119,44 @@ void AnimationSprite(Sprite1_ *spr)
                 else  SPR_setAnim(spr->SpriteA,10);
                 return;
             }
+            if (SpriteREF->Slot1==2)
+            {
+                if (spr->Direction!=8)
+                {
+                    if (spr->Direction==6)
+                    {
+                        spr->OffsetX=FIX32(0);
+                        SPR_setHFlip(spr->SpriteA,FALSE);
+                        SPR_setAnim(spr->SpriteA,14);
+                        return;
+                    }
+                    spr->OffsetX=FIX32(16);
+                    SPR_setHFlip(spr->SpriteA,TRUE);
+                    SPR_setAnim(spr->SpriteA,14);
+                }
+                else  SPR_setAnim(spr->SpriteA,15);
+                return;
+            }
+            if (SpriteREF->Slot1==10)
+            {
+                if (spr->Direction!=8)
+                {
+                    if (spr->Direction==6)
+                    {
+                        spr->OffsetX=FIX32(0);
+                        SPR_setHFlip(spr->SpriteA,FALSE);
+                        SPR_setAnim(spr->SpriteA,12);
+                        return;
+                    }
+                    spr->OffsetX=FIX32(16);
+                    SPR_setHFlip(spr->SpriteA,TRUE);
+                    SPR_setAnim(spr->SpriteA,12);
+                }
+                else  SPR_setAnim(spr->SpriteA,13);
+                return;
+            }
+
+
             if (spr->Direction!=8) SPR_setAnim(spr->SpriteA,0);
             else  SPR_setAnim(spr->SpriteA,4);
 		return;
@@ -653,8 +695,8 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=4;
-                    Sprite1_*  spr1 = &Sprites[IDBalle+4];
+                    u16 i=8;
+                    Sprite1_*  spr1 = &Sprites[IDBalle];
                     while(i--)
                     {
                         //spr1 = &Sprites[IDBalle+j];
@@ -708,8 +750,8 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=4;
-                    Sprite1_* spr1 = &Sprites[IDBalle+4];
+                    u16 i=8;
+                    Sprite1_* spr1 = &Sprites[IDBalle];
                     while(i--)
                     {
                         //spr1 = &Sprites[IDBalle+j];
@@ -936,7 +978,7 @@ void AnimationSprite(Sprite1_ *spr)
             return;
         }
         // Shotgun ?!
-        if (SpriteREF->Slot1) AnimArme=18;
+        if (SpriteREF->Slot1==1 || SpriteREF->Slot1==10 ) AnimArme=18;
 
         // Game over ?!
         if (GameOver==1)

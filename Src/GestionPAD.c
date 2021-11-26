@@ -62,7 +62,7 @@ void GestionPAD(Sprite1_ *spr)
         {
             spr->LancerGrenade=1;
             spr->TempoSprite=0;
-            u16 i=4;
+            u16 i=8;
             Sprite1_* spr1 = &Sprites[IDBalle];
             while(i--)
             {
@@ -179,7 +179,7 @@ void GestionPAD(Sprite1_ *spr)
             // Tir au pistolet ?
             if (!spr->Couteau)
             {
-                u16 i=4;
+                u16 i=8;
                 Sprite1_* spr1 = &Sprites[IDBalle];
 
                 // Tir en haut ?!
@@ -208,6 +208,10 @@ void GestionPAD(Sprite1_ *spr)
                         spr1->Visible=1;
                         spr1->Vitesse=FIX32(8);
                         spr1->CoordY=spr->CoordY+spr->DeltaY+FIX32(48);
+                        spr1->DegatArme=1;
+                        if (spr->Slot1==1) spr1->DegatArme=4;
+                        else if (spr->Slot1==10) {spr1->DegatArme=8;spr1->Vitesse=FIX32(6);}
+                        else if (spr->Slot1==2) spr1->DegatArme=2;
                         // Tir en haut !
                         if (spr->Direction>40)
                         {
