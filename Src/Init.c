@@ -464,7 +464,7 @@ void InitScene()
 	SPR_setVisibility(SprCivil->SpriteA,HIDDEN);
 
 	// Init Data
-	NombreBalle=8;
+	NombreBalle=7;
 	NombreBouclier=2;
 	NombreLettre=6;
 	NombreIA=5;
@@ -815,5 +815,15 @@ void InitRoutine()
 	SND_setPCM_XGM(SFX_GENERIC13, Civil_SFX, sizeof(Civil_SFX));
 	SND_setPCM_XGM(SFX_GENERIC14, Bonus_SFX, sizeof(Bonus_SFX));
 	SND_setPCM_XGM(SFX_GENERIC15, Respawn_SFX, sizeof(Respawn_SFX));
+	SND_setPCM_XGM(SFX_GENERIC16, Flamethrower_SFX, sizeof(Flamethrower_SFX));
+	SND_setPCM_XGM(SFX_GENERIC17, Grenades_SFX, sizeof(Grenades_SFX));
+	SND_setPCM_XGM(SFX_GENERIC18, Health_SFX, sizeof(Health_SFX));
+	SND_setPCM_XGM(SFX_GENERIC19, HeavyMachinegun_SFX, sizeof(HeavyMachinegun_SFX));
+	SND_setPCM_XGM(SFX_GENERIC20, Machinegun_SFX, sizeof(Machinegun_SFX));
+	SND_setPCM_XGM(SFX_GENERIC21, PowerUp_SFX, sizeof(PowerUp_SFX));
+	SND_setPCM_XGM(SFX_GENERIC22, RocketLauncher_SFX, sizeof(RocketLauncher_SFX));
+	SND_setPCM_XGM(SFX_GENERIC23, Score_SFX, sizeof(Score_SFX));
+	SND_setPCM_XGM(SFX_GENERIC24, Uzi_SFX, sizeof(Uzi_SFX));
+
 }
 

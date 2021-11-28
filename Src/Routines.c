@@ -203,46 +203,54 @@ void GestionBonus(Sprite1_ *spr)
         SpriteB->Visible=0;
         SpriteB->StandBy=1;
         SpriteB->Init=0;
-        SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
+        //SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
         GoCivil=1;
+
         switch(SpriteB->Transition)
         {
             case 0:
                 NombreGrenade+=5;
                 GestionNombreGrenades();
+                SND_startPlayPCM_XGM(SFX_GENERIC17, 2, SOUND_PCM_CH4);
                 break;
 
             case 1:
                 spr->Slot1=1;
                 NombreBalleShotgun=88;
                 GestionNombreBallesShotgun();
+                SND_startPlayPCM_XGM(SFX_GENERIC19, 2, SOUND_PCM_CH4);
                 break;
 
             case 2:
                 spr->HitPoint=6;
                 GestionHUDSante();
+                SND_startPlayPCM_XGM(SFX_GENERIC18, 2, SOUND_PCM_CH4);
                 break;
 
             case 3:
                 Score+=250;
                 GestionScore();
+                SND_startPlayPCM_XGM(SFX_GENERIC23, 2, SOUND_PCM_CH4);
                 break;
 
             case 4:
                 spr->NombreUP++;
                 GestionHUDSante();
+                SND_startPlayPCM_XGM(SFX_GENERIC21, 2, SOUND_PCM_CH4);
                 break;
 
             case 5:
                 spr->Slot1=10;
-                NombreBalleShotgun=25;
+                NombreBalleShotgun=20;
                 GestionNombreBallesShotgun();
+                SND_startPlayPCM_XGM(SFX_GENERIC22, 2, SOUND_PCM_CH4);
                 break;
 
             case 6:
                 spr->Slot1=2;
-                NombreBalleShotgun=60;
+                NombreBalleShotgun=71;
                 GestionNombreBallesShotgun();
+                SND_startPlayPCM_XGM(SFX_GENERIC20, 2, SOUND_PCM_CH4);
                 break;
 
         }
@@ -797,7 +805,7 @@ void Result_Screen()
     {
         Sprite1_* SprLvl= &NombreLevel;
         // Déblocage Zone 2.
-        if (Difficulte>5) RequisZone=1;
+        if (Difficulte>6) RequisZone=1;
         SprLvl->CoordX=FIX32(320);
         SprLvl->CoordY=FIX32(0);
         SprLvl->Vitesse=FIX32(5);
@@ -1433,7 +1441,7 @@ void GestionScore()
         if (Difficulte==2)  SND_startPlayPCM_XGM(SFX_GENERIC11, 1, SOUND_PCM_CH4);
         Difficulte=3;
     }
-    if (Score>3000 && Score<=3750 && Difficulte==3)
+    if (Score>3000 && Score<=4000 && Difficulte==3)
     {
         Sprite1_*  SprLvl= &NombreLevel;
         SprLvl->CoordX=FIX32(320);
@@ -1443,7 +1451,7 @@ void GestionScore()
         if (Difficulte==3)  SND_startPlayPCM_XGM(SFX_GENERIC11, 1, SOUND_PCM_CH4);
         Difficulte=4;
     }
-    if (Score>3750 && Score<=4500 && Difficulte==4)
+    if (Score>4000 && Score<=5250 && Difficulte==4)
     {
         Sprite1_* SprLvl;
         SprLvl= &NombreLevel;
@@ -1454,7 +1462,7 @@ void GestionScore()
         if (Difficulte==4)  SND_startPlayPCM_XGM(SFX_GENERIC11, 1, SOUND_PCM_CH4);
         Difficulte=5;
     }
-    if (Score>4500 && Difficulte==5 && Score<=5400)
+    if (Score>5250 && Difficulte==5 && Score<=6500)
     {
         Sprite1_* SprLvl= &NombreLevel;
         SprLvl->CoordX=FIX32(320);
@@ -1464,7 +1472,7 @@ void GestionScore()
         if (Difficulte==5)  SND_startPlayPCM_XGM(SFX_GENERIC11, 1, SOUND_PCM_CH4);
         Difficulte=6;
     }
-    if (Score>5400 && Difficulte==6 && Score<=6400)
+    if (Score>6500 && Difficulte==6 && Score<=7750)
     {
         Sprite1_* SprLvl= &NombreLevel;
         SprLvl->CoordX=FIX32(320);
@@ -1474,7 +1482,7 @@ void GestionScore()
         if (Difficulte==6)  SND_startPlayPCM_XGM(SFX_GENERIC11, 1, SOUND_PCM_CH4);
         Difficulte=7;
     }
-    if (Score>6400 && Difficulte==7 && Score<=7500)
+    if (Score>7750 && Difficulte==7 && Score<=9000)
     {
         Sprite1_* SprLvl= &NombreLevel;
         SprLvl->CoordX=FIX32(320);
@@ -1484,7 +1492,7 @@ void GestionScore()
         if (Difficulte==7)  SND_startPlayPCM_XGM(SFX_GENERIC11, 1, SOUND_PCM_CH4);
         Difficulte=8;
     }
-    if (Score>7500 && Difficulte==8 && Score<=9000)
+    if (Score>9000 && Difficulte==8 && Score<=10500)
     {
         Sprite1_* SprLvl= &NombreLevel;
         SprLvl->CoordX=FIX32(320);
@@ -1494,7 +1502,7 @@ void GestionScore()
         if (Difficulte==8)  SND_startPlayPCM_XGM(SFX_GENERIC11, 1, SOUND_PCM_CH4);
         Difficulte=9;
     }
-    if (Score>9000 && Difficulte==9)
+    if (Score>10500 && Difficulte==9)
     {
         Sprite1_* SprLvl= &NombreLevel;
         SprLvl->CoordX=FIX32(320);
@@ -1816,28 +1824,31 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                     if (!SprIA->HitPoint)
                     {
                         // Les soldats bouclier se cassent !!
-                        if (SprIA->ID==2 && !SprIA->IAFuite && spr->DegatArme!=8)
+                        if (SprIA->ID==2 && !SprIA->IAFuite)
                         {
-                            spr->Hit=0;
-                            spr->StandBy=1;
-                            spr->Visible=0;
-                            SprIA->IAFuite=1;
-                            SprIA->HitPoint++;
-                            switch (SprIA->Direction)
+                            if (spr->DegatArme!=8)
                             {
-                            case 4:
-                                SprIA->Direction=6;
-                                break;
+                                spr->Hit=0;
+                                spr->StandBy=1;
+                                spr->Visible=0;
+                                SprIA->IAFuite=1;
+                                SprIA->HitPoint++;
+                                switch (SprIA->Direction)
+                                {
+                                case 4:
+                                    SprIA->Direction=6;
+                                    break;
 
-                            case 6:
-                                SprIA->Direction=4;
-                                break;
+                                case 6:
+                                    SprIA->Direction=4;
+                                    break;
+                                }
+
+                                if (SprIA->Direction==98) SprIA->Direction=4;
+                                if (!SprIA->Direction) SprIA->Direction=6;
+
+                                SprIA->Vitesse=FIX32(2.5);
                             }
-
-                            if (SprIA->Direction==98) SprIA->Direction=4;
-                            if (!SprIA->Direction) SprIA->Direction=6;
-
-                            SprIA->Vitesse=FIX32(2.5);
                             // Bouclier !
                             Sprite1_* SprBou=&Sprites[IDBouclier];
                             u8 NrBou=2;
@@ -1857,7 +1868,7 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                                 }
                                 SprBou++;
                             }
-                            return;
+                            if (spr->DegatArme!=8) return;
                         }
                         SprIA->MortIA=1;
                         SprIA->TempoInScene=0;
@@ -1866,15 +1877,15 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                         if (SpriteREF->Slot1==1 || SpriteREF->Slot1==10) {SprIA->IntIA=12;SprIA->Direction=spr->Direction;}
                         else SprIA->IntIA=0;
                         spr->Hit=2;
-                        if (SpriteREF->Slot1==1) spr->Hit=8;
+                        //if (SpriteREF->Slot1==1) spr->Hit=8;
                         if (SprIA->ID==2 || SprIA->ID==7)  Score+=35+(Difficulte<<2);
                         if (SprIA->ID==3)  Score+=20+(Difficulte<<2);
                         if (SprIA->ID==4) Score+=25+(Difficulte<<2);
                         if (SprIA->ID==5) Score+=50+(Difficulte<<2);
-                        if (SpriteREF->Slot1==10)
+                        if (SpriteREF->Slot1==10 || SpriteREF->Slot1==1)
                         {
-                            if (spr->Direction==4) spr->OffsetX=FIX32(16);
-                            else spr->OffsetX=FIX32(-16);
+                            if (spr->Direction==4) spr->OffsetX=FIX32(20);
+                            else spr->OffsetX=FIX32(-24);
                         }
                         GestionScore();
                         spr->Direction=0;
@@ -2195,7 +2206,7 @@ void GestionIA(Sprite1_  *spr)
                     //RandomSeed();
                     while (TRUE)
                     {
-                        if (Difficulte>4)
+                        if (Difficulte>3)
                         {
                             // Lance Roquette/Heavy Machine Gun x 2
                             if (getRandomU16(100)<10 && NombreBalleShotgun<15) {SpriteB->Transition=5;break;}
@@ -2670,7 +2681,7 @@ void UpdateViewSprite(Sprite1_ *spr)
                 {
                     spr->AirUnit=10;
                     spr->SpeIA=0;
-                    if (Difficulte<4) spr->SpriteA = SPR_addSprite(&AirplaneLight_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+                    if (Difficulte<5) spr->SpriteA = SPR_addSprite(&AirplaneLight_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
                     else {spr->SpeIA=1;spr->SpriteA = SPR_addSprite(&AirplaneMedium_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));}
                 }
                 else
@@ -3423,7 +3434,11 @@ void Saut_Sprite(Sprite1_ *spr)
                 spr->StandBy=1;
                 spr->Visible=0;
                 spr->IntIA=0;
-                if (spr->ID==6) {CivilON=0;CivilVisible=0;}
+                if (spr->ID==6)
+                {
+                    CivilON=0;
+                    NombreCivil=0;
+                }
             }
         }
         if (GameOver)

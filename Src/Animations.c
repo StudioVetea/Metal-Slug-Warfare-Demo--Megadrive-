@@ -74,14 +74,6 @@ void AnimationSprite(Sprite1_ *spr)
 	// Balles joueur ?
     if (spr->ID==45)
 	{
-	    if (spr->Hit==8)
-        {
-            spr->Hit=0;
-            spr->StandBy=1;
-            spr->Visible=0;
-            spr->TempoSprite=0;
-            return;
-        }
 		if (spr->Hit)
 		{
 			spr->TempoSprite++;
@@ -107,12 +99,12 @@ void AnimationSprite(Sprite1_ *spr)
                 {
                     if (spr->Direction==6)
                     {
-                        spr->OffsetX=FIX32(0);
+                        //spr->OffsetX=FIX32(0);
                         SPR_setHFlip(spr->SpriteA,FALSE);
                         SPR_setAnim(spr->SpriteA,9);
                         return;
                     }
-                    spr->OffsetX=FIX32(16);
+                    //spr->OffsetX=FIX32(16);
                     SPR_setHFlip(spr->SpriteA,TRUE);
                     SPR_setAnim(spr->SpriteA,9);
                 }
@@ -125,12 +117,12 @@ void AnimationSprite(Sprite1_ *spr)
                 {
                     if (spr->Direction==6)
                     {
-                        spr->OffsetX=FIX32(0);
+                        //spr->OffsetX=FIX32(0);
                         SPR_setHFlip(spr->SpriteA,FALSE);
                         SPR_setAnim(spr->SpriteA,14);
                         return;
                     }
-                    spr->OffsetX=FIX32(16);
+                    //spr->OffsetX=FIX32(16);
                     SPR_setHFlip(spr->SpriteA,TRUE);
                     SPR_setAnim(spr->SpriteA,14);
                 }
@@ -143,12 +135,12 @@ void AnimationSprite(Sprite1_ *spr)
                 {
                     if (spr->Direction==6)
                     {
-                        spr->OffsetX=FIX32(0);
+                        //spr->OffsetX=FIX32(0);
                         SPR_setHFlip(spr->SpriteA,FALSE);
                         SPR_setAnim(spr->SpriteA,12);
                         return;
                     }
-                    spr->OffsetX=FIX32(16);
+                    //spr->OffsetX=FIX32(16);
                     SPR_setHFlip(spr->SpriteA,TRUE);
                     SPR_setAnim(spr->SpriteA,12);
                 }
@@ -978,7 +970,8 @@ void AnimationSprite(Sprite1_ *spr)
             return;
         }
         // Shotgun ?!
-        if (SpriteREF->Slot1==1 || SpriteREF->Slot1==10 ) AnimArme=18;
+        if (SpriteREF->Slot1==1 || SpriteREF->Slot1==10) AnimArme=18;
+        else if (SpriteREF->Slot1==2 ) AnimArme=37;
 
         // Game over ?!
         if (GameOver==1)

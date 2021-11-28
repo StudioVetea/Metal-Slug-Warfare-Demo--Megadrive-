@@ -202,8 +202,22 @@ void GestionPAD(Sprite1_ *spr)
                         spr->TempoRafale=0;
                         spr1->ID=45;
                         spr1->Hit=0;
-                        if (!spr->Slot1) SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH3);
-                        else SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+                        switch (spr->Slot1)
+                        {
+                            case 0:
+                            SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH3);
+                            break;
+                            case 1:
+                            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+                            break;
+                            case 2:
+                            SND_startPlayPCM_XGM(SFX_GENERIC24, 1, SOUND_PCM_CH3);
+                            break;
+                            case 10:
+                            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+                            break;
+                        }
+
                         //SPR_setAnim(spr1->SpriteA,0);
                         spr1->Visible=1;
                         spr1->Vitesse=FIX32(8);
@@ -212,6 +226,7 @@ void GestionPAD(Sprite1_ *spr)
                         if (spr->Slot1==1) spr1->DegatArme=4;
                         else if (spr->Slot1==10) {spr1->DegatArme=8;spr1->Vitesse=FIX32(6);}
                         else if (spr->Slot1==2) spr1->DegatArme=2;
+                        spr1->CoordX=spr->CoordX;
                         // Tir en haut !
                         if (spr->Direction>40)
                         {
@@ -223,22 +238,19 @@ void GestionPAD(Sprite1_ *spr)
                             else spr1->OffsetX=FIX32(-8);
                             //if (spr->DirectionTir==56) spr1->OffsetX=FIX32(-16);
                             //if (spr->DirectionTir==54) spr1->OffsetX=FIX32(-32);
-                            spr1->CoordX=spr->CoordX;
                             break;
                         }
                         else
                         {
                             spr1->OffsetY=FIX32(-7);
-                            spr1->OffsetX=FIX32(8);
+                            spr1->OffsetX=FIX32(24);
                             spr1->Direction=spr->MemDir;
                             if (!spr->MemDir) spr1->Direction=6;
                             if (spr1->Direction==6)
                             {
-                                if  (spr->Slot1) spr1->OffsetX=FIX32(16);
-                                else spr1->OffsetX=FIX32(-16);
+                                spr1->OffsetX=FIX32(-24);
                                 SPR_setAnim(spr->SpriteA,9);
                             }
-                           spr1->CoordX=spr->CoordX;
                             if (spr->Direction==26 || spr->Direction==24 || spr->Direction==2) spr1->OffsetY=FIX32(-17);
                         }
                         break;
