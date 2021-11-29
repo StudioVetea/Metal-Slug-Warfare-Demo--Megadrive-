@@ -200,32 +200,40 @@ void GestionPAD(Sprite1_ *spr)
                         }
                         spr1->StandBy=0;
                         spr->TempoRafale=0;
+                        spr1->TempoSprite=0;
                         spr1->ID=45;
                         spr1->Hit=0;
+                        spr1->Vitesse=FIX32(8);
                         switch (spr->Slot1)
                         {
                             case 0:
                             SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH3);
+                            spr1->DegatArme=1;
                             break;
                             case 1:
                             SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+                            spr1->DegatArme=4;
                             break;
                             case 2:
                             SND_startPlayPCM_XGM(SFX_GENERIC24, 1, SOUND_PCM_CH3);
+                            spr1->DegatArme=2;
+                            break;
+                            case 3:
+                            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+                            spr1->DegatArme=10;
+                            spr1->Vitesse=FIX32(3);
                             break;
                             case 10:
                             SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+                            spr1->Vitesse=FIX32(6);
+                            spr1->DegatArme=8;
+
                             break;
                         }
 
                         //SPR_setAnim(spr1->SpriteA,0);
                         spr1->Visible=1;
-                        spr1->Vitesse=FIX32(8);
                         spr1->CoordY=spr->CoordY+spr->DeltaY+FIX32(48);
-                        spr1->DegatArme=1;
-                        if (spr->Slot1==1) spr1->DegatArme=4;
-                        else if (spr->Slot1==10) {spr1->DegatArme=8;spr1->Vitesse=FIX32(6);}
-                        else if (spr->Slot1==2) spr1->DegatArme=2;
                         spr1->CoordX=spr->CoordX;
                         // Tir en haut !
                         if (spr->Direction>40)

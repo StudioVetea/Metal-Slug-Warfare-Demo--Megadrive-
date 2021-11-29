@@ -546,6 +546,7 @@ void InitScene()
     spr->SpriteDYN=0;
     spr->NombreUP=1;
     spr->Slot1=0;
+
     spr->HitPointMax=6;
     spr->HitPoint=spr->HitPointMax;
     Difficulte=0;

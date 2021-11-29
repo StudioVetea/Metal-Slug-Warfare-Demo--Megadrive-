@@ -253,6 +253,13 @@ void GestionBonus(Sprite1_ *spr)
                 SND_startPlayPCM_XGM(SFX_GENERIC20, 2, SOUND_PCM_CH4);
                 break;
 
+            case 7:
+                spr->Slot1=3;
+                NombreBalleShotgun=35;
+                GestionNombreBallesShotgun();
+                SND_startPlayPCM_XGM(SFX_GENERIC16, 2, SOUND_PCM_CH4);
+                break;
+
         }
     }
 }
@@ -1148,10 +1155,30 @@ void GestionTir(Sprite1_ *spr)
     if (!spr->Feu || spr->Couteau) return;
 
     spr->TempoRafale++;
-    u16 Speed=12;
-    if (spr->Slot1==1) Speed=10;
-    else if (spr->Slot1==10) Speed=25;
-    else if (spr->Slot1==2) Speed=8;
+    u16 Speed;
+    switch (spr->Slot1)
+    {
+        case 0:
+        Speed=12;
+        break;
+
+        case 1:
+        Speed=10;
+        break;
+
+        case 2:
+        Speed=8;
+        break;
+
+        case 3:
+        Speed=8;
+        break;
+
+        case 10:
+        Speed=25;
+        break;
+    }
+
     if (spr->TempoRafale>Speed)
     {
         spr->Feu=0;
@@ -1202,16 +1229,10 @@ void GestionCouteau(Sprite1_ *spr)
                             SprIA->TirBusy=0;
                             SprIA->TempoInScene=0;
                             SprIA->InScene=0;
-                            if (SprIA->ID==2)  Score+=35;
-                            if (SprIA->ID==3)  Score+=20;
-                            if (SprIA->ID==4) Score+=25;
-                            if (SprIA->ID==5) Score+=50;
-                            if (SprIA->ID==6) {Score+=75;SprIA->MortIA=20;}
-                            SprIA->TirBusy=0;
-                            SprIA->TempoSprite=0;
-                            GestionScore();
-                            if (SprIA->ID==2)
+                            switch (SprIA->ID)
                             {
+                                case 2:
+                                Score+=35+(Difficulte<<2);
                                 // Bouclier !
                                 Sprite1_* SprBou=&Sprites[IDBouclier];
                                 u8 NrBou=2;
@@ -1231,7 +1252,24 @@ void GestionCouteau(Sprite1_ *spr)
                                     }
                                     SprBou++;
                                 }
+                                break;
+                                case 3:
+                                Score+=20+(Difficulte<<2);
+                                break;
+                                case 4:
+                                Score+=25+(Difficulte<<2);
+                                break;
+                                case 5:
+                                Score+=50+(Difficulte<<2);
+                                break;
+                                case 6:
+                                Score+=75+(Difficulte<<2);
+                                SprIA->MortIA=20;
+                                break;
                             }
+                            SprIA->TirBusy=0;
+                            SprIA->TempoSprite=0;
+                            GestionScore();
                             if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
                             return;
                         }
@@ -1248,14 +1286,10 @@ void GestionCouteau(Sprite1_ *spr)
                             SprIA->TempoInScene=0;
                             SprIA->InScene=0;
                             SprIA->TirBusy=0;
-                            if (SprIA->ID==2)  Score+=35;
-                            if (SprIA->ID==3)  Score+=20;
-                            if (SprIA->ID==4) Score+=25;
-                            if (SprIA->ID==5) Score+=50;
-                            if (SprIA->ID==6) {Score+=75;SprIA->MortIA=20;}
-                            GestionScore();
-                            if (SprIA->ID==2)
+                            switch (SprIA->ID)
                             {
+                                case 2:
+                                Score+=35+(Difficulte<<2);
                                 // Bouclier !
                                 Sprite1_* SprBou=&Sprites[IDBouclier];
                                 u8 NrBou=2;
@@ -1275,7 +1309,22 @@ void GestionCouteau(Sprite1_ *spr)
                                     }
                                     SprBou++;
                                 }
+                                break;
+                                case 3:
+                                Score+=20+(Difficulte<<2);
+                                break;
+                                case 4:
+                                Score+=25+(Difficulte<<2);
+                                break;
+                                case 5:
+                                Score+=50+(Difficulte<<2);
+                                break;
+                                case 6:
+                                Score+=75+(Difficulte<<2);
+                                SprIA->MortIA=20;
+                                break;
                             }
+                            GestionScore();
                             if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
                             return;
                         }
@@ -1683,33 +1732,41 @@ void GestionGrenades(Sprite1_ *spr)
                             SprIA->TempoSprite=0;
                             if (!spr->TypeIA)
                             {
-                                if (SprIA->ID==2)  Score+=35+(Difficulte<<2);
-                                if (SprIA->ID==3)  Score+=20+(Difficulte<<2);
-                                if (SprIA->ID==4) Score+=25+(Difficulte<<2);
-                                if (SprIA->ID==5) Score+=50+(Difficulte<<2);
-                                GestionScore();
-                            }
-                            if (SprIA->ID==2)
-                            {
-                                // Bouclier !
-                                Sprite1_* SprBou=&Sprites[IDBouclier];
-                                u8 NrBou=2;
-                                while(NrBou--)
+                                switch (SprIA->ID)
                                 {
-                                    if (!SprBou->Visible)
+                                    case 2:
+                                    Score+=35+(Difficulte<<2);
+                                    // Bouclier !
+                                    Sprite1_* SprBou=&Sprites[IDBouclier];
+                                    u8 NrBou=2;
+                                    while(NrBou--)
                                     {
-                                        if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-                                        SprBou->Visible=1;
-                                        SprBou->CoordX=SprIA->CoordX;
-                                        SprBou->CoordY=SprIA->CoordY;
-                                        SprBou->Acceleration=FIX32(4);
-                                        SprBou->Direction=0;
-                                        SprBou->StandBy=0;
-                                        SprBou->TypeBouclier=1;
-                                        break;
+                                        if (!SprBou->Visible)
+                                        {
+                                            if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                            SprBou->Visible=1;
+                                            SprBou->CoordX=SprIA->CoordX;
+                                            SprBou->CoordY=SprIA->CoordY;
+                                            SprBou->Acceleration=FIX32(4);
+                                            SprBou->Direction=0;
+                                            SprBou->StandBy=0;
+                                            SprBou->TypeBouclier=1;
+                                            break;
+                                        }
+                                        SprBou++;
                                     }
-                                    SprBou++;
+                                    break;
+                                    case 3:
+                                    Score+=20+(Difficulte<<2);
+                                    break;
+                                    case 4:
+                                    Score+=25+(Difficulte<<2);
+                                    break;
+                                    case 5:
+                                    Score+=50+(Difficulte<<2);
+                                    break;
                                 }
+                                GestionScore();
                             }
                             if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
                         }
@@ -1826,7 +1883,7 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                         // Les soldats bouclier se cassent !!
                         if (SprIA->ID==2 && !SprIA->IAFuite)
                         {
-                            if (spr->DegatArme!=8)
+                            if (spr->DegatArme<8)
                             {
                                 spr->Hit=0;
                                 spr->StandBy=1;
@@ -1868,27 +1925,61 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                                 }
                                 SprBou++;
                             }
-                            if (spr->DegatArme!=8) return;
+                            if (spr->DegatArme<8) return;
                         }
                         SprIA->MortIA=1;
                         SprIA->TempoInScene=0;
                         SprIA->InScene=0;
                         spr->TempoSprite=0;
-                        if (SpriteREF->Slot1==1 || SpriteREF->Slot1==10) {SprIA->IntIA=12;SprIA->Direction=spr->Direction;}
-                        else SprIA->IntIA=0;
-                        spr->Hit=2;
-                        //if (SpriteREF->Slot1==1) spr->Hit=8;
-                        if (SprIA->ID==2 || SprIA->ID==7)  Score+=35+(Difficulte<<2);
-                        if (SprIA->ID==3)  Score+=20+(Difficulte<<2);
-                        if (SprIA->ID==4) Score+=25+(Difficulte<<2);
-                        if (SprIA->ID==5) Score+=50+(Difficulte<<2);
-                        if (SpriteREF->Slot1==10 || SpriteREF->Slot1==1)
+                        SprIA->Direction=0;
+                        switch(SpriteREF->Slot1)
                         {
+                            case 0:
+                            SprIA->IntIA=0;
+                            break;
+                            case 1:
+                            SprIA->IntIA=12;
+                            SprIA->Direction=spr->Direction;
                             if (spr->Direction==4) spr->OffsetX=FIX32(20);
                             else spr->OffsetX=FIX32(-24);
+                            break;
+                            case 2:
+                            SprIA->IntIA=0;
+                            break;
+                            case 3:
+                            SprIA->IntIA=5;
+                            break;
+                            case 10:
+                            SprIA->IntIA=12;
+                            SprIA->Direction=spr->Direction;
+                            if (spr->Direction==4) spr->OffsetX=FIX32(20);
+                            else spr->OffsetX=FIX32(-24);
+                            break;
                         }
+                        spr->Hit=2;
+                        //if (SpriteREF->Slot1==1) spr->Hit=8;
+                        // Score
+                        switch (SprIA->ID)
+                        {
+                            case 2:
+                            Score+=35+(Difficulte<<2);
+                            break;
+                            case 3:
+                            Score+=20+(Difficulte<<2);
+                            break;
+                            case 4:
+                            Score+=25+(Difficulte<<2);
+                            break;
+                            case 5:
+                            Score+=50+(Difficulte<<2);
+                            break;
+                            case 7:
+                            Score+=35+(Difficulte<<2);
+                            break;
+                        }
+
                         GestionScore();
-                        spr->Direction=0;
+                        if (SpriteREF->Slot1!=3) spr->Direction=0;
                         if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2))
                         {
                             if (getRandomU16(100)<50) SND_startPlayPCM_XGM(SFX_GENERIC2, 1, SOUND_PCM_CH2);
@@ -2208,13 +2299,15 @@ void GestionIA(Sprite1_  *spr)
                     {
                         if (Difficulte>3)
                         {
+                            // Lance Flamme
+                            if (getRandomU16(100)<10 && NombreBalleShotgun<15) {SpriteB->Transition=7;break;}
                             // Lance Roquette/Heavy Machine Gun x 2
-                            if (getRandomU16(100)<10 && NombreBalleShotgun<15) {SpriteB->Transition=5;break;}
-                            // Super Pistolet
+                            if (getRandomU16(100)<15 && NombreBalleShotgun<15) {SpriteB->Transition=5;break;}
+                            // Machine gun
                             if (getRandomU16(100)<20 && NombreBalleShotgun<15) {SpriteB->Transition=6;break;}
                         }
                         // UP en plus
-                        if (getRandomU16(100)<15) {SpriteB->Transition=4;break;}
+                        if (getRandomU16(100)<22) {SpriteB->Transition=4;break;}
                         //  Heavy Machine Gun
                         if (NombreBalleShotgun<15 && getRandomU16(100)<25) {SpriteB->Transition=1;break;}
                         //  Heavy Machine Gun

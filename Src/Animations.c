@@ -74,8 +74,25 @@ void AnimationSprite(Sprite1_ *spr)
 	// Balles joueur ?
     if (spr->ID==45)
 	{
+	    // Lance flamme ON ?!
+	    if (spr->DegatArme==10)
+        {
+            spr->TempoSprite++;
+            SPR_setAnim(spr->SpriteA,17);
+            // Fin d'animation, on désactive !
+			if (spr->TempoSprite>30)
+			{
+				spr->Hit=0;
+				spr->StandBy=1;
+				spr->Visible=0;
+				spr->TempoSprite=0;
+			}
+            return;
+        }
 		if (spr->Hit)
 		{
+		    // Pas de Hit avec Le lance flamme.
+		    if (spr->DegatArme==10) return;
 			spr->TempoSprite++;
 			if (SpriteREF->Slot1==10) SPR_setAnim(spr->SpriteA,16);
 			else
@@ -388,6 +405,8 @@ void AnimationSprite(Sprite1_ *spr)
             SPR_setAnim(spr->SpriteA,6);
             return;
         }
+        // Cramé ?!
+        if (spr->IntIA==5) {SPR_setAnim(spr->SpriteA,8);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
 
        switch(spr->Direction)
        {
@@ -519,6 +538,8 @@ void AnimationSprite(Sprite1_ *spr)
             SPR_setAnim(spr->SpriteA,5);
             return;
         }
+        // Cramé ?!
+        if (spr->IntIA==5) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
 
        switch(spr->Direction)
        {
@@ -663,6 +684,8 @@ void AnimationSprite(Sprite1_ *spr)
             SPR_setAnim(spr->SpriteA,5);
             return;
         }
+        // Cramé ?!
+        if (spr->IntIA==5) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
 
        switch(spr->Direction)
        {
@@ -687,7 +710,7 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=8;
+                    u16 i=NombreBalle;
                     Sprite1_*  spr1 = &Sprites[IDBalle];
                     while(i--)
                     {
@@ -742,7 +765,7 @@ void AnimationSprite(Sprite1_ *spr)
                 if (spr->TempoSprite>=30)
                 {
                     spr->TempoSprite=0;
-                    u16 i=8;
+                    u16 i=NombreBalle;
                     Sprite1_* spr1 = &Sprites[IDBalle];
                     while(i--)
                     {
@@ -808,7 +831,8 @@ void AnimationSprite(Sprite1_ *spr)
         {
             SPR_setHFlip(spr->SpriteA,FALSE);
             spr->OffsetX=FIX32(0);
-            SPR_setAnim(spr->SpriteA,5);
+            if (spr->IntIA==5) SPR_setAnim(spr->SpriteA,6);
+            else SPR_setAnim(spr->SpriteA,5);
             SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             return;
         }
@@ -863,7 +887,8 @@ void AnimationSprite(Sprite1_ *spr)
         {
             SPR_setHFlip(spr->SpriteA,FALSE);
             spr->OffsetX=FIX32(0);
-            SPR_setAnim(spr->SpriteA,7);
+            if (spr->IntIA==5) SPR_setAnim(spr->SpriteA,8);
+            else SPR_setAnim(spr->SpriteA,7);
             SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             return;
         }
@@ -970,7 +995,7 @@ void AnimationSprite(Sprite1_ *spr)
             return;
         }
         // Shotgun ?!
-        if (SpriteREF->Slot1==1 || SpriteREF->Slot1==10) AnimArme=18;
+        if (SpriteREF->Slot1==1 || SpriteREF->Slot1==10 || SpriteREF->Slot1==3) AnimArme=18;
         else if (SpriteREF->Slot1==2 ) AnimArme=37;
 
         // Game over ?!
