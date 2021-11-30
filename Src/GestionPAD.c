@@ -212,7 +212,7 @@ void GestionPAD(Sprite1_ *spr)
                             break;
                             case 1:
                             SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
-                            spr1->DegatArme=4;
+                            spr1->DegatArme=3;
                             break;
                             case 2:
                             SND_startPlayPCM_XGM(SFX_GENERIC24, 1, SOUND_PCM_CH3);

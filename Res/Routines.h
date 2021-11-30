@@ -2,6 +2,9 @@
 #define _ROUTINES_H
 
 
+extern void GestionCollisionGrenades(Sprite1_ *SprIA, Sprite1_ *spr);
+extern void GestionCollisionBombes(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF);
+extern void GestionCollisionBalles(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF);
 extern  void PaletteEffectZone2();
 extern void GestionBombe(Sprite1_ *spr);
 extern void GestionProjectiles();

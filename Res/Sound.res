@@ -27,6 +27,7 @@ WAV PowerUp_SFX "Sound/PowerUp.wav" XGM
 WAV RocketLauncher_SFX "Sound/Rocket Launcher.wav" XGM
 WAV Score_SFX "Sound/Score.wav" XGM
 WAV Uzi_SFX "Sound/Uzi.wav" XGM
+WAV Baby_SFX "Sound/LetsRockBaby.wav" XGM
 
 
 

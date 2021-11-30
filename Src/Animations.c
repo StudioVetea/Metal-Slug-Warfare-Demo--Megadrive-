@@ -407,6 +407,8 @@ void AnimationSprite(Sprite1_ *spr)
         }
         // Cramé ?!
         if (spr->IntIA==5) {SPR_setAnim(spr->SpriteA,8);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
+        if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
+        if (spr->MortIA==1) {SPR_setAnim(spr->SpriteA,3);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
 
        switch(spr->Direction)
        {
@@ -424,9 +426,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(8);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -453,9 +453,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
                 spr->OffsetX=FIX32(-13);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -472,9 +470,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
                 spr->OffsetX=FIX32(-13);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -501,9 +497,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(8);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -540,6 +534,9 @@ void AnimationSprite(Sprite1_ *spr)
         }
         // Cramé ?!
         if (spr->IntIA==5) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
+        if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
+        if (spr->MortIA==1) {SPR_setAnim(spr->SpriteA,3);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
+
 
        switch(spr->Direction)
        {
@@ -548,9 +545,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(8);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -567,9 +562,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
                 spr->OffsetX=FIX32(-13);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-               else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -586,9 +579,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(8);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -605,9 +596,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(8);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -632,9 +621,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
                 spr->OffsetX=FIX32(-13);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -658,9 +645,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
                 spr->OffsetX=FIX32(-13);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -686,6 +671,8 @@ void AnimationSprite(Sprite1_ *spr)
         }
         // Cramé ?!
         if (spr->IntIA==5) {SPR_setAnim(spr->SpriteA,7);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
+        if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
+        if (spr->MortIA==1) {SPR_setAnim(spr->SpriteA,3);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);return;}
 
        switch(spr->Direction)
        {
@@ -694,9 +681,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
                 spr->OffsetX=FIX32(-13);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else
@@ -749,9 +734,7 @@ void AnimationSprite(Sprite1_ *spr)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(8);
-                if (spr->IntIA==12) {SPR_setAnim(spr->SpriteA,6);SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA);return;}
-                if (spr->MortIA==1) SPR_setAnim(spr->SpriteA,3);
-                else SPR_setAnim(spr->SpriteA,4);
+                SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
             else

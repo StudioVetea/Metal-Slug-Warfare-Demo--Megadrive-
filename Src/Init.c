@@ -825,6 +825,8 @@ void InitRoutine()
 	SND_setPCM_XGM(SFX_GENERIC22, RocketLauncher_SFX, sizeof(RocketLauncher_SFX));
 	SND_setPCM_XGM(SFX_GENERIC23, Score_SFX, sizeof(Score_SFX));
 	SND_setPCM_XGM(SFX_GENERIC24, Uzi_SFX, sizeof(Uzi_SFX));
+	SND_setPCM_XGM(SFX_GENERIC25, Baby_SFX, sizeof(Baby_SFX));
+
 
 }
 

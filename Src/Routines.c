@@ -241,21 +241,21 @@ void GestionBonus(Sprite1_ *spr)
 
             case 5:
                 spr->Slot1=10;
-                NombreBalleShotgun=20;
+                NombreBalleShotgun=25;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC22, 2, SOUND_PCM_CH4);
                 break;
 
             case 6:
                 spr->Slot1=2;
-                NombreBalleShotgun=71;
+                NombreBalleShotgun=90;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC20, 2, SOUND_PCM_CH4);
                 break;
 
             case 7:
                 spr->Slot1=3;
-                NombreBalleShotgun=35;
+                NombreBalleShotgun=40;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC16, 2, SOUND_PCM_CH4);
                 break;
@@ -271,6 +271,7 @@ void GestionBonus(Sprite1_ *spr)
 void GestionProjectiles()
 {
     Sprite1_*spr1 = &Sprites[IDBalle];
+
 
     // ID Ref joueur
     Sprite1_* SpriteREF=&Sprites[0];
@@ -312,7 +313,7 @@ void GestionProjectiles()
 void GestionCivil(Sprite1_ *spr)
 {
     // Sécurité
-    if (PhaseScene || !GoCivil) return;
+    if (!GoCivil) return;
 
     //if (NombreIAScene>=NombreIASceneMax && !CivilON) return;
 
@@ -349,12 +350,12 @@ void GestionCivil(Sprite1_ *spr)
 
     // Spawn Civil.
     SprCivil->TempoSprite++;
-    if (SprCivil->TempoSprite<450+(Difficulte<<2)) return;
+    if (SprCivil->TempoSprite<1050+(Difficulte<<2)) return;
     u8 Chance=0;
 
     // Helico en court d'attaque ? On quitte !
-    Sprite1_* spr2=&Sprites[IDPlane];
-    if (spr2->Phase==2) return;
+    //Sprite1_* spr2=&Sprites[IDPlane];
+    //if (spr2->Phase==2) return;
 
     if (getRandomU16(100)<2) Chance=1;
 
@@ -379,7 +380,7 @@ void GestionVague()
     Sprite1_* spr2 = &Sprites[IDPlane];
 
     // Paramétrage difficulté / Médailles
-    TempoRegen=125-(Difficulte<<1);
+    TempoRegen=100-(Difficulte<<1);
 
 	switch(Difficulte)
 	{
@@ -409,7 +410,7 @@ void GestionVague()
         break;
 	}
 	if (Difficulte>7) NombreIASceneMax=5;
-	if (spr2->Phase) NombreIASceneMax=1;
+	if (spr2->Phase) NombreIASceneMax=2;
 }
 
 
@@ -651,8 +652,7 @@ void GestionBombe(Sprite1_ *spr)
     {
         // Massacre au sol !
         // Joueur principal
-        u16 NbrIA=NombreIA;
-        Sprite1_* SprIA=&Sprites[IDUnite];
+        //u16 NbrIA=NombreIA;
         Sprite1_* SpriteREF = &Sprites[0];
         fix32 DX_Joueur=abs(spr->CoordX - (SpriteREF->CoordX));
         fix32 DY_Joueur=abs(spr->CoordY - (SpriteREF->CoordY+FIX32(48)));
@@ -678,58 +678,18 @@ void GestionBombe(Sprite1_ *spr)
             }
             GestionHUDSante();
         }
-        while(NbrIA--)
-        {
-            if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA && SprIA->ID!=5 && SprIA->ID!=7)
-            {
-                fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
-                if (DX_IA<=FIX32(32))
-                {
-                    //RandomSeed();
-                    if (getRandomU16(100)<50) SprIA->Direction=6;
-                    else SprIA->Direction=4;
-                    u16 VV=getRandomU16(5);
-                    if (VV<2) VV=2;
-                    SprIA->Vitesse=FIX32(VV);
-                    SprIA->MortIA=2;
-                    SprIA->TempoInScene=0;
-                    SprIA->InScene=0;
-                    SprIA->IntIA=10;
-                    //RandomSeed();
-                    u16 VV1=getRandomU16(8);
-                    if (VV1<4) VV1=4;
-                    SprIA->Acceleration=FIX32(VV1);
-                    SprIA->RefY=FIX32(240+50);
-                    SprIA->SensY=1;
-                    SprIA->TirBusy=0;
-                    SprIA->TempoSprite=0;
-                    if (SprIA->ID==2)
-                    {
-                        // Bouclier !
-                        Sprite1_* SprBou=&Sprites[IDBouclier];
-                        u8 NrBou=2;
-                        while(NrBou--)
-                        {
-                            if (!SprBou->Visible)
-                            {
-                                if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-                                SprBou->Visible=1;
-                                SprBou->CoordX=SprIA->CoordX;
-                                SprBou->CoordY=SprIA->CoordY;
-                                SprBou->Acceleration=FIX32(4);
-                                SprBou->Direction=0;
-                                SprBou->StandBy=0;
-                                SprBou->TypeBouclier=1;
-                                break;
-                            }
-                            SprBou++;
-                        }
-                    }
-                    if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
-                }
-            }
-            SprIA++;
-        }
+
+        // Collision IA
+        Sprite1_* SprIA=&Sprites[IDUnite];
+        GestionCollisionBombes(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBombes(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBombes(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBombes(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBombes(SprIA,spr,SpriteREF);
     }
 }
 
@@ -1106,6 +1066,7 @@ void Phase_Scene(u8 Scene,Sprite1_ *spr)
         {
             PhaseAffichageScene=3;
             SND_startPlayPCM_XGM(SFX_GENERIC9, 1, SOUND_PCM_CH3);
+            SND_startPlayPCM_XGM(SFX_GENERIC25, 2, SOUND_PCM_CH4);
             TremblementON=1;
             TempoMax=8;
             TempoTremblement=0;
@@ -1702,77 +1663,19 @@ void GestionGrenades(Sprite1_ *spr)
                     }
                 }
 
-                // Joueur principal
-                u16 NbrIA=NombreIA;
+                // IA
+                //u16 NbrIA=NombreIA;
                 Sprite1_* SprIA=&Sprites[IDUnite];
-                while(NbrIA--)
-                {
-                    if (!SprIA->StandBy && !SprIA->MortIA && SprIA->ID!=5 && SprIA->ID!=7)
-                    {
-                        fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
-                        if (DX_IA<=FIX32(48))
-                        {
-                            //RandomSeed();
-                            if (getRandomU16(100)<50) SprIA->Direction=6;
-                            else SprIA->Direction=4;
-                            u16 VV=getRandomU16(5);
-                            if (VV<2) VV=2;
-                            SprIA->Vitesse=FIX32(VV);
-                            SprIA->MortIA=2;
-                            SprIA->TempoInScene=0;
-                            SprIA->InScene=0;
-                            SprIA->IntIA=10;
-                            //RandomSeed();
-                            u16 VV1=getRandomU16(8);
-                            if (VV1<4) VV1=4;
-                            SprIA->Acceleration=FIX32(VV1);
-                            SprIA->RefY=FIX32(240+50);
-                            SprIA->SensY=1;
-                            SprIA->TirBusy=0;
-                            SprIA->TempoSprite=0;
-                            if (!spr->TypeIA)
-                            {
-                                switch (SprIA->ID)
-                                {
-                                    case 2:
-                                    Score+=35+(Difficulte<<2);
-                                    // Bouclier !
-                                    Sprite1_* SprBou=&Sprites[IDBouclier];
-                                    u8 NrBou=2;
-                                    while(NrBou--)
-                                    {
-                                        if (!SprBou->Visible)
-                                        {
-                                            if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-                                            SprBou->Visible=1;
-                                            SprBou->CoordX=SprIA->CoordX;
-                                            SprBou->CoordY=SprIA->CoordY;
-                                            SprBou->Acceleration=FIX32(4);
-                                            SprBou->Direction=0;
-                                            SprBou->StandBy=0;
-                                            SprBou->TypeBouclier=1;
-                                            break;
-                                        }
-                                        SprBou++;
-                                    }
-                                    break;
-                                    case 3:
-                                    Score+=20+(Difficulte<<2);
-                                    break;
-                                    case 4:
-                                    Score+=25+(Difficulte<<2);
-                                    break;
-                                    case 5:
-                                    Score+=50+(Difficulte<<2);
-                                    break;
-                                }
-                                GestionScore();
-                            }
-                            if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
-                        }
-                    }
-                    SprIA++;
-                }
+                GestionCollisionGrenades(SprIA,spr);
+                SprIA++;
+                GestionCollisionGrenades(SprIA,spr);
+                SprIA++;
+                GestionCollisionGrenades(SprIA,spr);
+                SprIA++;
+                GestionCollisionGrenades(SprIA,spr);
+                SprIA++;
+                GestionCollisionGrenades(SprIA,spr);
+
             }
         }
 
@@ -1786,6 +1689,278 @@ void GestionGrenades(Sprite1_ *spr)
     return;
 }
 
+
+/////////////////////////////////////////
+//        Gestion Collision Grenades
+/////////////////////////////////////////
+void GestionCollisionGrenades(Sprite1_ *SprIA, Sprite1_ *spr)
+{
+    if (!SprIA->StandBy && !SprIA->MortIA && SprIA->ID!=5 && SprIA->ID!=7)
+    {
+        fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
+        if (DX_IA<=FIX32(48))
+        {
+            //RandomSeed();
+            if (getRandomU16(100)<50) SprIA->Direction=6;
+            else SprIA->Direction=4;
+            u16 VV=getRandomU16(5);
+            if (VV<2) VV=2;
+            SprIA->Vitesse=FIX32(VV);
+            SprIA->MortIA=2;
+            SprIA->TempoInScene=0;
+            SprIA->InScene=0;
+            SprIA->IntIA=10;
+            //RandomSeed();
+            u16 VV1=getRandomU16(8);
+            if (VV1<4) VV1=4;
+            SprIA->Acceleration=FIX32(VV1);
+            SprIA->RefY=FIX32(240+50);
+            SprIA->SensY=1;
+            SprIA->TirBusy=0;
+            SprIA->TempoSprite=0;
+            if (!spr->TypeIA)
+            {
+                switch (SprIA->ID)
+                {
+                    case 2:
+                    Score+=35+(Difficulte<<2);
+                    // Bouclier !
+                    Sprite1_* SprBou=&Sprites[IDBouclier];
+                    u8 NrBou=2;
+                    while(NrBou--)
+                    {
+                        if (!SprBou->Visible)
+                        {
+                            if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                            SprBou->Visible=1;
+                            SprBou->CoordX=SprIA->CoordX;
+                            SprBou->CoordY=SprIA->CoordY;
+                            SprBou->Acceleration=FIX32(4);
+                            SprBou->Direction=0;
+                            SprBou->StandBy=0;
+                            SprBou->TypeBouclier=1;
+                            break;
+                        }
+                        SprBou++;
+                    }
+                    break;
+                    case 3:
+                    Score+=20+(Difficulte<<2);
+                    break;
+                    case 4:
+                    Score+=25+(Difficulte<<2);
+                    break;
+                    case 5:
+                    Score+=50+(Difficulte<<2);
+                    break;
+                }
+                GestionScore();
+            }
+            if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
+        }
+    }
+}
+
+
+/////////////////////////////////////////
+//          Gestion Collision Bombes
+/////////////////////////////////////////
+void GestionCollisionBombes(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF)
+{
+    if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA && SprIA->ID!=5 && SprIA->ID!=7)
+    {
+        fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
+        if (DX_IA<=FIX32(32))
+        {
+            //RandomSeed();
+            if (getRandomU16(100)<50) SprIA->Direction=6;
+            else SprIA->Direction=4;
+            u16 VV=getRandomU16(5);
+            if (VV<2) VV=2;
+            SprIA->Vitesse=FIX32(VV);
+            SprIA->MortIA=2;
+            SprIA->TempoInScene=0;
+            SprIA->InScene=0;
+            SprIA->IntIA=10;
+            //RandomSeed();
+            u16 VV1=getRandomU16(8);
+            if (VV1<4) VV1=4;
+            SprIA->Acceleration=FIX32(VV1);
+            SprIA->RefY=FIX32(240+50);
+            SprIA->SensY=1;
+            SprIA->TirBusy=0;
+            SprIA->TempoSprite=0;
+            if (SprIA->ID==2)
+            {
+                // Bouclier !
+                Sprite1_* SprBou=&Sprites[IDBouclier];
+                u8 NrBou=2;
+                while(NrBou--)
+                {
+                    if (!SprBou->Visible)
+                    {
+                        if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                        SprBou->Visible=1;
+                        SprBou->CoordX=SprIA->CoordX;
+                        SprBou->CoordY=SprIA->CoordY;
+                        SprBou->Acceleration=FIX32(4);
+                        SprBou->Direction=0;
+                        SprBou->StandBy=0;
+                        SprBou->TypeBouclier=1;
+                        break;
+                    }
+                    SprBou++;
+                }
+            }
+            if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
+        }
+    }
+}
+
+
+/////////////////////////////////////////
+//          Gestion Collision Balles
+/////////////////////////////////////////
+void GestionCollisionBalles(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF)
+{
+    if (!SprIA->StandBy && !SprIA->MortIA && SprIA->ID!=6)
+    {
+        fix32 DX=FIX32(0);
+        if (spr->Direction==6)  DX=FIX32(-12);
+        else DX=FIX32(12);
+        if (SprIA->ID==5 || SprIA->AirUnit==10 || SprIA->ID==7) DX=FIX32(12);
+        fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX-DX));
+        fix32 DY_IA=abs(spr->CoordY - (SprIA->CoordY+SprIA->Spotting));
+        u8 TES=0;
+        // Test Balle <-> Unités
+        if (spr->Direction==6 && (SpriteREF->CoordX>SprIA->CoordX)) TES=1;
+        if (spr->Direction==4 && (SpriteREF->CoordX<SprIA->CoordX)) TES=1;
+
+        if (DX_IA<=FIX32(26) && DY_IA<=FIX32(24) && !TES)
+        {
+            SprIA->HitPoint-=spr->DegatArme;
+            if (SprIA->HitPoint>100) SprIA->HitPoint=0;
+            if (spr->Direction==6) spr->OffsetX=FIX32(0);
+            else spr->OffsetX=FIX32(-16);
+
+            if (!SprIA->HitPoint)
+            {
+                // Les soldats bouclier se cassent !!
+                if (SprIA->ID==2 && !SprIA->IAFuite)
+                {
+                    if (spr->DegatArme<8)
+                    {
+                        spr->Hit=0;
+                        spr->StandBy=1;
+                        spr->Visible=0;
+                        SprIA->IAFuite=1;
+                        SprIA->HitPoint++;
+                        switch (SprIA->Direction)
+                        {
+                        case 4:
+                            SprIA->Direction=6;
+                            break;
+
+                        case 6:
+                            SprIA->Direction=4;
+                            break;
+                        }
+
+                        if (SprIA->Direction==98) SprIA->Direction=4;
+                        if (!SprIA->Direction) SprIA->Direction=6;
+
+                        SprIA->Vitesse=FIX32(2.5);
+                    }
+                    // Bouclier !
+                    Sprite1_* SprBou=&Sprites[IDBouclier];
+                    u8 NrBou=2;
+                    while(NrBou--)
+                    {
+                        if (!SprBou->Visible)
+                        {
+                            if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                            SprBou->Visible=1;
+                            SprBou->CoordX=SprIA->CoordX;
+                            SprBou->CoordY=SprIA->CoordY;
+                            SprBou->Acceleration=FIX32(4);
+                            SprBou->Direction=0;
+                            SprBou->StandBy=0;
+                            SprBou->TypeBouclier=1;
+                            break;
+                        }
+                        SprBou++;
+                    }
+                    if (spr->DegatArme<8) return;
+                }
+                SprIA->MortIA=1;
+                SprIA->TempoInScene=0;
+                SprIA->InScene=0;
+                spr->TempoSprite=0;
+                SprIA->Direction=0;
+                switch(SpriteREF->Slot1)
+                {
+                    case 0:
+                    SprIA->IntIA=0;
+                    break;
+                    case 1:
+                    SprIA->IntIA=12;
+                    SprIA->Direction=spr->Direction;
+                    if (spr->Direction==4) spr->OffsetX=FIX32(20);
+                    else spr->OffsetX=FIX32(-24);
+                    break;
+                    case 2:
+                    SprIA->IntIA=0;
+                    break;
+                    case 3:
+                    SprIA->IntIA=5;
+                    break;
+                    case 10:
+                    SprIA->IntIA=12;
+                    SprIA->Direction=spr->Direction;
+                    if (spr->Direction==4) spr->OffsetX=FIX32(20);
+                    else spr->OffsetX=FIX32(-24);
+                    break;
+                }
+                spr->Hit=2;
+                //if (SpriteREF->Slot1==1) spr->Hit=8;
+                // Score
+                switch (SprIA->ID)
+                {
+                    case 2:
+                    Score+=35+(Difficulte<<2);
+                    break;
+                    case 3:
+                    Score+=20+(Difficulte<<2);
+                    break;
+                    case 4:
+                    Score+=25+(Difficulte<<2);
+                    break;
+                    case 5:
+                    Score+=50+(Difficulte<<2);
+                    break;
+                    case 7:
+                    Score+=35+(Difficulte<<2);
+                    break;
+                }
+
+                GestionScore();
+                if (SpriteREF->Slot1!=3) spr->Direction=0;
+                if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2))
+                {
+                    if (getRandomU16(100)<50) SND_startPlayPCM_XGM(SFX_GENERIC2, 1, SOUND_PCM_CH2);
+                    else SND_startPlayPCM_XGM(SFX_GENERIC3, 1, SOUND_PCM_CH2);
+                }
+                return;
+            }
+            else
+            {
+                spr->Hit=1;
+                spr->Direction=0;
+                return;
+            }
+        }
+    }
+}
 
 /////////////////////////////////////////
 //                  Gestion Balles
@@ -1819,7 +1994,7 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
     if (spr->ID==45)
     {
         // Test collision IA
-        u16 NbrIA=NombreIA;
+        //u16 NbrIA=NombreIA;
         Sprite1_* SprIA=&Sprites[IDPlane];
 
         if (SprIA->Phase==2)
@@ -1856,147 +2031,15 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
         }
 
         SprIA=&Sprites[IDUnite];
-        while(NbrIA--)
-        {
-            if (!SprIA->StandBy && !SprIA->MortIA && SprIA->ID!=6)
-            {
-                fix32 DX=FIX32(0);
-                if (spr->Direction==6)  DX=FIX32(-12);
-                else DX=FIX32(12);
-                if (SprIA->ID==5 || SprIA->AirUnit==10 || SprIA->ID==7) DX=FIX32(12);
-                fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX-DX));
-                fix32 DY_IA=abs(spr->CoordY - (SprIA->CoordY+SprIA->Spotting));
-                u8 TES=0;
-                // Test Balle <-> Unités
-                if (spr->Direction==6 && (SpriteREF->CoordX>SprIA->CoordX)) TES=1;
-                if (spr->Direction==4 && (SpriteREF->CoordX<SprIA->CoordX)) TES=1;
-
-                if (DX_IA<=FIX32(26) && DY_IA<=FIX32(24) && !TES)
-                {
-                    SprIA->HitPoint-=spr->DegatArme;
-                    if (SprIA->HitPoint>100) SprIA->HitPoint=0;
-                    if (spr->Direction==6) spr->OffsetX=FIX32(0);
-                    else spr->OffsetX=FIX32(-16);
-
-                    if (!SprIA->HitPoint)
-                    {
-                        // Les soldats bouclier se cassent !!
-                        if (SprIA->ID==2 && !SprIA->IAFuite)
-                        {
-                            if (spr->DegatArme<8)
-                            {
-                                spr->Hit=0;
-                                spr->StandBy=1;
-                                spr->Visible=0;
-                                SprIA->IAFuite=1;
-                                SprIA->HitPoint++;
-                                switch (SprIA->Direction)
-                                {
-                                case 4:
-                                    SprIA->Direction=6;
-                                    break;
-
-                                case 6:
-                                    SprIA->Direction=4;
-                                    break;
-                                }
-
-                                if (SprIA->Direction==98) SprIA->Direction=4;
-                                if (!SprIA->Direction) SprIA->Direction=6;
-
-                                SprIA->Vitesse=FIX32(2.5);
-                            }
-                            // Bouclier !
-                            Sprite1_* SprBou=&Sprites[IDBouclier];
-                            u8 NrBou=2;
-                            while(NrBou--)
-                            {
-                                if (!SprBou->Visible)
-                                {
-                                    if (SprBou->SpriteA==NULL) SprBou->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-                                    SprBou->Visible=1;
-                                    SprBou->CoordX=SprIA->CoordX;
-                                    SprBou->CoordY=SprIA->CoordY;
-                                    SprBou->Acceleration=FIX32(4);
-                                    SprBou->Direction=0;
-                                    SprBou->StandBy=0;
-                                    SprBou->TypeBouclier=1;
-                                    break;
-                                }
-                                SprBou++;
-                            }
-                            if (spr->DegatArme<8) return;
-                        }
-                        SprIA->MortIA=1;
-                        SprIA->TempoInScene=0;
-                        SprIA->InScene=0;
-                        spr->TempoSprite=0;
-                        SprIA->Direction=0;
-                        switch(SpriteREF->Slot1)
-                        {
-                            case 0:
-                            SprIA->IntIA=0;
-                            break;
-                            case 1:
-                            SprIA->IntIA=12;
-                            SprIA->Direction=spr->Direction;
-                            if (spr->Direction==4) spr->OffsetX=FIX32(20);
-                            else spr->OffsetX=FIX32(-24);
-                            break;
-                            case 2:
-                            SprIA->IntIA=0;
-                            break;
-                            case 3:
-                            SprIA->IntIA=5;
-                            break;
-                            case 10:
-                            SprIA->IntIA=12;
-                            SprIA->Direction=spr->Direction;
-                            if (spr->Direction==4) spr->OffsetX=FIX32(20);
-                            else spr->OffsetX=FIX32(-24);
-                            break;
-                        }
-                        spr->Hit=2;
-                        //if (SpriteREF->Slot1==1) spr->Hit=8;
-                        // Score
-                        switch (SprIA->ID)
-                        {
-                            case 2:
-                            Score+=35+(Difficulte<<2);
-                            break;
-                            case 3:
-                            Score+=20+(Difficulte<<2);
-                            break;
-                            case 4:
-                            Score+=25+(Difficulte<<2);
-                            break;
-                            case 5:
-                            Score+=50+(Difficulte<<2);
-                            break;
-                            case 7:
-                            Score+=35+(Difficulte<<2);
-                            break;
-                        }
-
-                        GestionScore();
-                        if (SpriteREF->Slot1!=3) spr->Direction=0;
-                        if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2))
-                        {
-                            if (getRandomU16(100)<50) SND_startPlayPCM_XGM(SFX_GENERIC2, 1, SOUND_PCM_CH2);
-                            else SND_startPlayPCM_XGM(SFX_GENERIC3, 1, SOUND_PCM_CH2);
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        spr->Hit=1;
-                        spr->Direction=0;
-                        return;
-                    }
-                }
-            }
-            SprIA++;
-        }
+        GestionCollisionBalles(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBalles(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBalles(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBalles(SprIA,spr,SpriteREF);
+        SprIA++;
+        GestionCollisionBalles(SprIA,spr,SpriteREF);
         return;
     }
 
@@ -3245,10 +3288,10 @@ void UpdateSprite(Sprite1_ *spr)
         // Phase d'hélicoptère.
         if (!spr->Phase)
         {
-            u16 T2=500;
+            u16 T2=1150;
             if (VisCamX==2) T2=50;
             if (spr->Visible) spr->TempoCouvert++;
-            if (spr->TempoCouvert>(T2-(Difficulte<<3)) && NombreIAScene<3 && spr->Visible  && !CivilON)
+            if (spr->TempoCouvert>(T2-(Difficulte<<3)) && NombreIAScene<3 && spr->Visible)
             {
                 if (VisCamX==2) return;
                 spr->Phase=1;
