@@ -58,10 +58,11 @@ void AnimationSprite(Sprite1_ *spr)
             spr->Visible=0;
 		}
 		else
-            // Helico Medium ?
-            if (spr->SpeIA)
+            // Helico Medium / Léger ?
+            if (spr->SpeedArme==10)
             {
-                SPR_setAnim(spr->SpriteA,11);
+                if (spr->SpeIA) SPR_setAnim(spr->SpriteA,11);
+                else SPR_setAnim(spr->SpriteA,18);
                 return;
             }
             // Balles sniper ?

@@ -1,9 +1,11 @@
 #ifndef _VARIABLES_H
 #define _VARIABLES_H
 
-#define MAP_WIDTH      2048
+#define MAP_WIDTH    2048
 #define MAP_HEIGHT		256
 #define  SniperRange  getRandomF32(FIX32(64))+FIX32(64)+getRandomF32(FIX32(64));
+#define TempoHelico 1000
+#define TempoCivil 950
 
 // Definition Sons & Musiques
 #define SFX_GENERIC 64
@@ -196,6 +198,7 @@ extern Sprite1_ SpriteBonus;
 extern s16 PCamX;
 extern s16 PCamY;
 
+extern u16 TestRoutine;
 extern u16 BlankPalette[16];
 extern u16 PaletteZone2[16];
 extern u16 PaletteZone2_1[16];

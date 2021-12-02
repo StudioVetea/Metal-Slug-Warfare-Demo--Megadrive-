@@ -255,7 +255,7 @@ void GestionBonus(Sprite1_ *spr)
 
             case 7:
                 spr->Slot1=3;
-                NombreBalleShotgun=40;
+                NombreBalleShotgun=25;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC16, 2, SOUND_PCM_CH4);
                 break;
@@ -350,7 +350,7 @@ void GestionCivil(Sprite1_ *spr)
 
     // Spawn Civil.
     SprCivil->TempoSprite++;
-    if (SprCivil->TempoSprite<1050+(Difficulte<<2)) return;
+    if (SprCivil->TempoSprite<TempoCivil+(Difficulte<<2)) return;
     u8 Chance=0;
 
     // Helico en court d'attaque ? On quitte !
@@ -721,7 +721,7 @@ void GestionAttaqueHelico(Sprite1_ *spr)
         if (spr->TempoAggro>120-(Difficulte<<2))
         {
             spr->TempoAggro=0;
-            u16 i=8;
+            u16 i=NombreBalle;
             Sprite1_* spr1 = &Sprites[IDBalle];
             while(i--)
             {
@@ -1840,8 +1840,12 @@ void GestionCollisionBalles(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF)
         {
             SprIA->HitPoint-=spr->DegatArme;
             if (SprIA->HitPoint>100) SprIA->HitPoint=0;
-            if (spr->Direction==6) spr->OffsetX=FIX32(0);
-            else spr->OffsetX=FIX32(-16);
+            // Pas de modif avec le lance flamme
+            if (spr->DegatArme<10)
+            {
+                if (spr->Direction==6) spr->OffsetX=FIX32(0);
+                else spr->OffsetX=FIX32(-16);
+            }
 
             if (!SprIA->HitPoint)
             {
@@ -1895,7 +1899,6 @@ void GestionCollisionBalles(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF)
                 SprIA->MortIA=1;
                 SprIA->TempoInScene=0;
                 SprIA->InScene=0;
-                spr->TempoSprite=0;
                 SprIA->Direction=0;
                 switch(SpriteREF->Slot1)
                 {
@@ -1921,7 +1924,13 @@ void GestionCollisionBalles(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF)
                     else spr->OffsetX=FIX32(-24);
                     break;
                 }
-                spr->Hit=2;
+                // Lance flamme aucun répit !!
+                if (spr->DegatArme<10)
+                {
+                    spr->TempoSprite=0;
+                    spr->Hit=2;
+                    spr->Direction=0;
+                }
                 //if (SpriteREF->Slot1==1) spr->Hit=8;
                 // Score
                 switch (SprIA->ID)
@@ -1944,7 +1953,6 @@ void GestionCollisionBalles(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF)
                 }
 
                 GestionScore();
-                if (SpriteREF->Slot1!=3) spr->Direction=0;
                 if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2))
                 {
                     if (getRandomU16(100)<50) SND_startPlayPCM_XGM(SFX_GENERIC2, 1, SOUND_PCM_CH2);
@@ -2054,20 +2062,31 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
             //if (SpriteREF->Direction==24 || SpriteREF->Direction==26 || SpriteREF->Direction==2)  DY=FIX32(60);
             fix32 DCX;
             fix32 DCY;
-            if (spr->Sniper)
+            // Helico
+            if (spr->SpeedArme==10)
             {
-                DCY=FIX32(-32);
-                if (spr->Direction==42) DCX=FIX32(8);
-                if (spr->Direction==36) DCX=FIX32(-16);
-                if (spr->Direction==14) DCX=FIX32(45);
+                DCY=FIX32(0);
+                if (spr->Direction==16) DCX=FIX32(-16);
+                if (spr->Direction==14) DCX=FIX32(18);
             }
             else
             {
-                DCY=FIX32(0);
-                if (spr->Direction==42) DCX=FIX32(8);
-                if (spr->Direction==36) DCX=FIX32(-12);
-                if (spr->Direction==14) DCX=FIX32(32);
+                if (spr->Sniper)
+                {
+                    DCY=FIX32(-32);
+                    if (spr->Direction==42) DCX=FIX32(8);
+                    if (spr->Direction==36) DCX=FIX32(-16);
+                    if (spr->Direction==14) DCX=FIX32(45);
+                }
+                else
+                {
+                    DCY=FIX32(0);
+                    if (spr->Direction==42) DCX=FIX32(8);
+                    if (spr->Direction==36) DCX=FIX32(-12);
+                    if (spr->Direction==14) DCX=FIX32(32);
+                }
             }
+
             fix32 CX_IA=spr->CoordX+FIX32(13);
             fix32 CY_IA=spr->CoordY-FIX32(13);
             fix32 CX_Player=SpriteREF->CoordX+DCX;
@@ -2086,8 +2105,8 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                 SpriteREF->ClignoTic=2;
                 spr->Direction=0;
                 SND_startPlayPCM_XGM(SFX_GENERIC6, 1, SOUND_PCM_CH2);
-                if (!spr->SpeIA) SpriteREF->HitPoint--;
-                else SpriteREF->HitPoint-=2;
+                if (!spr->SpeIA) SpriteREF->HitPoint-=2;
+                else SpriteREF->HitPoint-=4;
                 if (SpriteREF->HitPoint>200) SpriteREF->HitPoint=0;
                 if (!SpriteREF->HitPoint)
                 {
@@ -2169,6 +2188,144 @@ void GestionHUDSante()
 
 
 ///////////////////////////////
+//    Balles IA Instance
+///////////////////////////////
+void BallesIA(Sprite1_ *spr)
+{
+    TestRoutine=0;
+    Sprite1_* spr1 = &Sprites[IDBalle];
+    BallesIATest(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesIATest(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesIATest(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesIATest(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesIATest(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesIATest(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesIATest(spr1,spr);
+    if (TestRoutine) return;
+}
+
+///////////////////////////////
+//    Balles IA Instance 2
+///////////////////////////////
+void BallesIATest(Sprite1_ *spr1, Sprite1_ *spr)
+{
+    if (!spr1->StandBy)  return;
+    spr1->StandBy=0;
+    spr1->ID=46;
+    TestRoutine=1;
+    spr1->Hit=0;
+    if (Difficulte==1) spr->Boost=FIX32(0.25);
+    if (Difficulte==2) spr->Boost=FIX32(0.35);
+    if (Difficulte==3) spr->Boost=FIX32(0.45);
+    if (Difficulte==4) spr->Boost=FIX32(0.55);
+
+    // Hélico de combat  Tir x 2 !
+    if (spr->AirUnit==10)
+    {
+        spr1->Vitesse=FIX32(2.5);
+        if (spr->SpeIA) spr1->Vitesse=FIX32(3);
+        spr1->Visible=1;
+        spr1->SpeIA=spr->SpeIA;
+        spr1->IDList=2;
+        spr1->SpeedArme=spr->AirUnit;
+        spr->TirBusy=2;
+        spr1->Sniper=0;
+        spr->TempoChauffeArme=0;
+        spr1->CoordX=spr->CoordX;
+        spr1->DeltaY=FIX32(0);
+        spr1->CoordY=spr->CoordY;
+        spr1->OffsetY=FIX32(-64);
+        if (spr->Direction==4)
+        {
+            spr1->Direction=14;
+            spr1->OffsetX=FIX32(-4);
+            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);
+        }
+        else
+        {
+            spr1->Direction=16;
+            spr1->OffsetX=FIX32(-34);
+            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);
+        }
+        return;
+    }
+    else
+    {
+        // Tir du soldat Bouclier
+        if (spr->ID==2)
+        {
+            SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH2);
+            spr1->Vitesse=FIX32(3)+spr->Boost;
+            spr1->Visible=1;
+            spr1->IDList=1;
+            spr1->SpeedArme=0;
+            spr1->SpeIA=0;
+            spr1->CoordX=spr->CoordX;
+            spr1->CoordY=spr->CoordY+spr->DeltaY;
+            spr1->OffsetY=FIX32(-7);
+            spr1->Direction=spr->Direction;
+            if (spr->Direction==0) spr1->Direction=4;
+            if (spr->Direction==98) spr1->Direction=6;
+            if (spr->Direction==4) spr1->OffsetX=FIX32(8);
+            else  spr1->OffsetX=FIX32(0);
+            return;
+        }
+        // Tir Para   ou sniper
+        else if (spr->ID==5)
+        {
+            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);
+            spr1->Vitesse=FIX32(1.5)+spr->Boost;
+            spr1->Visible=1;
+            spr1->IDList=2;
+            spr1->Sniper=0;
+            spr1->SpeedArme=0;
+            spr1->SpeIA=0;
+            spr1->CoordX=spr->CoordX+spr->VitesseInit;
+            spr1->DeltaY=FIX32(0);
+            spr1->CoordY=spr->CoordY;
+            spr1->OffsetX=FIX32(-10);
+            spr1->OffsetY=FIX32(-64);
+            if (!spr->Animation) spr1->Direction=42;
+            if (spr->Animation==6) {spr1->Direction=36;spr1->OffsetX=FIX32(-24);spr1->OffsetY=FIX32(-56);}
+            if (spr->Animation==4) {spr1->Direction=14;spr1->OffsetX=FIX32(24);spr1->OffsetY=FIX32(-56);}
+            return;
+        }
+        // Tir Para   ou sniper
+        else if (spr->ID==7)
+        {
+            SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH2);
+            spr1->Vitesse=FIX32(1.5)+spr->Boost;
+            spr1->Visible=1;
+            spr1->IDList=2;
+            spr1->SpeIA=0;
+            spr1->SpeedArme=0;
+            spr1->Sniper=1;
+            spr1->CoordX=spr->CoordX;
+            spr1->DeltaY=FIX32(0);
+            spr1->CoordY=spr->CoordY;
+            spr1->OffsetX=FIX32(-8);
+            spr1->OffsetY=FIX32(-20);
+            if (spr->Animation==3) spr1->Direction=42;
+            if (spr->Animation==2) {spr1->Direction=36;spr1->OffsetX=FIX32(-38);spr1->OffsetY=FIX32(-20);}
+            if (spr->Animation==1) {spr1->Direction=14;spr1->OffsetX=FIX32(24);spr1->OffsetY=FIX32(-20);}
+            return;
+        }
+    }
+}
+
+///////////////////////////////
 //        Balles IA
 ///////////////////////////////
 void GestionBallesIA(Sprite1_ *spr)
@@ -2190,113 +2347,8 @@ void GestionBallesIA(Sprite1_ *spr)
              spr->TirBusy=0;
              return;
         }
-        u16 i=8,h=0;
-        Sprite1_* spr1 = &Sprites[IDBalle];
-        while(i--)
-        {
-            //spr1 = &Sprites[IDBalle+j];
-            if (spr1->StandBy)
-            {
-                spr1->StandBy=0;
-                spr1->ID=46;
-                spr1->Hit=0;
-                if (Difficulte==1) spr->Boost=FIX32(0.25);
-                if (Difficulte==2) spr->Boost=FIX32(0.35);
-                if (Difficulte==3) spr->Boost=FIX32(0.45);
-                if (Difficulte==4) spr->Boost=FIX32(0.55);
-
-                // Hélico de combat  Tir x 2 !
-                if (spr->AirUnit==10)
-                {
-                    spr1->Vitesse=FIX32(2.5);
-                    if (spr->SpeIA) spr1->Vitesse=FIX32(3);
-                    spr1->Visible=1;
-                    spr1->SpeIA=spr->SpeIA;
-                    spr1->IDList=2;
-                    spr->TirBusy=2;
-                    spr1->Sniper=0;
-                    spr->TempoChauffeArme=0;
-                    spr1->CoordX=spr->CoordX;
-                    spr1->DeltaY=FIX32(0);
-                    spr1->CoordY=spr->CoordY;
-                    spr1->OffsetY=FIX32(-64);
-                    if (spr->Direction==4)
-                    {
-                        spr1->Direction=14;
-                        if (!h) {spr1->OffsetX=FIX32(-10);SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);}
-                        else spr1->OffsetX=FIX32(12);
-                    }
-                    else
-                    {
-                        spr1->Direction=16;
-                        if (!h) {spr1->OffsetX=FIX32(-38);SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);}
-                        else spr1->OffsetX=FIX32(-20);
-                    }
-                    if (h) break;
-                    h++;
-                }
-                else
-                {
-                    // Tir du soldat Bouclier
-                    if (spr->ID==2)
-                    {
-                        SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH2);
-                        spr1->Vitesse=FIX32(3)+spr->Boost;
-                        spr1->Visible=1;
-                        spr1->IDList=1;
-                        spr1->SpeIA=0;
-                        spr1->CoordX=spr->CoordX;
-                        spr1->CoordY=spr->CoordY+spr->DeltaY;
-                        spr1->OffsetY=FIX32(-7);
-                        spr1->Direction=spr->Direction;
-                        if (spr->Direction==0) spr1->Direction=4;
-                        if (spr->Direction==98) spr1->Direction=6;
-                        if (spr->Direction==4) spr1->OffsetX=FIX32(8);
-                        else  spr1->OffsetX=FIX32(0);
-                        break;
-                    }
-                    // Tir Para   ou sniper
-                    else if (spr->ID==5)
-                    {
-                        SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH2);
-                        spr1->Vitesse=FIX32(1.5)+spr->Boost;
-                        spr1->Visible=1;
-                        spr1->IDList=2;
-                        spr1->Sniper=0;
-                        spr1->SpeIA=0;
-                        spr1->CoordX=spr->CoordX+spr->VitesseInit;
-                        spr1->DeltaY=FIX32(0);
-                        spr1->CoordY=spr->CoordY;
-                        spr1->OffsetX=FIX32(-10);
-                        spr1->OffsetY=FIX32(-64);
-                        if (!spr->Animation) spr1->Direction=42;
-                        if (spr->Animation==6) {spr1->Direction=36;spr1->OffsetX=FIX32(-24);spr1->OffsetY=FIX32(-56);}
-                        if (spr->Animation==4) {spr1->Direction=14;spr1->OffsetX=FIX32(24);spr1->OffsetY=FIX32(-56);}
-                        break;
-                    }
-                    // Tir Para   ou sniper
-                    else if (spr->ID==7)
-                    {
-                        SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH2);
-                        spr1->Vitesse=FIX32(1.5)+spr->Boost;
-                        spr1->Visible=1;
-                        spr1->IDList=2;
-                        spr1->SpeIA=0;
-                        spr1->Sniper=1;
-                        spr1->CoordX=spr->CoordX;
-                        spr1->DeltaY=FIX32(0);
-                        spr1->CoordY=spr->CoordY;
-                        spr1->OffsetX=FIX32(-8);
-                        spr1->OffsetY=FIX32(-20);
-                        if (spr->Animation==3) spr1->Direction=42;
-                        if (spr->Animation==2) {spr1->Direction=36;spr1->OffsetX=FIX32(-38);spr1->OffsetY=FIX32(-20);}
-                        if (spr->Animation==1) {spr1->Direction=14;spr1->OffsetX=FIX32(24);spr1->OffsetY=FIX32(-20);}
-                        break;
-                    }
-                }
-            }
-            spr1++;
-        }
+        // Gestion Balles IA
+        BallesIA(spr);
     }
     if (spr->TempoRafale>70)
     {
@@ -2360,10 +2412,10 @@ void GestionIA(Sprite1_  *spr)
                         // Grenade en plus
                         if (NombreGrenade<6 && getRandomU16(100)<45) {SpriteB->Transition=0;break;}
                         // 250 pts
-                        SpriteB->Transition=3;
                         break;
                     }
                 }
+
                 if (spr->TempoSprite==2) SND_startPlayPCM_XGM(SFX_GENERIC13, 2, SOUND_PCM_CH4);
                 if  (spr->TempoSprite>80)
                 {
@@ -2950,6 +3002,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
         spr->StandBy=0;
         spr->SpriteDYN=1;
         spr->TypeIA=1;
+        spr->TempoRafale=0;
         spr->CoordY=FIX32(140+24);
         CollisionGroundMAP(spr);
         spr->Acceleration=FIX32(0);
@@ -3288,10 +3341,8 @@ void UpdateSprite(Sprite1_ *spr)
         // Phase d'hélicoptère.
         if (!spr->Phase)
         {
-            u16 T2=1150;
-            if (VisCamX==2) T2=50;
             if (spr->Visible) spr->TempoCouvert++;
-            if (spr->TempoCouvert>(T2-(Difficulte<<3)) && NombreIAScene<3 && spr->Visible)
+            if (spr->TempoCouvert>(TempoHelico-(Difficulte<<3)) && NombreIAScene<3 && spr->Visible)
             {
                 if (VisCamX==2) return;
                 spr->Phase=1;

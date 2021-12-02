@@ -12,6 +12,117 @@
 
 
 ////////////////////////////////////////
+//      Gestion Balles joueur
+////////////////////////////////////////
+void BallesJoueur(Sprite1_ *spr1, Sprite1_ *spr)
+{
+    // Balles déjà en jeu ?!
+    if (!spr1->StandBy) return;
+
+    if (spr->Slot1)
+    {
+        NombreBalleShotgun--;
+        GestionNombreBallesShotgun();
+        if (!NombreBalleShotgun)
+        {
+            spr->Slot1=0;
+        }
+    }
+    spr1->StandBy=0;
+    TestRoutine=1;
+    spr->TempoRafale=0;
+    spr1->TempoSprite=0;
+    spr1->ID=45;
+    spr1->Hit=0;
+    spr1->Vitesse=FIX32(8);
+    switch (spr->Slot1)
+    {
+        case 0:
+        SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH3);
+        spr1->DegatArme=1;
+        break;
+        case 1:
+        SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+        spr1->DegatArme=3;
+        break;
+        case 2:
+        SND_startPlayPCM_XGM(SFX_GENERIC24, 1, SOUND_PCM_CH3);
+        spr1->DegatArme=2;
+        break;
+        case 3:
+        SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+        spr1->DegatArme=10;
+        spr1->Vitesse=FIX32(3);
+        break;
+        case 10:
+        SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+        spr1->Vitesse=FIX32(6);
+        spr1->DegatArme=8;
+        break;
+    }
+
+    //SPR_setAnim(spr1->SpriteA,0);
+    spr1->Visible=1;
+    spr1->CoordY=spr->CoordY+spr->DeltaY+FIX32(44);
+    spr1->CoordX=spr->CoordX;
+    // Tir en haut !
+    if (spr->Direction>40)
+    {
+        //if (value & BUTTON_RIGHT && spr->Direction==88) spr->DirectionTir=56;
+        //if (value & BUTTON_LEFT && spr->Direction==88) spr->DirectionTir=54;
+        spr1->OffsetY=FIX32(24);
+        spr1->Direction=8;
+        if (!spr->MemDir || spr->MemDir==6) spr1->OffsetX=FIX32(8);
+        else spr1->OffsetX=FIX32(-8);
+        return;
+        //if (spr->DirectionTir==56) spr1->OffsetX=FIX32(-16);
+        //if (spr->DirectionTir==54) spr1->OffsetX=FIX32(-32);
+    }
+    else
+    {
+        spr1->OffsetY=FIX32(-7);
+        spr1->OffsetX=FIX32(24);
+        spr1->Direction=spr->MemDir;
+        if (!spr->MemDir) spr1->Direction=6;
+        if (spr1->Direction==6)
+        {
+            spr1->OffsetX=FIX32(-24);
+            SPR_setAnim(spr->SpriteA,9);
+        }
+        if (spr->Direction==26 || spr->Direction==24 || spr->Direction==2) spr1->OffsetY=FIX32(-17);
+    }
+}
+////////////////////////////////////////
+//      Gestion Balles joueur  Bis
+////////////////////////////////////////
+void GestionBallesJoueur(Sprite1_ *spr)
+{
+    TestRoutine=0;
+    Sprite1_* spr1 = &Sprites[IDBalle];
+    BallesJoueur(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesJoueur(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesJoueur(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesJoueur(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesJoueur(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesJoueur(spr1,spr);
+    if (TestRoutine) return;
+    spr1++;
+    BallesJoueur(spr1,spr);
+    if (TestRoutine) return;
+}
+
+
+////////////////////////////////////////
 //                  Gestion PAD
 ////////////////////////////////////////
 void GestionPAD(Sprite1_ *spr)
@@ -62,7 +173,7 @@ void GestionPAD(Sprite1_ *spr)
         {
             spr->LancerGrenade=1;
             spr->TempoSprite=0;
-            u16 i=8;
+            u16 i=NombreBalle;
             Sprite1_* spr1 = &Sprites[IDBalle];
             while(i--)
             {
@@ -177,97 +288,9 @@ void GestionPAD(Sprite1_ *spr)
             }
 
             // Tir au pistolet ?
-            if (!spr->Couteau)
-            {
-                u16 i=8;
-                Sprite1_* spr1 = &Sprites[IDBalle];
-
-                // Tir en haut ?!
-                //if (value & BUTTON_UP) spr->Direction=88;
-                while(i--)
-                {
-                    //spr1 = &Sprites[IDBalle];
-                    if (spr1->StandBy)
-                    {
-                        if (spr->Slot1)
-                        {
-                            NombreBalleShotgun--;
-                            GestionNombreBallesShotgun();
-                            if (!NombreBalleShotgun)
-                            {
-                                spr->Slot1=0;
-                            }
-                        }
-                        spr1->StandBy=0;
-                        spr->TempoRafale=0;
-                        spr1->TempoSprite=0;
-                        spr1->ID=45;
-                        spr1->Hit=0;
-                        spr1->Vitesse=FIX32(8);
-                        switch (spr->Slot1)
-                        {
-                            case 0:
-                            SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH3);
-                            spr1->DegatArme=1;
-                            break;
-                            case 1:
-                            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
-                            spr1->DegatArme=3;
-                            break;
-                            case 2:
-                            SND_startPlayPCM_XGM(SFX_GENERIC24, 1, SOUND_PCM_CH3);
-                            spr1->DegatArme=2;
-                            break;
-                            case 3:
-                            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
-                            spr1->DegatArme=10;
-                            spr1->Vitesse=FIX32(3);
-                            break;
-                            case 10:
-                            SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
-                            spr1->Vitesse=FIX32(6);
-                            spr1->DegatArme=8;
-
-                            break;
-                        }
-
-                        //SPR_setAnim(spr1->SpriteA,0);
-                        spr1->Visible=1;
-                        spr1->CoordY=spr->CoordY+spr->DeltaY+FIX32(48);
-                        spr1->CoordX=spr->CoordX;
-                        // Tir en haut !
-                        if (spr->Direction>40)
-                        {
-                            //if (value & BUTTON_RIGHT && spr->Direction==88) spr->DirectionTir=56;
-                            //if (value & BUTTON_LEFT && spr->Direction==88) spr->DirectionTir=54;
-                            spr1->OffsetY=FIX32(24);
-                            spr1->Direction=8;
-                            if (!spr->MemDir || spr->MemDir==6) spr1->OffsetX=FIX32(8);
-                            else spr1->OffsetX=FIX32(-8);
-                            //if (spr->DirectionTir==56) spr1->OffsetX=FIX32(-16);
-                            //if (spr->DirectionTir==54) spr1->OffsetX=FIX32(-32);
-                            break;
-                        }
-                        else
-                        {
-                            spr1->OffsetY=FIX32(-7);
-                            spr1->OffsetX=FIX32(24);
-                            spr1->Direction=spr->MemDir;
-                            if (!spr->MemDir) spr1->Direction=6;
-                            if (spr1->Direction==6)
-                            {
-                                spr1->OffsetX=FIX32(-24);
-                                SPR_setAnim(spr->SpriteA,9);
-                            }
-                            if (spr->Direction==26 || spr->Direction==24 || spr->Direction==2) spr1->OffsetY=FIX32(-17);
-                        }
-                        break;
-                    }
-                    spr1++;
-                }
+            if (!spr->Couteau) GestionBallesJoueur(spr);
             }
         }
-    }
 
 
     // Mémorisation direction joueur

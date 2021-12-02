@@ -1,7 +1,8 @@
 #ifndef _ROUTINES_H
 #define _ROUTINES_H
 
-
+extern void BallesIATest(Sprite1_ *spr, Sprite1_ *spr1);
+extern void BallesIA(Sprite1_ *spr);
 extern void GestionCollisionGrenades(Sprite1_ *SprIA, Sprite1_ *spr);
 extern void GestionCollisionBombes(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF);
 extern void GestionCollisionBalles(Sprite1_ *SprIA, Sprite1_ *spr, Sprite1_ *SpriteREF);

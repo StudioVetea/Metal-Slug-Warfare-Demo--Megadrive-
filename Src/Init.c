@@ -22,6 +22,7 @@ void Clear_Variable()
 {
     ind=0;
     StatutJoy=0;
+    TestRoutine=0;
     PauseGame=0;
     numTile=0;
     RNDSEED=0;
@@ -305,9 +306,13 @@ void InitIntro()
 	ind=0;
 	memcpy(&palette[0], Palette_EcranMS.data, 16 * 2);
 	memcpy(&palette[16], Palette_Menu.data, 16 * 2);
+	memcpy(&palette[48], Palette_Font.data, 16 * 2);
 
     ind = TILE_USERINDEX;
     VDP_loadTileSet(bga_Ecran_MS.tileset, ind, DMA);
+    // Font
+	VDP_setTextPalette(PAL3);
+	VDP_loadTileSet(Font1.tileset, TILE_FONTINDEX+1, TRUE);
 
     // init backgrounds
     TileMap *bgaIntro = bga_Ecran_MS.tilemap;
@@ -333,13 +338,24 @@ void InitIntro()
 	SPR_setAnim(SprLvl->SpriteA,0);
 	SPR_setVisibility(SprLvl->SpriteA,VISIBLE);
 	u16 Anim=0;
+	u8 TempoTexte=0;
 	// Fade In Scene.
     VDP_fadeInAll(palette,32,FALSE);
 	// start music
 	XGM_startPlay(Menu_Music);
+	VDP_drawTextBG(BG_B,"NOT FOR SALE !!",12,14);
+
     while(TRUE)
 	{
 		u16 value=JOY_readJoypad(JOY_1);
+
+		// Message Important !
+		TempoTexte++;
+		if (TempoTexte>20) TempoTexte=0;
+		if (TempoTexte<10) VDP_drawTextBG(BG_B,"NOT FOR SALE !!",12,14);
+		else VDP_drawTextBG(BG_B,"                 ",12,14);
+
+		// Quitter ?!
 		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START)) break;
 
 		// Animation Warfare !
@@ -544,7 +560,7 @@ void InitScene()
 	spr->StandBy=0;
 	spr->TypeIA=0;
     spr->SpriteDYN=0;
-    spr->NombreUP=1;
+    spr->NombreUP=2;
     spr->Slot1=0;
 
     spr->HitPointMax=6;
@@ -649,7 +665,7 @@ void InitScene()
         spr->TypeBouclier=0;
         spr->SpriteA = SPR_addSprite(&Balle_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(spr->SpriteA, TRUE);
-        SPR_setVisibility(spr->SpriteA,FALSE);
+        SPR_setVisibility(spr->SpriteA,HIDDEN);
         SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
         SPR_setAnim(spr->SpriteA,0);
         SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
@@ -673,7 +689,7 @@ void InitScene()
         spr->TypeIA=0;
         spr->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(spr->SpriteA, TRUE);
-        SPR_setVisibility(spr->SpriteA,FALSE);
+        SPR_setVisibility(spr->SpriteA,HIDDEN);
         //Sprite1_* SpriteREF=Sprites;
 		//SpriteREF = &Sprites[0];
         SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
