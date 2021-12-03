@@ -378,7 +378,6 @@ void GestionCivil(Sprite1_ *spr)
 void GestionVague()
 {
     Sprite1_* spr2 = &Sprites[IDPlane];
-
     // Paramétrage difficulté / Médailles
     TempoRegen=TempoSpawn-(Difficulte<<1);
 

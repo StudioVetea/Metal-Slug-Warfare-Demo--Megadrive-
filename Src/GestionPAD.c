@@ -247,12 +247,12 @@ void GestionPAD(Sprite1_ *spr)
                         else
                         {
                             spr1->OffsetY=FIX32(-7);
-                            spr1->OffsetX=FIX32(24);
+                            spr1->OffsetX=FIX32(26);
                             spr1->Direction=spr->MemDir;
                             if (!spr->MemDir) spr1->Direction=6;
                             if (spr1->Direction==6)
                             {
-                                spr1->OffsetX=FIX32(-24);
+                                spr1->OffsetX=FIX32(-26);
                                 SPR_setAnim(spr->SpriteA,9);
                             }
                             if (spr->Direction==26 || spr->Direction==24 || spr->Direction==2) spr1->OffsetY=FIX32(-17);
