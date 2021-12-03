@@ -199,6 +199,7 @@ void InitEcranZone()
 	memcpy(&palette[32], Palette_BGB.data, 16 * 2);
 
 	// Init Scene.
+	NumeroZone=0;
 	ind = TILE_USERINDEX;
 	VDP_loadTileSet(Town_.tileset, ind, DMA);
 	TileMap *Zone1 = Town_.tilemap;
@@ -254,14 +255,14 @@ void InitEcranZone()
 		SYS_doVBlankProcess();
 	}
 
-	XGM_pausePlay();
+	//XGM_pausePlay();
 	XGM_stopPlay();
 	SYS_doVBlankProcess();
 	VDP_clearPlane(BG_A,TRUE);
     VDP_fadeOutAll(16,FALSE);
     MEM_free(Zone1);
     MEM_free(Zone2);
-    SPR_reset();
+    //SPR_reset();
     SPR_end();
 }
 
@@ -382,14 +383,14 @@ void InitIntro()
 		VDP_setVerticalScroll(BG_A, CamPosY);
 	}
 	// Fade In Scene.
-	XGM_pausePlay();
+	//XGM_pausePlay();
 	XGM_stopPlay();
 	SYS_doVBlankProcess();
 	VDP_clearPlane(BG_A,TRUE);
     VDP_fadeOutAll(16,FALSE);
     MEM_free(bgaIntro);
     MEM_free(bgb);
-    SPR_reset();
+    //SPR_reset();
     SPR_end();
     ind=0;
 }
@@ -480,7 +481,7 @@ void InitScene()
 	SPR_setVisibility(SprCivil->SpriteA,HIDDEN);
 
 	// Init Data
-	NombreBalle=7;
+	NombreBalle=6;
 	NombreBouclier=2;
 	NombreLettre=6;
 	NombreIA=5;
@@ -511,7 +512,7 @@ void InitScene()
 	Sprite1_* SprNombreUP=&NombreUP;
 	SprNombreUP->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPriorityAttribut(SprNombreUP->SpriteA, TRUE);
-	SPR_setAnim(SprNombreUP->SpriteA,4);
+	SPR_setAnim(SprNombreUP->SpriteA,2);
 	SPR_setPosition(SprNombreUP->SpriteA,52,24);
 	SPR_setAlwaysOnTop(SprNombreUP->SpriteA,TRUE);
 
@@ -579,10 +580,7 @@ void InitScene()
 	spr->SpriteA = SPR_addSprite(&Joe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
 	SPR_setVisibility(spr->SpriteA,HIDDEN);
-	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
-	SPR_setAnim(spr->SpriteA,0);
-	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
-	SPR_setVisibility(spr->SpriteA,VISIBLE);
+	SPR_setVisibility(SprMarcheJoe->SpriteA,HIDDEN);
 	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
 	SPR_setAnim(spr->SpriteA,0);
 
@@ -707,6 +705,7 @@ void InitScene()
 	spr->CoordY=FIX32(140+8);
 	spr->Vitesse=FIX32(0.3);
 	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setVisibility(spr->SpriteA,VISIBLE);
 	spr->AirUnit=0;
 	spr->StandBy=0;
 	spr->Direction=6;
@@ -738,7 +737,7 @@ void InitScene()
         spr->TypeIA=0;
         spr->SpriteA = SPR_addSprite(&FontStart_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(spr->SpriteA, TRUE);
-        SPR_setVisibility(spr->SpriteA,FALSE);
+        SPR_setVisibility(spr->SpriteA,VISIBLE);
         SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
         SPR_setAnim(spr->SpriteA,j);
         SPR_setAlwaysOnTop(spr->SpriteA,TRUE);

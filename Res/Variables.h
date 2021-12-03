@@ -6,6 +6,7 @@
 #define  SniperRange  getRandomF32(FIX32(64))+FIX32(64)+getRandomF32(FIX32(64));
 #define TempoHelico 1000
 #define TempoCivil 950
+#define TempoSpawn 100
 
 // Definition Sons & Musiques
 #define SFX_GENERIC 64
@@ -34,6 +35,8 @@
 #define SFX_GENERIC23 87
 #define SFX_GENERIC24 88
 #define SFX_GENERIC25 89
+#define SFX_GENERIC26 90
+#define SFX_GENERIC27 91
 
 
 /*

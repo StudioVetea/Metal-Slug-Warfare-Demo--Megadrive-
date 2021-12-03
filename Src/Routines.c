@@ -248,14 +248,14 @@ void GestionBonus(Sprite1_ *spr)
 
             case 6:
                 spr->Slot1=2;
-                NombreBalleShotgun=90;
+                NombreBalleShotgun=99;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC20, 2, SOUND_PCM_CH4);
                 break;
 
             case 7:
                 spr->Slot1=3;
-                NombreBalleShotgun=25;
+                NombreBalleShotgun=35;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC16, 2, SOUND_PCM_CH4);
                 break;
@@ -380,7 +380,7 @@ void GestionVague()
     Sprite1_* spr2 = &Sprites[IDPlane];
 
     // Paramétrage difficulté / Médailles
-    TempoRegen=100-(Difficulte<<1);
+    TempoRegen=TempoSpawn-(Difficulte<<1);
 
 	switch(Difficulte)
 	{
@@ -402,14 +402,8 @@ void GestionVague()
     case 5:
         NombreIASceneMax=3;
         break;
-    case 6:
-        NombreIASceneMax=4;
-        break;
-    case 7:
-        NombreIASceneMax=4;
-        break;
 	}
-	if (Difficulte>7) NombreIASceneMax=5;
+	if (Difficulte>5) NombreIASceneMax=4;
 	if (spr2->Phase) NombreIASceneMax=2;
 }
 
@@ -860,20 +854,21 @@ void Result_Screen()
 	SPR_setAnim(spr->SpriteA,0);
 
     VDP_fadeInAll(palette,32,FALSE);
-    // start music
-    XGM_startPlay(Thunder_Music);
     // update sprites
     SPR_update();
 
     // Vblank
-    SYS_doVBlankProcess();
+    //SYS_doVBlankProcess();
+
+    // start music
+    XGM_startPlay(Thunder_Music);
     i=0;
     j=5;
 
 	while(TRUE)
 	{
         u16 value=JOY_readJoypad(JOY_1);
-        if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START)) break;
+        if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START)) {XGM_stopPlay();break;}
 
 	    // Clignotement résultat !
 	    i++;
@@ -895,8 +890,7 @@ void Result_Screen()
 		// Vblank
 		SYS_doVBlankProcess();
 	}
-    XGM_pausePlay();
-    XGM_stopPlay();
+    //XGM_pausePlay();
     VDP_fadeOutAll(32,FALSE);
 	return;
 }
@@ -2037,15 +2031,19 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                 return;
             }
         }
-
+        TestRoutine=0;
         SprIA=&Sprites[IDUnite];
         GestionCollisionBalles(SprIA,spr,SpriteREF);
+        if (TestRoutine) return;
         SprIA++;
         GestionCollisionBalles(SprIA,spr,SpriteREF);
+        if (TestRoutine) return;
         SprIA++;
         GestionCollisionBalles(SprIA,spr,SpriteREF);
+        if (TestRoutine) return;
         SprIA++;
         GestionCollisionBalles(SprIA,spr,SpriteREF);
+        if (TestRoutine) return;
         SprIA++;
         GestionCollisionBalles(SprIA,spr,SpriteREF);
         return;
@@ -2106,7 +2104,7 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
                 spr->Direction=0;
                 SND_startPlayPCM_XGM(SFX_GENERIC6, 1, SOUND_PCM_CH2);
                 if (!spr->SpeIA) SpriteREF->HitPoint-=2;
-                else SpriteREF->HitPoint-=4;
+                else SpriteREF->HitPoint-=3;
                 if (SpriteREF->HitPoint>200) SpriteREF->HitPoint=0;
                 if (!SpriteREF->HitPoint)
                 {
@@ -2213,7 +2211,6 @@ void BallesIA(Sprite1_ *spr)
     if (TestRoutine) return;
     spr1++;
     BallesIATest(spr1,spr);
-    if (TestRoutine) return;
 }
 
 ///////////////////////////////
@@ -2349,6 +2346,7 @@ void GestionBallesIA(Sprite1_ *spr)
         }
         // Gestion Balles IA
         BallesIA(spr);
+        return;
     }
     if (spr->TempoRafale>70)
     {
@@ -2402,7 +2400,7 @@ void GestionIA(Sprite1_  *spr)
                             if (getRandomU16(100)<20 && NombreBalleShotgun<15) {SpriteB->Transition=6;break;}
                         }
                         // UP en plus
-                        if (getRandomU16(100)<22) {SpriteB->Transition=4;break;}
+                        if (getRandomU16(100)<21) {SpriteB->Transition=4;break;}
                         //  Heavy Machine Gun
                         if (NombreBalleShotgun<15 && getRandomU16(100)<25) {SpriteB->Transition=1;break;}
                         //  Heavy Machine Gun
@@ -2983,6 +2981,7 @@ void UpdateViewSprite(Sprite1_ *spr)
         {
             CivilON=0;
             NombreCivil=0;
+            spr->TempoSprite=0;
         }
         if (spr->ID==7) SniperON=0;
         spr->ID=0;
@@ -3105,7 +3104,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             case 5:
 			spr->CaC=0;
 			spr->Sniper=0;
-			spr->Spotting=FIX32(40);
+			spr->Spotting=FIX32(60);
             spr->DistanceAggro=FIX32(0);
             spr->Vitesse=FIX32(0.20)+getRandomF32(FIX32(0.15));
             spr->CoordY=FIX32(-64);
