@@ -36,7 +36,7 @@ void Clear_Variable()
     NombreGrenade=10;
     TempoRespawn=0;
     NombreCivil=0;
-    Difficulte=0;
+    //Difficulte=0;
     Score=0;
     PhaseScene=0;
     PhaseAffichageScene=0;
@@ -185,6 +185,7 @@ void Clear_Variable()
     }
 }
 
+
 ///////////////////////////////
 //    Ecran sélection Zone
 ///////////////////////////////
@@ -197,25 +198,38 @@ void InitEcranZone()
 	memcpy(&palette[48], Palette_Font.data, 16 * 2);
 	memcpy(&palette[16], Palette_BGB_1.data, 16 * 2);
 	memcpy(&palette[32], Palette_BGB.data, 16 * 2);
+	memcpy(&palette[0], Palette_Zone3.data, 16 * 2);
 
 	// Init Scene.
 	NumeroZone=0;
 	ind = TILE_USERINDEX;
 	VDP_loadTileSet(Town_.tileset, ind, DMA);
 	TileMap *Zone1 = Town_.tilemap;
-	VDP_setTileMapEx(BG_B, Zone1, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, ind), 20, 6, 0, 0, 20, 14, CPU);
+	VDP_setTileMapEx(BG_B, Zone1, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, ind), 20,1, 0, 0, 20, 14, CPU);
 	ind +=256;
 	VDP_loadTileSet(Jungle_.tileset, ind, DMA);
 	TileMap *Zone2 = Jungle_.tilemap;
-	VDP_setTileMapEx(BG_B, Zone2, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ind), 0, 6, 0, 0, 20, 14, CPU);
+	VDP_setTileMapEx(BG_B, Zone2, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ind), 0, 1, 0, 0, 20, 14, CPU);
+
 
     // Données Textes / FONT
-	VDP_fadeInAll(palette,24,FALSE);
 	VDP_setTextPalette(PAL3);
 	VDP_loadTileSet(Font1.tileset, TILE_FONTINDEX+1, TRUE);
-	VDP_drawText("<JUNGLE ZONE>",4,21);
-	VDP_drawText(" TOWN ZONE ",25,21);
-	if (!RequisZone) VDP_drawText("! NEED RANK 7 !",23,13);
+	VDP_drawText("<JUNGLE ZONE>",4,15);
+	VDP_drawText(" TOWN ZONE ",25,15);
+	if (!RequisZone) VDP_drawText("! NEED RANK 7 !",23,8);
+
+	// Zone spéciale !
+	if (RequisZone3==1)
+	{
+		ind+=256;
+		VDP_loadTileSet(ZoneBoss.tileset, ind, DMA);
+		TileMap *Zone3 = ZoneBoss.tilemap;
+		VDP_setTileMapEx(BG_B, Zone3, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 10, 16, 0, 0, 20, 14, CPU);
+		VDP_drawText(" FINAL ZONE ",15,26);
+	}
+
+	VDP_fadeInAll(palette,24,FALSE);
 	XGM_startPlay(ChoixZone_Music);
 
 	// Boucle principale.
@@ -225,8 +239,8 @@ void InitEcranZone()
 		if (!RequisZone)
 		{
 			Tempo++;
-			if (Tempo<5) VDP_drawText("                ",23,13);
-			else VDP_drawText("! NEED RANK 7 !",23,13);
+			if (Tempo<5) VDP_drawText("                ",23,8);
+			else VDP_drawText("! NEED RANK 7 !",23,8);
 			if (Tempo>10) Tempo=0;
 		}
 
@@ -234,19 +248,38 @@ void InitEcranZone()
 		u16 value=JOY_readJoypad(JOY_1);
 		if (value & BUTTON_RIGHT && RequisZone)
 		{
-			VDP_drawText("<TOWN ZONE>",25,21);
-			VDP_drawText(" JUNGLE ZONE ",4,21);
+			VDP_drawText("<TOWN ZONE>",25,15);
+			VDP_drawText(" JUNGLE ZONE ",4,15);
+			if (RequisZone3==1) VDP_drawText(" FINAL ZONE ",15,26);
 			NumeroZone=1;
 		}
 		if (value & BUTTON_LEFT)
 		{
-			VDP_drawText(" TOWN ZONE ",25,21);
-			VDP_drawText("<JUNGLE ZONE>",4,21);
+			VDP_drawText(" TOWN ZONE ",25,15);
+			VDP_drawText("<JUNGLE ZONE>",4,15);
+			if (RequisZone3==1) VDP_drawText(" FINAL ZONE ",15,26);
+			NumeroZone=0;
+		}
+		if (value & BUTTON_DOWN && RequisZone3==1)
+		{
+			VDP_drawText(" TOWN ZONE ",25,15);
+			VDP_drawText(" JUNGLE ZONE ",4,15);
+			VDP_drawText("<FINAL ZONE>",15,26);
+			NumeroZone=2;
+		}
+
+		if (value & BUTTON_UP && RequisZone3==1)
+		{
+			VDP_drawText(" TOWN ZONE ",25,15);
+			VDP_drawText("<JUNGLE ZONE>",4,15);
+			VDP_drawText(" FINAL ZONE ",15,26);
 			NumeroZone=0;
 		}
 
+
 		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START))
 		{
+			XGM_stopPlay();
 			SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
 			break;
 		}
@@ -256,7 +289,6 @@ void InitEcranZone()
 	}
 
 	//XGM_pausePlay();
-	XGM_stopPlay();
 	SYS_doVBlankProcess();
 	VDP_clearPlane(BG_A,TRUE);
     VDP_fadeOutAll(16,FALSE);
@@ -763,6 +795,23 @@ void InitMAP()
 {
 	// Init
 	VDP_init();
+
+	// Zone 3 ?!
+	if (NumeroZone==2)
+	{
+		Zone3();
+		// Une fois connu, on ne reviendra plus dessus.
+		RequisZone3=99;
+		// Init général
+		Clear_Variable();
+		GameOver=1;
+		VDP_setPaletteColors(0, (u16*) palette_black, 64);
+		SPR_end();
+		VDP_init();
+		StartMain();
+		return;
+	}
+
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
 	//NumeroZone=1;
@@ -841,6 +890,7 @@ void InitRoutine()
 	SND_setPCM_XGM(SFX_GENERIC23, Score_SFX, sizeof(Score_SFX));
 	SND_setPCM_XGM(SFX_GENERIC24, Uzi_SFX, sizeof(Uzi_SFX));
 	SND_setPCM_XGM(SFX_GENERIC25, Baby_SFX, sizeof(Baby_SFX));
+	SND_setPCM_XGM(SFX_GENERIC26, Voice_SFX, sizeof(Flamethrower_SFX));
 
 
 }

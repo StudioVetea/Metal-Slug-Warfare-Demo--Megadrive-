@@ -764,8 +764,11 @@ void Result_Screen()
     if (Difficulte)
     {
         Sprite1_* SprLvl= &NombreLevel;
-        // Déblocage Zone 2.
-        if (Difficulte>6) RequisZone=1;
+
+        // Déblocage Zones.
+        if (Difficulte>6 && !RequisZone && !NumeroZone) RequisZone=1;
+        if (NumeroZone==1 && Difficulte>8 && !RequisZone3) RequisZone3=1;
+
         SprLvl->CoordX=FIX32(320);
         SprLvl->CoordY=FIX32(0);
         SprLvl->Vitesse=FIX32(5);
@@ -3653,4 +3656,543 @@ void PrintU16(u16 D,u8 X,u8 Y)
 {
     sprintf(Texte,"D :%d",D);
     VDP_drawText(Texte,X,Y);
+}
+
+
+///////////////////////////////
+//   Test Init Zone 3
+///////////////////////////////
+void Zone3()
+{
+    s16 hscrollTabBGA[224/8];
+    s16 hscrollTabBGB[224/8];
+    s16 hscroll;
+    s16 hscrollMed;
+    s16 hscrollFast;
+    u16 PhaseJoueur=0;
+    u8 MapBoss=0;
+    s16 BossY=0;
+    s16 BossX=0;
+    u8 SensY=0;
+    u16 i=0,j=0;
+
+	u16 Tempo=0;
+	// Init
+	VDP_init();
+	VDP_setPaletteColors(0, (u16*) palette_black, 64);
+	memcpy(&palette[0], Palette_MapZone3.data, 16 * 2);
+	memcpy(&palette[16], Palette_BossZone3.data, 16 * 2);
+	memcpy(&palette[32], Palette_General.data, 16 * 2);
+	memcpy(&palette[48], Palette_Joe.data, 16 * 2);
+
+
+    //Init mode scrolling
+    VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
+    CamPosY=0;
+    CamPosX=0;
+	// Init Scene.
+	NumeroZone=0;
+	ind = TILE_USERINDEX;
+	VDP_loadTileSet(MapZone3.tileset, ind, DMA);
+	TileMap *Zone3 = MapZone3.tilemap;
+	VDP_clearPlane(BG_B,TRUE);
+	VDP_setTileMapEx(BG_B, Zone3, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 0, 0, 0, 4, 64, 29, DMA);
+	ind +=280;
+	VDP_loadTileSet(BossZone3.tileset, ind, DMA);
+	TileMap *Boss = BossZone3.tilemap;
+
+	// Sprites
+	 SPR_initEx(512);
+    Sprite1_* spr = &Sprites[0];
+
+    // Turbines BOSS
+    spr->CoordX=FIX32(36);
+    spr->CoordY=FIX32(292);
+    spr->ID=70;
+    spr->Visible=1;
+    spr->Vitesse=FIX32(1);
+	spr->SpriteA = SPR_addSprite(&TurbineBoss_Sprite, 0, 0, TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+	SPR_setVisibility(spr->SpriteA,VISIBLE);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setAnim(spr->SpriteA,0);
+    SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
+
+    spr++;
+    spr->CoordX=FIX32(228);
+    spr->CoordY=FIX32(292);
+    spr->ID=70;
+    spr->Visible=1;
+    spr->Vitesse=FIX32(1);
+	spr->SpriteA = SPR_addSprite(&TurbineBoss_Sprite, 0, 0, TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+	SPR_setVisibility(spr->SpriteA,VISIBLE);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setAnim(spr->SpriteA,1);
+    SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
+
+    // General
+    spr++;
+    spr->CoordX=FIX32(150);
+    spr->CoordY=FIX32(212);
+    spr->ID=66;
+    spr->Visible=1;
+    spr->Vitesse=FIX32(1);
+	spr->SpriteA = SPR_addSprite(&General_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SPR_setPriorityAttribut(spr->SpriteA, FALSE);
+	SPR_setVisibility(spr->SpriteA,VISIBLE);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setAnim(spr->SpriteA,0);
+    SPR_setAlwaysOnTop(spr->SpriteA,FALSE);
+
+    // Joe
+    spr++;
+    spr->CoordX=FIX32(-48);
+    spr->CoordY=FIX32(140);
+    spr->ID=99;
+    spr->Visible=1;
+    spr->Slot1=1;
+    spr->StandBy=0;
+    spr->Vitesse=FIX32(1.2);
+	spr->SpriteA = SPR_addSprite(&Joe_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setPriorityAttribut(spr->SpriteA, FALSE);
+	SPR_setVisibility(spr->SpriteA,VISIBLE);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setAnim(spr->SpriteA,19);
+    SPR_setAlwaysOnTop(spr->SpriteA,FALSE);
+
+    // Dialogues
+    spr++;
+    spr->CoordX=FIX32(400);
+    spr->CoordY=FIX32(4);
+    spr->ID=15;
+    spr->TempoSprite=0;
+    spr->Visible=0;
+    spr->Vitesse=FIX32(16);
+    spr->Direction=0;
+	spr->SpriteA = SPR_addSprite(&Dialogues_Sprites, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
+	SPR_setVisibility(spr->SpriteA,HIDDEN);
+	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
+	SPR_setAnim(spr->SpriteA,0);
+    SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
+
+    MaxObjet=5;
+	PhaseScene=0;
+
+	XGM_startPlay(RockD_Music);
+    // Données Textes / FONT
+	VDP_fadeInAll(palette,24,FALSE);
+
+	// Boucle principale.
+	while(TRUE)
+	{
+		// Init joy
+		u16 value=JOY_readJoypad(JOY_1);
+
+	    CamPosX+=2;
+	    Tempo++;
+	    if (CamPosY<=420) {CamPosY++;BossY=0;}
+	    else {if (!PhaseScene) PhaseScene=1;}
+
+
+	    // Dialogues ?!
+        spr = &Sprites[4];
+        switch (PhaseScene)
+        {
+            // Tempo
+            case 1:
+            spr->TempoSprite++;
+            if (spr->TempoSprite>100)
+            {
+                spr->TempoSprite=0;
+                SPR_setAnim(spr->SpriteA,0);
+                PhaseScene=2;
+                Tempo=0;
+                j=0;
+                SND_startPlayPCM_XGM(SFX_GENERIC26, 2, SOUND_PCM_CH4);
+            }
+            break;
+
+            //Tempo
+            case 2:
+                spr->Visible=1;
+                spr->Direction=4;
+                if (spr->CoordX<=FIX32(180))
+                {
+                    spr->Direction=0;
+                    PhaseScene=3;
+                }
+                break;
+
+            case 3:
+                    if (!SensY) spr->CoordY-=FIX32(0.5);
+                    if (SensY)  spr->CoordY+=FIX32(0.5);
+                    spr->TempoSprite++;
+                    j=1;
+                    if (spr->TempoSprite>200)
+                    {
+                        spr->TempoSprite=0;
+                        PhaseScene=4;
+                        j=0;
+                    }
+                break;
+
+            case 4:
+                spr->Direction=6;
+                if (spr->CoordX>=FIX32(400))
+                {
+                    spr->Direction=0;
+                    SPR_setAnim(spr->SpriteA,1);
+                    spr->CoordY=FIX32(148);
+                    SND_startPlayPCM_XGM(SFX_GENERIC26, 2, SOUND_PCM_CH4);
+                    PhaseScene=5;
+                }
+                break;
+
+            case 5:
+                spr->Direction=4;
+                if (spr->CoordX<=FIX32(180))
+                {
+                    spr->Direction=0;
+                    PhaseScene=6;
+                }
+                break;
+
+            case 6:
+                spr->TempoSprite++;
+                if (spr->TempoSprite>200)
+                {
+                    spr->TempoSprite=0;
+                    PhaseScene=7;
+                }
+                break;
+
+            case 7:
+                spr->Direction=6;
+                if (spr->CoordX>=FIX32(400))
+                {
+                    spr->Direction=0;
+                    SPR_setAnim(spr->SpriteA,2);
+                    SND_startPlayPCM_XGM(SFX_GENERIC26, 2, SOUND_PCM_CH4);
+                    spr->CoordY=FIX32(4);
+                    PhaseScene=8;
+                }
+                break;
+
+            case 8:
+                spr->Direction=4;
+                if (spr->CoordX<=FIX32(180))
+                {
+                    spr->Direction=0;
+                    PhaseScene=9;
+                }
+                break;
+
+            case 9:
+                if (!SensY) spr->CoordY-=FIX32(0.5);
+                if (SensY)  spr->CoordY+=FIX32(0.5);
+                spr->TempoSprite++;
+                j=1;
+                if (spr->TempoSprite>200)
+                {
+                    spr->TempoSprite=0;
+                    PhaseScene=10;
+                    j=0;
+                }
+                break;
+
+            case 10:
+                spr->Direction=6;
+                if (spr->CoordX>=FIX32(400))
+                {
+                    spr->Direction=0;
+                    SPR_setAnim(spr->SpriteA,3);
+                    SND_startPlayPCM_XGM(SFX_GENERIC26, 2, SOUND_PCM_CH4);
+                    spr->CoordY=FIX32(148);
+                    PhaseScene=11;
+                }
+                break;
+
+            case 11:
+                spr->Direction=4;
+                if (spr->CoordX<=FIX32(180))
+                {
+                    spr->Direction=0;
+                    PhaseScene=12;
+                }
+                break;
+
+            case 12:
+                spr->TempoSprite++;
+                if (spr->TempoSprite>200)
+                {
+                    spr->TempoSprite=0;
+                    PhaseScene=13;
+                }
+                break;
+
+            case 13:
+                spr->Direction=6;
+                if (spr->CoordX>=FIX32(400))
+                {
+                    spr->Direction=0;
+                    SPR_setAnim(spr->SpriteA,4);
+                    SND_startPlayPCM_XGM(SFX_GENERIC26, 2, SOUND_PCM_CH4);
+                    spr->CoordY=FIX32(4);
+                    PhaseScene=14;
+                }
+                break;
+
+            case 14:
+                spr->Direction=4;
+                if (spr->CoordX<=FIX32(180))
+                {
+                    spr->Direction=0;
+                    PhaseScene=15;
+                }
+                break;
+
+            case 15:
+                if (!SensY) spr->CoordY-=FIX32(0.5);
+                if (SensY)  spr->CoordY+=FIX32(0.5);
+                spr->TempoSprite++;
+                j=1;
+                if (spr->TempoSprite>200)
+                {
+                    spr->TempoSprite=0;
+                    PhaseScene=16;
+                    j=0;
+                }
+                break;
+
+            case 16:
+                spr->Direction=6;
+                if (spr->CoordX>=FIX32(400))
+                {
+                    spr->Direction=0;
+                    SPR_setAnim(spr->SpriteA,5);
+                    SND_startPlayPCM_XGM(SFX_GENERIC26, 2, SOUND_PCM_CH4);
+                    spr->CoordY=FIX32(148);
+                    PhaseScene=17;
+                }
+                break;
+
+            case 17:
+                spr->Direction=4;
+                if (spr->CoordX<=FIX32(180))
+                {
+                    spr->Direction=0;
+                    PhaseScene=18;
+                }
+                break;
+
+            case 18:
+                spr->TempoSprite++;
+                if (spr->TempoSprite>200)
+                {
+                    spr->TempoSprite=0;
+                    PhaseScene=19;
+                }
+                break;
+
+            case 19:
+                spr->Direction=6;
+                if (spr->CoordX>=FIX32(400))
+                {
+                    spr->Direction=0;
+                    spr->CoordY=FIX32(4);
+                    PhaseScene=20;
+                    PhaseJoueur=1;
+                }
+                break;
+        }
+
+	    // Init Sprites Joueur
+        spr = &Sprites[3];
+		// Déplacement joueur & Gestion
+		if (PhaseJoueur)
+        {
+            spr->Direction=0;
+            if (value & BUTTON_UP) spr->Direction=88;
+            if (value & BUTTON_LEFT)
+            {
+                if (spr->Direction==88) spr->Direction=84;
+                else {spr->Direction=4;spr->MemDir=4;}
+            }
+            if (value & BUTTON_RIGHT)
+            {
+                if (spr->Direction==88) spr->Direction=86;
+                else {spr->Direction=6;spr->MemDir=6;}
+            }
+
+            // Tir !
+            if (value & BUTTON_A && !spr->Feu)
+            {
+                spr->Feu=1;
+                SND_startPlayPCM_XGM(SFX_GENERIC10, 1, SOUND_PCM_CH3);
+            }
+
+            // Tir cadence ?
+            GestionTir(spr);
+
+            // Animation
+            switch (spr->Direction)
+            {
+                case 0:
+                    switch(spr->MemDir)
+                    {
+                        case 4:
+                        SPR_setHFlip(spr->SpriteA,TRUE);
+                        SPR_setAnim(spr->SpriteA,19);
+                        spr->OffsetX=FIX32(16);
+                        break;
+
+                        case 6:
+                        SPR_setHFlip(spr->SpriteA,FALSE);
+                        SPR_setAnim(spr->SpriteA,19);
+                        spr->OffsetX=FIX32(0);
+                        break;
+                    }
+
+                break;
+                case 4:
+                    SPR_setHFlip(spr->SpriteA,TRUE);
+                    SPR_setAnim(spr->SpriteA,19);
+                    spr->OffsetX=FIX32(16);
+                break;
+
+                case 6:
+                    SPR_setHFlip(spr->SpriteA,FALSE);
+                    SPR_setAnim(spr->SpriteA,19);
+                    spr->OffsetX=FIX32(0);
+                break;
+
+                case 84:
+                    spr->OffsetX=FIX32(16);
+                    SPR_setHFlip(spr->SpriteA,TRUE);
+                    SPR_setAnim(spr->SpriteA,34);
+                    break;
+
+                case 86:
+                    spr->OffsetX=FIX32(0);
+                    SPR_setHFlip(spr->SpriteA,FALSE);
+                    SPR_setAnim(spr->SpriteA,34);
+                    break;
+            }
+
+        }
+
+
+        // Liste Sprites
+        spr = &Sprites[0];
+        i = MaxObjet ;
+
+		// Scène Sprites
+        while(i--)
+        {
+            // Joe
+            if (spr->ID==99)
+            {
+                switch(PhaseJoueur)
+                {
+                case 0:
+                        if (CamPosY<=360) spr->CoordY-=FIX32(0.035);
+                        //else PhaseJoueur=1;
+                        if (spr->CoordX<FIX32(136)) spr->CoordX+=FIX32(0.5);
+                        break;
+
+                case 1:
+                    spr->Direction=4;
+                    SPR_setHFlip(spr->SpriteA,TRUE);
+                    SPR_setAnim(spr->SpriteA,19);
+                    spr->OffsetX=FIX32(16);
+                    if (spr->CoordX<=FIX32(-48)) spr->Direction=0;
+                    break;
+                }
+            }
+            else if (spr->ID==70 || spr->ID==66)
+            {
+                // Animation général
+                if (spr->ID==66)
+                {
+                    if (!j) SPR_setAnim(spr->SpriteA,0);
+                    else SPR_setAnim(spr->SpriteA,1);
+                }
+
+                // Turbines BOSS
+                if (!PhaseScene) spr->CoordY-=FIX32(0.5);
+                else
+                {
+                    if (!SensY) spr->CoordY-=FIX32(0.5);
+                    if (SensY)  spr->CoordY+=FIX32(0.5);
+                    if (PhaseScene==20) spr->Direction=4;
+                }
+            }
+
+            MoveSprite(spr);
+            // Position.
+            if (spr->Visible) SPR_setVisibility(spr->SpriteA,VISIBLE);
+            else SPR_setVisibility(spr->SpriteA,HIDDEN);
+            SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX-spr->OffsetX),fix32ToInt(spr->CoordY));
+            spr++;
+        }
+
+        SPR_update();
+
+        // Vblank
+		SYS_doVBlankProcess();
+
+		// On dévoile le BOSS
+	    if (MapBoss<18)
+        {
+            Tempo++;
+            if (Tempo==24) {MapBoss++;Tempo=0;}
+            VDP_setTileMapEx(BG_A, Boss, TILE_ATTR_FULL(PAL1, TRUE, FALSE, FALSE, ind), 3, 28, 0, 0, 35, MapBoss, DMA);
+        }
+
+        // Effets Scrolling
+        hscroll = -CamPosX;
+        hscrollMed = hscroll + (hscroll >> 3);
+        hscrollFast = hscroll + (hscroll >> 1);
+        for(i = 0; i < 224>>3; i++)
+            hscrollTabBGA[i] = -BossX;
+        for(i = 0; i < 32>>3; i++)
+            hscrollTabBGB[i] = hscrollFast;
+        for(; i < 185>>3; i++)
+            hscrollTabBGB[i] = hscrollMed;
+        for(; i < 224>>3; i++)
+            hscrollTabBGB[i] = hscrollFast;
+
+        // Scrolling parallaxe plan B
+        VDP_setHorizontalScrollTile(BG_B, 0, hscrollTabBGB, 224>>3, DMA);
+
+        // Scrolling Boss
+        if (PhaseScene)
+        {
+            if (!SensY) BossY++;
+            if (SensY)  BossY--;
+            if (BossY>16 && !SensY) SensY=1;
+            if (!BossY && SensY) SensY=0;
+            if (PhaseScene==20)
+            {
+                BossX++;
+                VDP_setHorizontalScrollTile(BG_A, 0, hscrollTabBGA, 224>>3, DMA);
+                if (BossX>220)
+                {
+                    XGM_stopPlay();
+                    VDP_fadeOutAll(30,FALSE);
+                    return;
+                }
+            }
+
+
+        }
+
+        VDP_setVerticalScroll(BG_A, (CamPosY>>1)+(BossY>>1));
+        if (CamPosY<=280) VDP_setVerticalScroll(BG_B, (-CamPosY>>4));
+
+
+	}
+
 }

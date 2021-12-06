@@ -211,6 +211,7 @@ extern u16 PaletteZone2_4[16];
 extern u16 PaletteZone2_5[16];
 extern u16 PaletteZone2_6[16];
 
+extern u16 RequisZone3;
 extern u16 IDCivil;
 extern u16 NumeroZone;
 extern u16 GoCivil;

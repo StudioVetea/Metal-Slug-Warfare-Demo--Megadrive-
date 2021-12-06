@@ -25,6 +25,9 @@ SPRITE Civil_Sprite  "Sprites/Civil.png" 6 6 FAST 6
 SPRITE IconeCivil_Sprite "Sprites/Bonus_32x32.png" 4 4 FAST 6
 SPRITE IconeBonus_Sprite "Sprites/Bonus_32x32.png" 4 4 FAST 6
 SPRITE Warfare_Sprite "Gfx/Warfare.png" 24 4 FAST 6
+SPRITE TurbineBoss_Sprite "Sprites/TurbinesBoss.png" 8 4 FAST 3
+SPRITE General_Sprite "Sprites/General.png" 4 4 FAST 6
+SPRITE Dialogues_Sprites "Sprites/Dialogues_112x48.png" 14 6 FAST 4
 
 
 

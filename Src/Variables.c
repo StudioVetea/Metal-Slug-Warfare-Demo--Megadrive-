@@ -35,6 +35,7 @@ Sprite1_ SpriteBonus;
 s16 PCamX=0;
 s16 PCamY=0;
 
+u16 RequisZone3=0;
 u16 TestRoutine=0;
 u16 RequisZone=0;
 u16 TempoPaletteBG=0;

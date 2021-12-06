@@ -3,6 +3,7 @@ XGM Menu_Music "Sound/ACDC.vgm"
 XGM Thunder_Music  "Sound/Thunder.vgm"
 XGM ChoixZone_Music "Sound/ChoiceZone.vgm"
 XGM Zone2_Music  "Sound/MusicZone2.vgm"
+XGM RockD_Music "Sound/Rock_D.vgm"
 WAV Magnum_SFX "Sound/Magnum357.wav" XGM
 WAV Mort_SFX "Sound/Mort.wav" XGM
 WAV Mort1_SFX "Sound/Mort1.wav" XGM
@@ -28,6 +29,7 @@ WAV RocketLauncher_SFX "Sound/Rocket Launcher.wav" XGM
 WAV Score_SFX "Sound/Score.wav" XGM
 WAV Uzi_SFX "Sound/Uzi.wav" XGM
 WAV Baby_SFX "Sound/LetsRockBaby.wav" XGM
+WAV Voice_SFX "Sound/Voice1.wav" XGM
 
 
 
