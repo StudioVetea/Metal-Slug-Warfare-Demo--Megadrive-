@@ -82,10 +82,14 @@ void MainLoop()
 		// Game Over ?!
 		if (GameOver==2) break;
 	}
+
+	VDP_fadeOutAll(32,FALSE);
 	// set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
+    //SYS_doVBlankProcess();
 	XGM_stopPlay();
 	SPR_end();
+	SYS_doVBlankProcess();
 	VDP_init();
 	MEM_free(bgb);
 	MEM_free(bga);
@@ -99,6 +103,7 @@ void MainLoop()
 	Clear_Variable();
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
 	SPR_end();
+	SYS_doVBlankProcess();
 	VDP_init();
 	StartMain();
 	return;

@@ -193,6 +193,7 @@ void InitEcranZone()
 {
 	u16 Tempo=0;
 	// Init
+	SYS_doVBlankProcess();
 	VDP_init();
 	VDP_setPaletteColors(0, (u16*) palette_black, 64);
 	memcpy(&palette[48], Palette_Font.data, 16 * 2);
@@ -201,6 +202,8 @@ void InitEcranZone()
 	memcpy(&palette[0], Palette_Zone3.data, 16 * 2);
 
 	// Init Scene.
+	RequisZone3=1;
+	RequisZone=1;
 	NumeroZone=0;
 	ind = TILE_USERINDEX;
 	VDP_loadTileSet(Town_.tileset, ind, DMA);
@@ -279,7 +282,6 @@ void InitEcranZone()
 
 		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START))
 		{
-			XGM_stopPlay();
 			SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
 			break;
 		}
@@ -288,12 +290,13 @@ void InitEcranZone()
 		SYS_doVBlankProcess();
 	}
 
-	//XGM_pausePlay();
-	SYS_doVBlankProcess();
+	XGM_stopPlay();
+	//SYS_doVBlankProcess();
 	VDP_clearPlane(BG_A,TRUE);
-    VDP_fadeOutAll(16,FALSE);
     MEM_free(Zone1);
     MEM_free(Zone2);
+    if (RequisZone3==1) MEM_free(Zone3);
+    VDP_fadeOutAll(16,FALSE);
     //SPR_reset();
     SPR_end();
 }
@@ -303,7 +306,9 @@ void InitEcranZone()
 ///////////////////////////////
 void InitIntro()
 {
-	//VDP_init();
+		// Init
+	SYS_doVBlankProcess();
+	VDP_init();
 	// set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
 
@@ -330,7 +335,8 @@ void InitIntro()
 		MEM_free(bgaIntro1);
 		ind=0;
 		SPR_end();
-		//VDP_init();
+		SYS_doVBlankProcess();
+		VDP_init();
 	}
 
 	GameOver=0;
@@ -417,7 +423,6 @@ void InitIntro()
 	// Fade In Scene.
 	//XGM_pausePlay();
 	XGM_stopPlay();
-	SYS_doVBlankProcess();
 	VDP_clearPlane(BG_A,TRUE);
     VDP_fadeOutAll(16,FALSE);
     MEM_free(bgaIntro);
@@ -544,7 +549,7 @@ void InitScene()
 	Sprite1_* SprNombreUP=&NombreUP;
 	SprNombreUP->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPriorityAttribut(SprNombreUP->SpriteA, TRUE);
-	SPR_setAnim(SprNombreUP->SpriteA,2);
+	SPR_setAnim(SprNombreUP->SpriteA,3);
 	SPR_setPosition(SprNombreUP->SpriteA,52,24);
 	SPR_setAlwaysOnTop(SprNombreUP->SpriteA,TRUE);
 
@@ -593,7 +598,7 @@ void InitScene()
 	spr->StandBy=0;
 	spr->TypeIA=0;
     spr->SpriteDYN=0;
-    spr->NombreUP=2;
+    spr->NombreUP=3;
     spr->Slot1=0;
 
     spr->HitPointMax=6;
@@ -794,6 +799,7 @@ void InitScene()
 void InitMAP()
 {
 	// Init
+	SYS_doVBlankProcess();
 	VDP_init();
 
 	// Zone 3 ?!
@@ -807,6 +813,7 @@ void InitMAP()
 		GameOver=1;
 		VDP_setPaletteColors(0, (u16*) palette_black, 64);
 		SPR_end();
+		SYS_doVBlankProcess();
 		VDP_init();
 		StartMain();
 		return;

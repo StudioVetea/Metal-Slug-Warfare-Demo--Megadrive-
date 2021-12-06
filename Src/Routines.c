@@ -3141,16 +3141,19 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             spr->VitesseInit=FIX32(0);
             spr->Direction=0;
             spr->InScene=0;
-            //spr->CoordX=Civil_CoordX;
             spr->Visible=0;
+
+            // Calcul position IA / Joueur
             // Calcul position IA / Joueur
             const Vect2D_f32* posCivil = &PositionCivil[0];
             j=10;
+            u8 TES=0;
             while(j--)
             {
                 fix32 Dist=abs(SpriteRef->CoordX-posCivil->x);
                 if (Dist>=FIX32(960)+getRandomF32(320))
                 {
+                    TES=1;
                     spr->CoordX=posCivil->x;
                     spr->CoordY=posCivil->y;
                     Civil_CoordX= spr->CoordX;
@@ -3159,7 +3162,15 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
                 }
                 posCivil++;
             }
-
+            // Si aucune sélection, on la force au dernier index.
+            if (!TES)
+            {
+                posCivil = &PositionCivil[10];
+                spr->CoordX=posCivil->x;
+                spr->CoordY=posCivil->y;
+                Civil_CoordX= spr->CoordX;
+                Civil_CoordY= spr->CoordY;
+            }
             return;
             break;
 
@@ -3629,11 +3640,7 @@ void Saut_Sprite(Sprite1_ *spr)
                 }
             }
         }
-        if (GameOver)
-        {
-            VDP_fadeOutAll(32,FALSE);
-            GameOver=2;
-        }
+        if (GameOver) GameOver=2;
     }
 }
 
@@ -4180,6 +4187,9 @@ void Zone3()
                 VDP_setHorizontalScrollTile(BG_A, 0, hscrollTabBGA, 224>>3, DMA);
                 if (BossX>220)
                 {
+                    MEM_free(Zone3);
+                    MEM_free(Boss);
+                    //SYS_doVBlankProcess();
                     XGM_stopPlay();
                     VDP_fadeOutAll(30,FALSE);
                     return;
@@ -4191,8 +4201,6 @@ void Zone3()
 
         VDP_setVerticalScroll(BG_A, (CamPosY>>1)+(BossY>>1));
         if (CamPosY<=280) VDP_setVerticalScroll(BG_B, (-CamPosY>>4));
-
-
 	}
 
 }
