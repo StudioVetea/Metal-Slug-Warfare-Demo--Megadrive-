@@ -344,7 +344,6 @@ void GestionCivil(Sprite1_ *spr)
             SPR_setPosition(SprCivil->SpriteA,284,80);
             CivilVisible=0;
         }
-
         return;
     }
 
@@ -608,7 +607,7 @@ void DisplayMedals()
     // Affichage
     SPR_setPosition(SprLvl->SpriteA, x, y);
     return;
-    }
+}
 
 //////////////////////////////////////
 //                 Largage Bombes
@@ -741,7 +740,7 @@ void GestionAttaqueHelico(Sprite1_ *spr)
         }
     }
 
-    }
+}
 
 
 
@@ -757,6 +756,22 @@ void Result_Screen()
     memcpy(&palette[16], Palette_Score.data, 16 * 2);
     memcpy(&palette[32],Palette_Airplane.data,16*2);
     memcpy(&palette[48],Palette_Joe.data,16*2);
+
+    // Ecriture en SRAM du score
+    SRAM_enable();
+    ReadSram=SRAM_readWord (0x0000);
+    SRAM_disable();
+
+    if (ReadSram<=Score)
+    {
+        SRAM_enable();
+        SRAM_writeWord(0x0000, Score);
+        SRAM_disable();
+        SRAM_enable();
+        ReadSram=SRAM_readWord (0x0000);
+        SRAM_disable();
+    }
+
 
     SPR_initEx(512);
 
@@ -778,6 +793,16 @@ void Result_Screen()
         SPR_setPosition(SprLvl->SpriteA,130,70);
     }
 
+    // Sprite HighScore
+	Sprite1_* HighScoreTexte=&SpriteHighScore;
+    HighScoreTexte->CoordX=FIX32(10);
+    HighScoreTexte->CoordY=FIX32(210);
+    HighScoreTexte->Vitesse=FIX32(5);
+    HighScoreTexte->SpriteA = SPR_addSprite(&HighScore_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+    SPR_setAnim(HighScoreTexte->SpriteA,0);
+    SPR_setVisibility(HighScoreTexte->SpriteA,VISIBLE);
+    SPR_setPosition(HighScoreTexte->SpriteA,0,210);
+
 
 	// Score
     NombreDigitScore=5;
@@ -796,10 +821,29 @@ void Result_Screen()
         SprScore++;
     }
 
+    // HighScore
+    NombreDigitScore=5;
+	Sprite1_* SprScoreHigh=&HighScore[0];
+    i=NombreDigitScore;
+    j=0;
+    Pos=0;
+    while(i--)
+    {
+        Pos=250-(j*16);
+        j++;
+        SprScoreHigh->SpriteA = SPR_addSprite(&Nombre_SpriteXL, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        SPR_setPriorityAttribut(SprScoreHigh->SpriteA, TRUE);
+        SPR_setAnim(SprScoreHigh->SpriteA,0);
+        SPR_setPosition(SprScoreHigh->SpriteA,Pos,210);
+        SprScoreHigh++;
+    }
+
+
 
     // Variables
     //Score=1500;
     Sprite1_ *sco;
+    Sprite1_ *scoHigh;
     char Buffer[5];
     char *Car;
 
@@ -834,6 +878,39 @@ void Result_Screen()
         sco++;
     }
 
+    // HighScore
+    uintToStr(ReadSram,Texte,0);
+    Lon=strlen(Texte);
+	strclr(Buffer);
+    strcat(Buffer,Texte);
+
+    // Score
+    scoHigh=&HighScore[0];
+    i=Lon;
+    j=0;
+    Pos=0;
+    while(i--)
+    {
+        Pos=250-(j*16);
+        j++;
+        Car=&Buffer[i];
+        //NombreIA+3+6+7+1+6;
+        if (*Car=='0') SPR_setAnim(scoHigh->SpriteA,0);
+        if (*Car=='1') SPR_setAnim(scoHigh->SpriteA,1);
+        if (*Car=='2') SPR_setAnim(scoHigh->SpriteA,2);
+        if (*Car=='3') SPR_setAnim(scoHigh->SpriteA,3);
+        if (*Car=='4') SPR_setAnim(scoHigh->SpriteA,4);
+        if (*Car=='5') SPR_setAnim(scoHigh->SpriteA,5);
+        if (*Car=='6') SPR_setAnim(scoHigh->SpriteA,6);
+        if (*Car=='7') SPR_setAnim(scoHigh->SpriteA,7);
+        if (*Car=='8') SPR_setAnim(scoHigh->SpriteA,8);
+        if (*Car=='9') SPR_setAnim(scoHigh->SpriteA,9);
+        SPR_setPosition(scoHigh->SpriteA,Pos,210);
+        scoHigh++;
+    }
+
+
+
 	Sprite1_* spr = &Sprites[0];
 	spr->CoordX=FIX32(100);
 	spr->CoordY=FIX32(0);
@@ -866,23 +943,41 @@ void Result_Screen()
     XGM_startPlay(Thunder_Music);
     i=0;
     j=5;
+    u16 PosX=270;
+    u8 z=0;
+    u8 w=5;
 
 	while(TRUE)
 	{
         u16 value=JOY_readJoypad(JOY_1);
-        if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START)) {XGM_stopPlay();break;}
+        if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START))  break;
+
+        // On fait défiler le highscore
+        HighScoreTexte->CoordX+=FIX32(4);
+        SPR_setPosition(HighScoreTexte->SpriteA,fix32ToInt(HighScoreTexte->CoordX),fix32ToInt(HighScoreTexte->CoordY));
+        i=5;
+        j=0;
+        scoHigh=&HighScore[0];
+        PosX+=4;
+        while(i--)
+        {
+            j++;
+            Pos=PosX-(j*16);
+            SPR_setPosition(scoHigh->SpriteA,Pos,210);
+            scoHigh++;
+        }
 
 	    // Clignotement résultat !
-	    i++;
+	    z++;
         sco=&NombreScore[0];
-        while(j--)
+        while(w--)
         {
-            if (i<=8) SPR_setVisibility(sco->SpriteA,VISIBLE);
+            if (z<=8) SPR_setVisibility(sco->SpriteA,VISIBLE);
             else SPR_setVisibility(sco->SpriteA,HIDDEN);
             sco++;
         }
-        j=5;
-	    if (i>16) i=0;
+        w=5;
+	    if (z>16) z=0;
 
 
         SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
@@ -892,9 +987,6 @@ void Result_Screen()
 		// Vblank
 		SYS_doVBlankProcess();
 	}
-    //XGM_pausePlay();
-    VDP_fadeOutAll(32,FALSE);
-	return;
 }
 
 ///////////////////////////////
@@ -1682,7 +1774,6 @@ void GestionGrenades(Sprite1_ *spr)
         //Saut_Sprite(spr);
     //}
 
-    return;
 }
 
 
@@ -3697,8 +3788,8 @@ void Zone3()
     VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
     CamPosY=0;
     CamPosX=0;
+
 	// Init Scene.
-	NumeroZone=0;
 	ind = TILE_USERINDEX;
 	VDP_loadTileSet(MapZone3.tileset, ind, DMA);
 	TileMap *Zone3 = MapZone3.tilemap;
@@ -4185,15 +4276,8 @@ void Zone3()
             {
                 BossX++;
                 VDP_setHorizontalScrollTile(BG_A, 0, hscrollTabBGA, 224>>3, DMA);
-                if (BossX>220)
-                {
-                    MEM_free(Zone3);
-                    MEM_free(Boss);
-                    //SYS_doVBlankProcess();
-                    XGM_stopPlay();
-                    VDP_fadeOutAll(30,FALSE);
-                    return;
-                }
+                // Fin de la scène
+                if (BossX>220) break;
             }
 
 
@@ -4203,4 +4287,10 @@ void Zone3()
         if (CamPosY<=280) VDP_setVerticalScroll(BG_B, (-CamPosY>>4));
 	}
 
+    MEM_free(Zone3);
+    MEM_free(Boss);
+    //SYS_doVBlankProcess();
+    XGM_stopPlay();
+    VDP_fadeOutAll(30,FALSE);
+    SPR_end();
 }

@@ -202,8 +202,6 @@ void InitEcranZone()
 	memcpy(&palette[0], Palette_Zone3.data, 16 * 2);
 
 	// Init Scene.
-	RequisZone3=1;
-	RequisZone=1;
 	NumeroZone=0;
 	ind = TILE_USERINDEX;
 	VDP_loadTileSet(Town_.tileset, ind, DMA);
@@ -280,25 +278,23 @@ void InitEcranZone()
 		}
 
 
-		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START))
-		{
-			SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
-			break;
-		}
+		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START)) break;
 
 		// Vblank
 		SYS_doVBlankProcess();
 	}
 
+	// Fin bouclage
+	SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
 	XGM_stopPlay();
 	//SYS_doVBlankProcess();
 	VDP_clearPlane(BG_A,TRUE);
-    MEM_free(Zone1);
-    MEM_free(Zone2);
-    if (RequisZone3==1) MEM_free(Zone3);
-    VDP_fadeOutAll(16,FALSE);
-    //SPR_reset();
-    SPR_end();
+	MEM_free(Zone1);
+	MEM_free(Zone2);
+	if (RequisZone3==1) MEM_free(Zone3);
+	VDP_fadeOutAll(16,FALSE);
+	//SPR_reset();
+	VDP_init();
 }
 
 ///////////////////////////////
@@ -420,16 +416,17 @@ void InitIntro()
 		VDP_setHorizontalScroll(BG_A,(-CamPosX));
 		VDP_setVerticalScroll(BG_A, CamPosY);
 	}
+
 	// Fade In Scene.
 	//XGM_pausePlay();
 	XGM_stopPlay();
 	VDP_clearPlane(BG_A,TRUE);
-    VDP_fadeOutAll(16,FALSE);
-    MEM_free(bgaIntro);
-    MEM_free(bgb);
-    //SPR_reset();
-    SPR_end();
-    ind=0;
+	VDP_fadeOutAll(16,FALSE);
+	MEM_free(bgaIntro);
+	MEM_free(bgb);
+	//SPR_reset();
+	SPR_end();
+	ind=0;
 }
 
 ///////////////////////////////
@@ -437,6 +434,9 @@ void InitIntro()
 ///////////////////////////////
 void InitScene()
 {
+	// Zone Boss ?
+	if (NumeroZone==2) return;
+
 	// Fade & Palettes
 	if (NumeroZone)
 	{
@@ -456,6 +456,7 @@ void InitScene()
 	Sprite1_* spr = &Sprites[0];
 	spr->CoordX=FIX32(48);
 	spr->CoordY=FIX32(140-48);
+	SPR_reset();
      // BGB
     updateCameraPosition(spr);
 	// set new camera position
@@ -463,7 +464,7 @@ void InitScene()
     updateVDPScroll();
 	SYS_doVBlankProcess();
     // BGA
-    VDP_setTileMapEx(BG_A, bga, TILE_ATTR_FULL(0, FALSE, FALSE, FALSE, bgBaseTileIndex[0]), 0, 0, 0, 0, 64, 32, DMA_QUEUE);
+    VDP_setTileMapEx(BG_A, bga, TILE_ATTR_FULL(0, FALSE, FALSE, FALSE, bgBaseTileIndex[0]), 0, 0, 0, 0, 64, 32, CPU);
 
 	// camera position (force refresh)
     CamPosX = -1;
@@ -480,7 +481,7 @@ void InitScene()
 	SprLvl->CoordX=FIX32(320);
 	SprLvl->CoordY=FIX32(0);
 	SprLvl->Vitesse=FIX32(5);
-	SprLvl->SpriteA = SPR_addSprite(&Medailles_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SprLvl->SpriteA = SPR_addSpriteSafe(&Medailles_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPosition(SprLvl->SpriteA,fix32ToInt(SprLvl->CoordX),fix32ToInt(SprLvl->CoordY));
 	SPR_setAlwaysOnTop(SprLvl->SpriteA,TRUE);
 	SPR_setAnim(SprLvl->SpriteA,0);
@@ -490,21 +491,21 @@ void InitScene()
 	Sprite1_* SprHUD= &SpriteHUD[0];
 	SprHUD->CoordX=FIX32(16);
 	SprHUD->CoordY=FIX32(16);
-	SprHUD->SpriteA = SPR_addSprite(&HUDSante_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SprHUD->SpriteA = SPR_addSpriteSafe(&HUDSante_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setAlwaysOnTop(SprHUD->SpriteA,TRUE);
 	SPR_setPosition(SprHUD->SpriteA,fix32ToInt(SprHUD->CoordX),fix32ToInt(SprHUD->CoordY));
 	SPR_setAnim(SprHUD->SpriteA,0);
 	SprHUD++;
 	SprHUD->CoordX=FIX32(16);
 	SprHUD->CoordY=FIX32(24);
-	SprHUD->SpriteA = SPR_addSprite(&HUDCredit_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SprHUD->SpriteA = SPR_addSpriteSafe(&HUDCredit_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPosition(SprHUD->SpriteA,fix32ToInt(SprHUD->CoordX),fix32ToInt(SprHUD->CoordY));
 	SPR_setAlwaysOnTop(SprHUD->SpriteA,TRUE);
 	SPR_setAnim(SprHUD->SpriteA,0);
 	SprHUD++;
 	SprHUD->CoordX=FIX32(72);
 	SprHUD->CoordY=FIX32(8);
-	SprHUD->SpriteA = SPR_addSprite(&HUDArme_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SprHUD->SpriteA = SPR_addSpriteSafe(&HUDArme_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPosition(SprHUD->SpriteA,fix32ToInt(SprHUD->CoordX),fix32ToInt(SprHUD->CoordY));
 	SPR_setAlwaysOnTop(SprHUD->SpriteA,TRUE);
 	SPR_setAnim(SprHUD->SpriteA,0);
@@ -512,7 +513,7 @@ void InitScene()
 
 	// Icone Civile
 	Sprite1_* SprCivil=&SpriteCivil;
-	SprCivil->SpriteA = SPR_addSprite(&IconeCivil_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SprCivil->SpriteA = SPR_addSpriteSafe(&IconeCivil_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setAlwaysOnTop(SprCivil->SpriteA,TRUE);
 	SPR_setPosition(SprCivil->SpriteA,300,100);
 	SPR_setVisibility(SprCivil->SpriteA,HIDDEN);
@@ -537,7 +538,7 @@ void InitScene()
     {
         Pos=64-(j<<3);
         j++;
-        SprScore->SpriteA = SPR_addSprite(&Nombre_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        SprScore->SpriteA = SPR_addSpriteSafe(&Nombre_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(SprScore->SpriteA, TRUE);
         SPR_setAnim(SprScore->SpriteA,0);
         SPR_setPosition(SprScore->SpriteA,Pos,8);
@@ -547,7 +548,7 @@ void InitScene()
 
     // Nombre UP
 	Sprite1_* SprNombreUP=&NombreUP;
-	SprNombreUP->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SprNombreUP->SpriteA = SPR_addSpriteSafe(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPriorityAttribut(SprNombreUP->SpriteA, TRUE);
 	SPR_setAnim(SprNombreUP->SpriteA,3);
 	SPR_setPosition(SprNombreUP->SpriteA,52,24);
@@ -562,7 +563,7 @@ void InitScene()
     {
         //Pos=64-(j<<3);
         //j++;
-        SprNombreGrenade->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        SprNombreGrenade->SpriteA = SPR_addSpriteSafe(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(SprNombreGrenade->SpriteA, TRUE);
         //SPR_setAnim(SprNombreGrenade->SpriteA,0);
         //SPR_setPosition(SprNombreGrenade->SpriteA,Pos,8);
@@ -581,7 +582,7 @@ void InitScene()
     {
         //Pos=64-(j<<3);
         //j++;
-        SprNombreBalleShotGun->SpriteA = SPR_addSprite(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        SprNombreBalleShotGun->SpriteA = SPR_addSpriteSafe(&Nombre1_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(SprNombreBalleShotGun->SpriteA, TRUE);
         //SPR_setAnim(SprNombreGrenade->SpriteA,0);
         //SPR_setPosition(SprNombreGrenade->SpriteA,Pos,8);
@@ -613,8 +614,8 @@ void InitScene()
     // Jambes
 	Sprite1_* SprMarcheJoe=&Marche_Joe;
 
-	SprMarcheJoe->SpriteA = SPR_addSprite(&MarcheJoe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
-	spr->SpriteA = SPR_addSprite(&Joe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	SprMarcheJoe->SpriteA = SPR_addSpriteSafe(&MarcheJoe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	spr->SpriteA = SPR_addSpriteSafe(&Joe_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPriorityAttribut(spr->SpriteA, TRUE);
 	SPR_setVisibility(spr->SpriteA,HIDDEN);
 	SPR_setVisibility(SprMarcheJoe->SpriteA,HIDDEN);
@@ -641,7 +642,7 @@ void InitScene()
 
     // Chargement Sprites
 	//spr->SpriteA = SPR_addSprite(&Airplane_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
-	spr->SpriteA = SPR_addSprite(&AirplaneLight_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	spr->SpriteA = SPR_addSpriteSafe(&AirplaneLight_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
 	SPR_setPriorityAttribut(spr->SpriteA, FALSE);
 	SPR_setVisibility(spr->SpriteA,VISIBLE);
 	SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
@@ -651,7 +652,7 @@ void InitScene()
 
     // Icone objets
     IDBonus=IDPlane+1;
-	spr->SpriteA = SPR_addSprite(&IconeBonus_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+	spr->SpriteA = SPR_addSpriteSafe(&IconeBonus_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 	SPR_setPosition(spr->SpriteA,0,0);
 	SPR_setAlwaysOnTop(spr->SpriteA,TRUE);
 	SPR_setAnim(spr->SpriteA,0);
@@ -698,7 +699,7 @@ void InitScene()
         spr->StandBy=1;
         spr->TypeIA=0;
         spr->TypeBouclier=0;
-        spr->SpriteA = SPR_addSprite(&Balle_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        spr->SpriteA = SPR_addSpriteSafe(&Balle_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(spr->SpriteA, TRUE);
         SPR_setVisibility(spr->SpriteA,HIDDEN);
         SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
@@ -722,7 +723,7 @@ void InitScene()
         spr->Visible=0;
         spr->StandBy=1;
         spr->TypeIA=0;
-        spr->SpriteA = SPR_addSprite(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        spr->SpriteA = SPR_addSpriteSafe(&Bouclier_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(spr->SpriteA, TRUE);
         SPR_setVisibility(spr->SpriteA,HIDDEN);
         //Sprite1_* SpriteREF=Sprites;
@@ -736,7 +737,7 @@ void InitScene()
 	// Metal Slug !!
 	// Init Phase scène : 1 Arrivée du Tank , 2 - Largage de Marco, 3 - Départ du tank, 0 - Démarrage démo.
 	PhaseScene=1;
-	spr->SpriteA = SPR_addSprite(&MetalSlug_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+	spr->SpriteA = SPR_addSpriteSafe(&MetalSlug_Sprite, 0, 0, TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
 	SPR_setAnim(spr->SpriteA,1);
 	spr->CoordX=FIX32(-64);
 	spr->CoordY=FIX32(140+8);
@@ -772,7 +773,7 @@ void InitScene()
         spr->ID=11;
         spr->StandBy=0;
         spr->TypeIA=0;
-        spr->SpriteA = SPR_addSprite(&FontStart_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+        spr->SpriteA = SPR_addSpriteSafe(&FontStart_Sprite, 0, 0, TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
         SPR_setPriorityAttribut(spr->SpriteA, TRUE);
         SPR_setVisibility(spr->SpriteA,VISIBLE);
         SPR_setPosition(spr->SpriteA,fix32ToInt(spr->CoordX),fix32ToInt(spr->CoordY));
@@ -788,8 +789,7 @@ void InitScene()
 	NombreIAScene=0;
     MaxObjet=NombreLettre+NombreIA+NombreBalle+NombreDigitScore+NombreBouclier;
 	GestionNombreBallesShotgun();
-
-	SPR_update();
+	//SPR_update();
 }
 
 
@@ -798,26 +798,9 @@ void InitScene()
 ////////////////////////////////////////
 void InitMAP()
 {
-	// Init
-	SYS_doVBlankProcess();
-	VDP_init();
 
 	// Zone 3 ?!
-	if (NumeroZone==2)
-	{
-		Zone3();
-		// Une fois connu, on ne reviendra plus dessus.
-		RequisZone3=99;
-		// Init général
-		Clear_Variable();
-		GameOver=1;
-		VDP_setPaletteColors(0, (u16*) palette_black, 64);
-		SPR_end();
-		SYS_doVBlankProcess();
-		VDP_init();
-		StartMain();
-		return;
-	}
+	if (NumeroZone==2) return;
 
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
@@ -856,7 +839,6 @@ void InitMAP()
 		bga = unpackTileMap(bga_image_1.tilemap, NULL);
 		break;
 	}
-
 }
 
 
@@ -898,7 +880,5 @@ void InitRoutine()
 	SND_setPCM_XGM(SFX_GENERIC24, Uzi_SFX, sizeof(Uzi_SFX));
 	SND_setPCM_XGM(SFX_GENERIC25, Baby_SFX, sizeof(Baby_SFX));
 	SND_setPCM_XGM(SFX_GENERIC26, Voice_SFX, sizeof(Flamethrower_SFX));
-
-
 }
 

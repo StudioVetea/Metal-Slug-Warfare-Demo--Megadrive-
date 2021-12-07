@@ -28,6 +28,7 @@ SPRITE Warfare_Sprite "Gfx/Warfare.png" 24 4 FAST 6
 SPRITE TurbineBoss_Sprite "Sprites/TurbinesBoss.png" 8 4 FAST 3
 SPRITE General_Sprite "Sprites/General.png" 4 4 FAST 6
 SPRITE Dialogues_Sprites "Sprites/Dialogues_112x48.png" 14 6 FAST 4
+SPRITE HighScore_Sprite "Sprites/High_ScoreXL.png" 22 2 FAST 4
 
 
 

@@ -19,8 +19,10 @@ const Vect2D_f32 PositionPara[16] = {{FIX32(64), FIX32(-32)}, {FIX32(192), FIX32
 Sprite1_ Sprites[60];
 Sprite1_ SpriteHUD[10];
 Sprite1_ NombreScore[5];
+Sprite1_ HighScore[16];
 Sprite1_ NombreUP;
 Sprite1_ NombreLevel;
+Sprite1_ SpriteHighScore;
 Sprite1_ Marche_Joe;
 Sprite1_ NombreBallesShot[2];
 Sprite1_ NombreGrenades[2];
@@ -35,6 +37,7 @@ Sprite1_ SpriteBonus;
 s16 PCamX=0;
 s16 PCamY=0;
 
+u16 ReadSram=0;
 u16 RequisZone3=0;
 u16 TestRoutine=0;
 u16 RequisZone=0;
