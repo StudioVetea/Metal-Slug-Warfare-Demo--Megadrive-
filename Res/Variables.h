@@ -190,7 +190,6 @@ typedef struct
 extern Sprite1_ Sprites[60];
 extern Sprite1_ SpriteHUD[10];
 extern Sprite1_ NombreScore[5];
-extern Sprite1_ HighScore[16];
 extern Sprite1_ NombreBallesShot[2];
 extern Sprite1_ NombreGrenades[2];
 extern Sprite1_ NombreUP;
@@ -198,7 +197,6 @@ extern Sprite1_ NombreLevel;
 extern Sprite1_ Marche_Joe;
 extern Sprite1_ SpriteCivil;
 extern Sprite1_ SpriteBonus;
-extern Sprite1_ SpriteHighScore;
 
 extern s16 PCamX;
 extern s16 PCamY;

@@ -286,13 +286,13 @@ void InitEcranZone()
 
 	// Fin bouclage
 	SND_startPlayPCM_XGM(SFX_GENERIC14, 2, SOUND_PCM_CH4);
-	XGM_stopPlay();
 	//SYS_doVBlankProcess();
 	VDP_clearPlane(BG_A,TRUE);
 	MEM_free(Zone1);
 	MEM_free(Zone2);
 	if (RequisZone3==1) MEM_free(Zone3);
 	VDP_fadeOutAll(16,FALSE);
+	XGM_stopPlay();
 	//SPR_reset();
 	VDP_init();
 }
@@ -419,9 +419,9 @@ void InitIntro()
 
 	// Fade In Scene.
 	//XGM_pausePlay();
-	XGM_stopPlay();
 	VDP_clearPlane(BG_A,TRUE);
 	VDP_fadeOutAll(16,FALSE);
+	XGM_stopPlay();
 	MEM_free(bgaIntro);
 	MEM_free(bgb);
 	//SPR_reset();
@@ -457,7 +457,7 @@ void InitScene()
 	spr->CoordX=FIX32(48);
 	spr->CoordY=FIX32(140-48);
 	SPR_reset();
-     // BGB
+	// BGB
     updateCameraPosition(spr);
 	// set new camera position
     setCameraPosition(PCamX, PCamY);
@@ -510,6 +510,7 @@ void InitScene()
 	SPR_setAlwaysOnTop(SprHUD->SpriteA,TRUE);
 	SPR_setAnim(SprHUD->SpriteA,0);
 	SprHUD++;
+
 
 	// Icone Civile
 	Sprite1_* SprCivil=&SpriteCivil;
@@ -804,9 +805,10 @@ void InitMAP()
 
     // set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
-	//NumeroZone=1;
+
 	ind = TILE_USERINDEX;
 	bgBaseTileIndex[0] = ind;
+
 
 	switch (NumeroZone)
 	{

@@ -413,7 +413,7 @@ void GestionVague()
 void CreateIANew(Sprite1_ *spr)
 {
 
-    if (!spr->SpriteDYN || PhaseScene) return;
+    if (!spr->SpriteDYN || PhaseScene || spr->IntIA==10) return;
     if (NombreIAScene>=NombreIASceneMax) return;
     if (spr->SpriteA!=NULL) return;
 
@@ -749,6 +749,10 @@ void GestionAttaqueHelico(Sprite1_ *spr)
 ///////////////////////////////
 void Result_Screen()
 {
+    // Variables
+    Sprite1_ HighScore[5];
+    Sprite1_ SpriteHighScore;
+
 	//VDP_init();
 	// set all palette to black
     VDP_setPaletteColors(0, (u16*) palette_black, 64);
@@ -758,19 +762,25 @@ void Result_Screen()
     memcpy(&palette[48],Palette_Joe.data,16*2);
 
     // Ecriture en SRAM du score
+    // Si ROM > 2 Mo alors
+    // Z80_requestBus(TRUE);
     SRAM_enable();
     ReadSram=SRAM_readWord (0x0000);
-    SRAM_disable();
+    if (ReadSram>65000)
+    {
+        SRAM_writeWord(0x0000, 0);
+        ReadSram=SRAM_readWord (0x0000);
+    }
 
     if (ReadSram<=Score)
     {
-        SRAM_enable();
+
         SRAM_writeWord(0x0000, Score);
-        SRAM_disable();
-        SRAM_enable();
         ReadSram=SRAM_readWord (0x0000);
-        SRAM_disable();
     }
+    SRAM_disable();
+    // si ROM > 2 Mo alors
+    // Z80_releaseBus();
 
 
     SPR_initEx(512);
@@ -2083,7 +2093,7 @@ void GestionBalles(Sprite1_ *spr, Sprite1_ *SpriteREF)
     }
 
     // Couteau ?!
-    if (SpriteREF->Couteau) return;
+    //if (SpriteREF->Couteau) return;
 
     // Balles Joueurs
     if (spr->ID==45)
@@ -4290,7 +4300,7 @@ void Zone3()
     MEM_free(Zone3);
     MEM_free(Boss);
     //SYS_doVBlankProcess();
-    XGM_stopPlay();
     VDP_fadeOutAll(30,FALSE);
+	XGM_stopPlay();
     SPR_end();
 }

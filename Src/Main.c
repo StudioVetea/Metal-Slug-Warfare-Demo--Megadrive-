@@ -90,8 +90,8 @@ void MainLoop()
 			}
 
 			// Fin de la boucle !
+			VDP_fadeOutAll(16,FALSE);
 			XGM_stopPlay();
-			VDP_fadeOutAll(32,FALSE);
 			MEM_free(bgb);
 			MEM_free(bga);
 			SPR_end();
@@ -106,8 +106,8 @@ void MainLoop()
 		}
 
         // Fin
+		VDP_fadeOutAll(16,FALSE);
 		XGM_stopPlay();
-		VDP_fadeOutAll(32,FALSE);
 		SPR_end();
 		// Init général
 		Clear_Variable();
