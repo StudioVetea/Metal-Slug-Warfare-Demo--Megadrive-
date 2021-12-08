@@ -2,49 +2,14 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="default" />
-	<File name="Res\Variables.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="Res\Animations.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1948" topLine="13" />
+			<Cursor1 position="384" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Src\Variables.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="Src\Variables.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="612" topLine="14" />
-		</Cursor>
-	</File>
-	<File name="Res\gfx.h" open="1" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="441" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Src\Main.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1105" topLine="55" />
-		</Cursor>
-	</File>
-	<File name="Res\gfx.res" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="756" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Src\GestionPAD.c" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="380" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Src\Animations.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1042" topLine="41" />
-		</Cursor>
-	</File>
-	<File name="Res\Init.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="169" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Res\Sprites.h" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="137" topLine="0" />
+			<Cursor1 position="1579" topLine="15" />
 		</Cursor>
 	</File>
 	<File name="Res\Map\BG_A.png" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -52,54 +17,89 @@
 			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Res\Animations.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="Res\Main.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="384" topLine="0" />
+			<Cursor1 position="80" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Res\Main.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="Res\GestionPAD.h" open="1" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="106" topLine="0" />
+			<Cursor1 position="46" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Res\GestionPAD.h" open="1" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="Res\gfx.res" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="107" topLine="0" />
+			<Cursor1 position="823" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Res\Init.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="183" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Res\Routines.h" open="1" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="61" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Src\Main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1772" topLine="73" />
+		</Cursor>
+	</File>
+	<File name="Res\Sprites.h" open="1" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="137" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Res\Variables.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4258" topLine="171" />
+		</Cursor>
+	</File>
+	<File name="Res\Sound.h" open="1" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="460" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Res\Sprites.res" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1936" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Res\Sound.res" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="81" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Res\gfx.h" open="1" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="441" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Src\Init.c" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="10885" topLine="381" />
+		</Cursor>
+	</File>
+	<File name="Src\Animations.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="12034" topLine="378" />
+		</Cursor>
+	</File>
+	<File name="Src\GestionPAD.c" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="10041" topLine="37" />
+		</Cursor>
+	</File>
+	<File name="Src\Routines.c" open="1" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="131090" topLine="4121" />
 		</Cursor>
 	</File>
 	<File name="Res\Gfx\Ecran_MS_BGA.png" open="0" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Res\Routines.h" open="1" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="385" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Res\Sound.h" open="1" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="460" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Res\Sound.res" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="623" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Res\Sprites.res" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1046" topLine="1" />
-		</Cursor>
-	</File>
-	<File name="Src\Init.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="19289" topLine="672" />
-		</Cursor>
-	</File>
-	<File name="Src\Routines.c" open="1" top="1" tabpos="18" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="492" topLine="87" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
