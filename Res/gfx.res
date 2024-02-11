@@ -2,6 +2,7 @@ PALETTE Palette_Joe "Sprites/Joe_48x48.png"
 PALETTE Palette_BGA "Map/BG_A.png"
 PALETTE Palette_BGB "Map/BG_B.png"
 PALETTE Palette_BGA_1 "Map/BG_A1.png"
+PALETTE Palette_BGA_2 "Map/Flamme.png"
 PALETTE Palette_BGB_1 "Map/BG_B1.png"
 PALETTE Palette_Menu "Gfx/Mess_Menu.png"
 PALETTE Palette_Airplane "Sprites/Airplane_96x64.png"
@@ -21,6 +22,7 @@ PALETTE Palette_Zone3 "Sprites/Zone3_160x128.png"
 IMAGE bga_Ecran_MS "Gfx/Ecran_MS_BGA_old.png" NONE
 IMAGE bga_image "Map/BG_A.png" BEST
 IMAGE bga_image_1 "Map/BG_A1.png" BEST
+IMAGE bga_image_2 "MAP/Flamme.png" BEST
 IMAGE Image_LogoSgdk "Gfx/SgdkLogo.png" NONE
 IMAGE Town_ "Sprites/Town_160x128.png" BEST ALL
 IMAGE Jungle_ "Sprites/Jungle_160x128.png" BEST ALL

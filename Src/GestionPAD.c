@@ -53,9 +53,7 @@ void GestionPAD(Sprite1_ *spr)
     // Init
     spr->Direction=0;
 
-    // Lancer grenade joueur & Saut
-    if (!spr->Saut)
-    {
+
         // Lancer grenade ?!
         if (value & BUTTON_C && !spr->LancerGrenade && NombreGrenade)
         {
@@ -93,15 +91,18 @@ void GestionPAD(Sprite1_ *spr)
                 }
                 spr1++;
             }
-            return;
+            if (!spr->Saut) return;
         }
 
+    // Saut
+    if (!spr->Saut)
+    {
         // Saut ?
         if (value & BUTTON_B)
         {
             //if (spr->MemSprint) spr->Boost=FIX32(2);
             spr->Saut=1;
-            spr->Acceleration=FIX32(6);
+            spr->Acceleration=FIX32(7);
             spr->RefY=spr->CoordY;
             spr->SensY=1;
         }

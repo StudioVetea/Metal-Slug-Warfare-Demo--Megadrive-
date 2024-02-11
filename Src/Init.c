@@ -192,6 +192,7 @@ void Clear_Variable()
 void InitEcranZone()
 {
 	u16 Tempo=0;
+	u16 Tempo1=0;
 	// Init
 	SYS_doVBlankProcess();
 	VDP_init();
@@ -200,6 +201,10 @@ void InitEcranZone()
 	memcpy(&palette[16], Palette_BGB_1.data, 16 * 2);
 	memcpy(&palette[32], Palette_BGB.data, 16 * 2);
 	memcpy(&palette[0], Palette_Zone3.data, 16 * 2);
+
+	// Debug
+	RequisZone3=0;
+	RequisZone=0;
 
 	// Init Scene.
 	NumeroZone=0;
@@ -221,14 +226,14 @@ void InitEcranZone()
 	if (!RequisZone) VDP_drawText("! NEED RANK 7 !",23,8);
 
 	// Zone spéciale !
-	if (RequisZone3==1)
-	{
-		ind+=256;
-		VDP_loadTileSet(ZoneBoss.tileset, ind, DMA);
-		TileMap *Zone3 = ZoneBoss.tilemap;
-		VDP_setTileMapEx(BG_B, Zone3, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 10, 16, 0, 0, 20, 14, CPU);
-		VDP_drawText(" FINAL ZONE ",15,26);
-	}
+	//if (RequisZone3==1)
+	//{
+	ind+=256;
+	VDP_loadTileSet(ZoneBoss.tileset, ind, DMA);
+	TileMap *Zone3 = ZoneBoss.tilemap;
+	VDP_setTileMapEx(BG_B, Zone3, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 10, 16, 0, 0, 20, 14, CPU);
+	VDP_drawText(" ROAD ZONE ",15,26);
+	//}
 
 	VDP_fadeInAll(palette,24,FALSE);
 	XGM_startPlay(ChoixZone_Music);
@@ -245,27 +250,36 @@ void InitEcranZone()
 			if (Tempo>10) Tempo=0;
 		}
 
+		// Zone 3 débloquée ?!
+		if (!RequisZone3)
+		{
+			Tempo1++;
+			if (Tempo1<5) VDP_drawText("                                     ",8,22);
+			else VDP_drawText("! NEED TOWN ZONE RANK 10 !",8,22);
+			if (Tempo1>10) Tempo1=0;
+		}
+
 		// Init joy
 		u16 value=JOY_readJoypad(JOY_1);
 		if (value & BUTTON_RIGHT && RequisZone)
 		{
 			VDP_drawText("<TOWN ZONE>",25,15);
 			VDP_drawText(" JUNGLE ZONE ",4,15);
-			if (RequisZone3==1) VDP_drawText(" FINAL ZONE ",15,26);
+			if (RequisZone3==1) VDP_drawText(" ROAD ZONE ",15,26);
 			NumeroZone=1;
 		}
 		if (value & BUTTON_LEFT)
 		{
 			VDP_drawText(" TOWN ZONE ",25,15);
 			VDP_drawText("<JUNGLE ZONE>",4,15);
-			if (RequisZone3==1) VDP_drawText(" FINAL ZONE ",15,26);
+			if (RequisZone3==1) VDP_drawText(" ROAD ZONE ",15,26);
 			NumeroZone=0;
 		}
 		if (value & BUTTON_DOWN && RequisZone3==1)
 		{
 			VDP_drawText(" TOWN ZONE ",25,15);
 			VDP_drawText(" JUNGLE ZONE ",4,15);
-			VDP_drawText("<FINAL ZONE>",15,26);
+			VDP_drawText("<ROAD ZONE>",15,26);
 			NumeroZone=2;
 		}
 
@@ -273,7 +287,7 @@ void InitEcranZone()
 		{
 			VDP_drawText(" TOWN ZONE ",25,15);
 			VDP_drawText("<JUNGLE ZONE>",4,15);
-			VDP_drawText(" FINAL ZONE ",15,26);
+			VDP_drawText(" ROAD ZONE ",15,26);
 			NumeroZone=0;
 		}
 
@@ -292,6 +306,7 @@ void InitEcranZone()
 	MEM_free(Zone2);
 	if (RequisZone3==1) MEM_free(Zone3);
 	VDP_fadeOutAll(16,FALSE);
+	RAZ_PCM();
 	XGM_stopPlay();
 	//SPR_reset();
 	VDP_init();
@@ -316,18 +331,18 @@ void InitIntro()
 		VDP_loadTileSet(Image_LogoSgdk.tileset, ind, DMA);
 		TileMap *bgaIntro1 = Image_LogoSgdk.tilemap;
 		VDP_setTileMapEx(BG_B, bgaIntro1, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, ind), 0, 0, 0, 2, 40, 30, CPU);
-
-		VDP_fadeInAll(palette,24,FALSE);
+		SND_startPlayPCM_XGM(SFX_GENERIC27, 2, SOUND_PCM_CH4);
+		VDP_fadeInAll(palette,35,FALSE);
 		while(TRUE)
 		{
 
-			waitMs(2000);
+			waitMs(2750);
 			break;
 			// Vblank
 			SYS_doVBlankProcess();
 		}
 		// Fade In Scene.
-		VDP_fadeOutAll(16,FALSE);
+		VDP_fadeOutAll(35,FALSE);
 		MEM_free(bgaIntro1);
 		ind=0;
 		SPR_end();
@@ -378,17 +393,19 @@ void InitIntro()
     VDP_fadeInAll(palette,32,FALSE);
 	// start music
 	XGM_startPlay(Menu_Music);
-	VDP_drawTextBG(BG_B,"NOT FOR SALE !!",12,14);
+	//VDP_drawTextBG(BG_B,"NOT FOR SALE !!",12,14);
 
     while(TRUE)
 	{
 		u16 value=JOY_readJoypad(JOY_1);
 
 		// Message Important !
+		/*
 		TempoTexte++;
 		if (TempoTexte>20) TempoTexte=0;
 		if (TempoTexte<10) VDP_drawTextBG(BG_B,"NOT FOR SALE !!",12,14);
 		else VDP_drawTextBG(BG_B,"                 ",12,14);
+			*/
 
 		// Quitter ?!
 		if (value & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START)) break;
@@ -421,6 +438,7 @@ void InitIntro()
 	//XGM_pausePlay();
 	VDP_clearPlane(BG_A,TRUE);
 	VDP_fadeOutAll(16,FALSE);
+	RAZ_PCM();
 	XGM_stopPlay();
 	MEM_free(bgaIntro);
 	MEM_free(bgb);
@@ -526,7 +544,7 @@ void InitScene()
 	NombreIA=5;
 	NombreDigitScore=5;
 	NombreIAScene=0;
-	NombreGrenade=10;
+	NombreGrenade=25;
 	NombreBalleShotgun=0;
 	GoCivil=1;
 
@@ -595,12 +613,12 @@ void InitScene()
 
 	// Joueur principal
 	spr->MemDir=6;
-	spr->Vitesse=FIX32(1.25);
+	spr->Vitesse=FIX32(1.35);
 	spr->AirUnit=0;
 	spr->StandBy=0;
 	spr->TypeIA=0;
     spr->SpriteDYN=0;
-    spr->NombreUP=3;
+    spr->NombreUP=5;
     spr->Slot1=0;
 
     spr->HitPointMax=6;
@@ -882,5 +900,6 @@ void InitRoutine()
 	SND_setPCM_XGM(SFX_GENERIC24, Uzi_SFX, sizeof(Uzi_SFX));
 	SND_setPCM_XGM(SFX_GENERIC25, Baby_SFX, sizeof(Baby_SFX));
 	SND_setPCM_XGM(SFX_GENERIC26, Voice_SFX, sizeof(Flamethrower_SFX));
+	SND_setPCM_XGM(SFX_GENERIC27, Logo_SFX, sizeof(Logo_SFX));
 }
 

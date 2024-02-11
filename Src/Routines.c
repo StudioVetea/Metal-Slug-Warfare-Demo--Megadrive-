@@ -124,6 +124,17 @@ void UpdateScene()
 }
 
 
+//////////////////////////////////////
+//         RAZ Canal PCM
+//////////////////////////////////////
+void RAZ_PCM()
+{
+    XGM_stopPlayPCM(SOUND_PCM_CH1);
+    XGM_stopPlayPCM(SOUND_PCM_CH2);
+    XGM_stopPlayPCM(SOUND_PCM_CH3);
+    XGM_stopPlayPCM(SOUND_PCM_CH4);
+}
+
 
 //////////////////////////////////////
 //          Effet Palette Zone 2
@@ -241,7 +252,7 @@ void GestionBonus(Sprite1_ *spr)
 
             case 5:
                 spr->Slot1=10;
-                NombreBalleShotgun=25;
+                NombreBalleShotgun=50;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC22, 2, SOUND_PCM_CH4);
                 break;
@@ -255,7 +266,7 @@ void GestionBonus(Sprite1_ *spr)
 
             case 7:
                 spr->Slot1=3;
-                NombreBalleShotgun=35;
+                NombreBalleShotgun=60;
                 GestionNombreBallesShotgun();
                 SND_startPlayPCM_XGM(SFX_GENERIC16, 2, SOUND_PCM_CH4);
                 break;
@@ -378,12 +389,13 @@ void GestionVague()
 {
     Sprite1_* spr2 = &Sprites[IDPlane];
     // Paramétrage difficulté / Médailles
-    TempoRegen=TempoSpawn-(Difficulte<<1);
+    TempoRegen=48-(Difficulte*2);
+    //TempoRegen=TempoSpawn-(Difficulte<<1);
 
 	switch(Difficulte)
 	{
     case 0:
-        NombreIASceneMax=2;
+        NombreIASceneMax=1;
         break;
     case 1:
         NombreIASceneMax=2;
@@ -392,7 +404,7 @@ void GestionVague()
         NombreIASceneMax=2;
         break;
     case 3:
-        NombreIASceneMax=2;
+        NombreIASceneMax=3;
         break;
     case 4:
         NombreIASceneMax=3;
@@ -1701,6 +1713,44 @@ void GestionGrenades(Sprite1_ *spr)
     if (spr->SpriteA==NULL) return;
 
 
+    // Cas d'unités volantes
+    Sprite1_* SprIA=&Sprites[IDPlane];
+
+    if (SprIA->Phase==2 && !SprIA->Hit && !spr->Hit)
+    {
+        // Helico ?!
+        fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX+FIX32(16)));
+        fix32 DY_IA=abs(spr->CoordY - (SprIA->CoordY+FIX32(16)));
+        fix32 C=FIX32(44);
+        if (SprIA->AirUnit==10) C=FIX32(24);
+        if (DX_IA<=C && DY_IA<=FIX32(24) && !SprIA->MortIA)
+        {
+            spr->Hit=1;
+            spr->Direction=0;
+            spr->TempoSprite=0;
+            spr->Saut=0;
+            SprIA->HitPoint-=12;
+            if (SprIA->HitPoint>100) SprIA->HitPoint=0;
+            if (!SprIA->HitPoint)
+            {
+                SprIA->MortIA=1;
+                SprIA->TempoInScene=0;
+                SprIA->InScene=0;
+                SprIA->TempoSprite=0;
+                if (spr->AirUnit==1) Score+=500+(Difficulte<<2);
+                else Score+=350+(Difficulte<<2);
+                SprIA->Transition=0;
+                SprIA->CalculTransition=0;
+                GestionScore();
+                if (!NumeroZone) XGM_startPlay(Demo_Music);
+                else XGM_startPlay(Zone2_Music);
+            }
+            VDP_setPalette(PAL3, BlankPalette);
+            SprIA->Hit=1;
+            return;
+        }
+    }
+
     // Au contact ?! BOUM !
     if (!spr->TypeIA && !spr->Hit)
     {
@@ -1708,15 +1758,30 @@ void GestionGrenades(Sprite1_ *spr)
         Sprite1_* SprIA=&Sprites[IDUnite];
         while(NbrIA--)
         {
-            if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA && SprIA->ID!=5 && SprIA->ID!=7)
+            if (!SprIA->StandBy && SprIA->Visible && !SprIA->MortIA)
             {
+                fix32 DX1=FIX32(0);
+                if (SprIA->ID==5) DX1=FIX32(48);
                 fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
-                if (DX_IA<=FIX32(16))
+                fix32 DY_IA=abs(spr->CoordY - (SprIA->CoordY+DX1));
+                if (DX_IA<=FIX32(16) && DY_IA<=FIX32(24))
                 {
                     spr->Hit=1;
                     spr->Direction=0;
                     spr->TempoSprite=0;
                     spr->Saut=0;
+                    // Cas des paras ?!
+                    if (SprIA->ID==5)
+                    {
+                        SprIA->MortIA=1;
+                        SprIA->TempoInScene=0;
+                        SprIA->InScene=0;
+                        SprIA->Direction=0;
+                        SprIA->TirBusy=0;
+                        SprIA->TempoSprite=0;
+                        Score+=50+(Difficulte<<2);
+                        GestionScore();
+                    }
                     break;
                 }
             }
@@ -1792,10 +1857,11 @@ void GestionGrenades(Sprite1_ *spr)
 /////////////////////////////////////////
 void GestionCollisionGrenades(Sprite1_ *SprIA, Sprite1_ *spr)
 {
-    if (!SprIA->StandBy && !SprIA->MortIA && SprIA->ID!=5 && SprIA->ID!=7)
+    if (!SprIA->StandBy && !SprIA->MortIA)
     {
         fix32 DX_IA=abs(spr->CoordX - (SprIA->CoordX));
-        if (DX_IA<=FIX32(48))
+        fix32 DY_IA=abs(spr->CoordY - (SprIA->CoordY));
+        if (DX_IA<=FIX32(24) && DY_IA<=FIX32(24))
         {
             //RandomSeed();
             if (getRandomU16(100)<50) SprIA->Direction=6;
@@ -1815,8 +1881,9 @@ void GestionCollisionGrenades(Sprite1_ *SprIA, Sprite1_ *spr)
             SprIA->SensY=1;
             SprIA->TirBusy=0;
             SprIA->TempoSprite=0;
-            if (!spr->TypeIA)
-            {
+
+            //if (!spr->TypeIA)
+            //{
                 switch (SprIA->ID)
                 {
                     case 2:
@@ -1847,12 +1914,9 @@ void GestionCollisionGrenades(Sprite1_ *SprIA, Sprite1_ *spr)
                     case 4:
                     Score+=25+(Difficulte<<2);
                     break;
-                    case 5:
-                    Score+=50+(Difficulte<<2);
-                    break;
                 }
                 GestionScore();
-            }
+            //}
             if (SND_isPlayingPCM_XGM(SOUND_PCM_CH2)) SND_startPlayPCM_XGM(SFX_GENERIC5, 1, SOUND_PCM_CH2);
         }
     }
@@ -2363,8 +2427,8 @@ void BallesIATest(Sprite1_ *spr1, Sprite1_ *spr)
     }
     else
     {
-        // Tir du soldat Bouclier
-        if (spr->ID==2)
+        // Tir du soldat Bouclier  & Fantassin
+        if (spr->ID==2 || spr->ID==3)
         {
             SND_startPlayPCM_XGM(SFX_GENERIC1, 1, SOUND_PCM_CH2);
             spr1->Vitesse=FIX32(3)+spr->Boost;
@@ -2374,6 +2438,10 @@ void BallesIATest(Sprite1_ *spr1, Sprite1_ *spr)
             spr1->SpeIA=0;
             spr1->CoordX=spr->CoordX;
             spr1->CoordY=spr->CoordY+spr->DeltaY;
+            if (spr->ID==3)
+            {
+                spr1->CoordY=spr->CoordY+spr->DeltaY-FIX32(2);
+            }
             spr1->OffsetY=FIX32(-7);
             spr1->Direction=spr->Direction;
             if (spr->Direction==0) spr1->Direction=4;
@@ -2493,25 +2561,25 @@ void GestionIA(Sprite1_  *spr)
                     //RandomSeed();
                     while (TRUE)
                     {
-                        if (Difficulte>3)
-                        {
-                            // Lance Flamme
-                            if (getRandomU16(100)<10 && NombreBalleShotgun<15) {SpriteB->Transition=7;break;}
-                            // Lance Roquette/Heavy Machine Gun x 2
-                            if (getRandomU16(100)<15 && NombreBalleShotgun<15) {SpriteB->Transition=5;break;}
-                            // Machine gun
-                            if (getRandomU16(100)<20 && NombreBalleShotgun<15) {SpriteB->Transition=6;break;}
-                        }
+                        //if (Difficulte>3)
+                        //{
+                        // Lance Flamme
+                        if (getRandomU16(100)<=10 ) {SpriteB->Transition=7;break;}
+                        // Lance Roquette/Heavy Machine Gun x 2
+                        if (getRandomU16(100)<=15) {SpriteB->Transition=5;break;}
+                        // Machine gun
+                        if (getRandomU16(100)<=20) {SpriteB->Transition=6;break;}
+                        //}
                         // UP en plus
-                        if (getRandomU16(100)<21) {SpriteB->Transition=4;break;}
+                        if (getRandomU16(100)<=25) {SpriteB->Transition=4;break;}
                         //  Heavy Machine Gun
-                        if (NombreBalleShotgun<15 && getRandomU16(100)<25) {SpriteB->Transition=1;break;}
+                        if (getRandomU16(100)<=30) {SpriteB->Transition=1;break;}
                         //  Heavy Machine Gun
-                        if (!SpriteREF->Slot1 && getRandomU16(100)<35) {SpriteB->Transition=1;break;}
+                        if (!SpriteREF->Slot1 && getRandomU16(100)<=35) {SpriteB->Transition=1;break;}
                         //  Restauration santé
-                        if (SpriteREF->HitPoint<3 && getRandomU16(100)<40) {SpriteB->Transition=2;break;}
+                        if (SpriteREF->HitPoint<3 && getRandomU16(100)<=40) {SpriteB->Transition=2;break;}
                         // Grenade en plus
-                        if (NombreGrenade<6 && getRandomU16(100)<45) {SpriteB->Transition=0;break;}
+                        if (NombreGrenade<6 && getRandomU16(100)<=50) {SpriteB->Transition=0;break;}
                         // 250 pts
                         break;
                     }
@@ -2594,7 +2662,7 @@ void GestionIA(Sprite1_  *spr)
     if (spr->ID==6) return;
 
 
-    // Les unités Snipers tirent quand elles sont en position
+    // Les unités Snipers tirent quand elles sont en position, ici Tireur bouclier.
     if (spr->ID==2 && spr->Reach && !spr->TirBusy)
     {
         spr->TempoCountRafale++;
@@ -2605,6 +2673,19 @@ void GestionIA(Sprite1_  *spr)
             spr->TirBusy=1;
         }
     }
+
+    // Cas des fantassins snipeurs !
+    if (spr->ID==3 && spr->Sniper && !spr->TirBusy)
+    {
+        spr->TempoCountRafale++;
+        if (spr->TempoCountRafale>spr->TempoCountRafaleMax)
+        {
+            spr->TempoCountRafale=0;
+            spr->TirBusy=1;
+        }
+    }
+
+
 
     // Algoririthme de traitement
     // Distance joueur / IA
@@ -2696,7 +2777,7 @@ void GestionIA(Sprite1_  *spr)
     }
 
     // Attaque Corps à corps Soldat 3.
-    if (spr->ID==3)
+    if (spr->ID==3 && spr->CaC)
     {
         if (spr->CoupCrosse)
         {
@@ -2818,6 +2899,7 @@ void updateVDPScroll()
         if (TempoTremblement & 1)  VDP_setVerticalScroll(BG_B,CamPosY -3);
         else VDP_setVerticalScroll(BG_B,CamPosY+3);
     }
+
 }
 
 
@@ -3193,6 +3275,15 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             spr->Vitesse=FIX32(1)+getRandomF32(FIX32(0.5))+spr->Boost;
             spr->Spotting=FIX32(0);
             spr->VitesseInit=FIX32(0);
+			// 50% de chance que le fantassin snipe et ne rushe pas.
+            if (getRandomU16(100)<=50)
+            {
+                spr->CaC=0;
+                spr->Sniper=1;
+                spr->TempoCountRafaleMax=getRandomU16(50)+(50-(Difficulte*2));
+                spr->Vitesse=FIX32(0);
+            }
+
             break;
 
             case 4:
@@ -3252,7 +3343,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             while(j--)
             {
                 fix32 Dist=abs(SpriteRef->CoordX-posCivil->x);
-                if (Dist>=FIX32(960)+getRandomF32(320))
+                if (Dist>=FIX32(960)+getRandomF32(128))
                 {
                     TES=1;
                     spr->CoordX=posCivil->x;
@@ -3266,7 +3357,7 @@ void CreateSpriteDYN(Sprite1_ *spr, u8 Type)
             // Si aucune sélection, on la force au dernier index.
             if (!TES)
             {
-                posCivil = &PositionCivil[10];
+                posCivil = &PositionCivil[9];
                 spr->CoordX=posCivil->x;
                 spr->CoordY=posCivil->y;
                 Civil_CoordX= spr->CoordX;
@@ -4301,6 +4392,7 @@ void Zone3()
     MEM_free(Boss);
     //SYS_doVBlankProcess();
     VDP_fadeOutAll(30,FALSE);
+    RAZ_PCM();
 	XGM_stopPlay();
     SPR_end();
 }

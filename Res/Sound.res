@@ -30,6 +30,7 @@ WAV Score_SFX "Sound/Score.wav" XGM
 WAV Uzi_SFX "Sound/Uzi.wav" XGM
 WAV Baby_SFX "Sound/LetsRockBaby.wav" XGM
 WAV Voice_SFX "Sound/Voice1.wav" XGM
+WAV Logo_SFX "Sound/Logo.wav" XGM
 
 
 

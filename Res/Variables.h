@@ -6,7 +6,7 @@
 #define  SniperRange  getRandomF32(FIX32(64))+FIX32(64)+getRandomF32(FIX32(64));
 #define TempoHelico 1000
 #define TempoCivil 950
-#define TempoSpawn 90
+#define TempoSpawn 80
 
 // Definition Sons & Musiques
 #define SFX_GENERIC 64
@@ -200,7 +200,9 @@ extern Sprite1_ SpriteBonus;
 
 extern s16 PCamX;
 extern s16 PCamY;
+extern s16 hscroll[224];
 
+extern u16 offset;
 extern u16 TestRoutine;
 extern u16 BlankPalette[16];
 extern u16 PaletteZone2[16];

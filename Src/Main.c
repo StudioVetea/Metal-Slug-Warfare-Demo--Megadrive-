@@ -62,6 +62,8 @@ void MainLoop()
 		{
 			// Fade In Scene.
 			VDP_fadeInAll(palette,15,FALSE);
+			Score=8700;
+			Difficulte=7;
 
 			// Main Loop
 			while(TRUE)
@@ -91,6 +93,7 @@ void MainLoop()
 
 			// Fin de la boucle !
 			VDP_fadeOutAll(16,FALSE);
+			RAZ_PCM();
 			XGM_stopPlay();
 			MEM_free(bgb);
 			MEM_free(bga);
@@ -107,6 +110,7 @@ void MainLoop()
 
         // Fin
 		VDP_fadeOutAll(16,FALSE);
+		RAZ_PCM();
 		XGM_stopPlay();
 		SPR_end();
 		// Init général

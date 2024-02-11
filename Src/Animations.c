@@ -257,6 +257,7 @@ void AnimationSprite(Sprite1_ *spr)
                     }
                     if (spr->MortIA)
                     {
+                        SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA2);
                         SPR_setAnim(spr->SpriteA,3);
                     }
                     //else SPR_setAnim(spr->SpriteA,0);
@@ -284,6 +285,7 @@ void AnimationSprite(Sprite1_ *spr)
                     }
                     if (spr->MortIA)
                     {
+                        SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA2);
                         SPR_setAnim(spr->SpriteA,3);
                     }
                     //else SPR_setAnim(spr->SpriteA,0);
@@ -381,6 +383,7 @@ void AnimationSprite(Sprite1_ *spr)
 				}
 				if (spr->MortIA)
 				{
+                    SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA2);
 					SPR_setAnim(spr->SpriteA,5);
 				}
 				else
@@ -542,6 +545,24 @@ void AnimationSprite(Sprite1_ *spr)
        switch(spr->Direction)
        {
         case 0:
+            // Tir ?
+            if (spr->Sniper && !spr->MortIA)
+            {
+                if (spr->TirBusy)
+                {
+                    SPR_setHFlip(spr->SpriteA,FALSE);
+                    spr->OffsetX=FIX32(6);
+                    SPR_setAnim(spr->SpriteA,0);
+                    SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA3);
+                    return;
+                }
+                else
+                {
+                    SPR_setHFlip(spr->SpriteA,FALSE);
+                    spr->OffsetX=FIX32(6);
+                    SPR_setAnim(spr->SpriteA,8);
+                }
+            }
             if (spr->MortIA)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
@@ -549,7 +570,7 @@ void AnimationSprite(Sprite1_ *spr)
                 SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
-            else
+            else if (spr->CaC)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(0);
@@ -559,6 +580,24 @@ void AnimationSprite(Sprite1_ *spr)
             break;
 
         case 6:
+            // Tir ?
+            if (spr->Sniper && !spr->MortIA)
+            {
+                if (spr->TirBusy)
+                {
+                    SPR_setHFlip(spr->SpriteA,TRUE);
+                    spr->OffsetX=FIX32(6);
+                    SPR_setAnim(spr->SpriteA,0);
+                    SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA3);
+                    return;
+                }
+                else
+                {
+                    SPR_setHFlip(spr->SpriteA,TRUE);
+                    spr->OffsetX=FIX32(6);
+                    SPR_setAnim(spr->SpriteA,8);
+                }
+            }
             if (spr->MortIA)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
@@ -566,7 +605,7 @@ void AnimationSprite(Sprite1_ *spr)
                 SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
-            else
+            else if (spr->CaC)
             {
                 SPR_setHFlip(spr->SpriteA,TRUE);
                 spr->OffsetX=FIX32(0);
@@ -576,6 +615,24 @@ void AnimationSprite(Sprite1_ *spr)
             break;
 
         case 4:
+            // Tir ?
+            if (spr->Sniper && !spr->MortIA)
+            {
+                if (spr->TirBusy)
+                {
+                    SPR_setHFlip(spr->SpriteA,FALSE);
+                    spr->OffsetX=FIX32(6);
+                    SPR_setAnim(spr->SpriteA,0);
+                    SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA3);
+                    return;
+                }
+                else
+                {
+                    SPR_setHFlip(spr->SpriteA,FALSE);
+                    spr->OffsetX=FIX32(6);
+                    SPR_setAnim(spr->SpriteA,8);
+                }
+            }
             if (spr->MortIA)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
@@ -583,7 +640,7 @@ void AnimationSprite(Sprite1_ *spr)
                 SPR_setAnim(spr->SpriteA,4);
                 SPR_setFrameChangeCallback(spr->SpriteA, &TimerChangedIA1);
             }
-            else
+            else if (spr->CaC)
             {
                 SPR_setHFlip(spr->SpriteA,FALSE);
                 spr->OffsetX=FIX32(0);
@@ -993,6 +1050,11 @@ void AnimationSprite(Sprite1_ *spr)
         // Lancer de Grenade ?!
         if (spr->LancerGrenade)
         {
+            // Saut ?!
+            if (spr->Saut)
+            {
+                AnimArme= 44;
+            }
             spr->TempoSprite++;
             // Fin de lancer ?!
             if (spr->TempoSprite>30)
@@ -1392,6 +1454,7 @@ void TimerChangedIA3(Sprite* sprite)
 {
     sprite->timer=6;
 }
+
 
 void TimerChangedIA0(Sprite* sprite)
 {

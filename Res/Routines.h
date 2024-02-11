@@ -1,6 +1,7 @@
 #ifndef _ROUTINES_H
 #define _ROUTINES_H
 
+extern void RAZ_PCM();
 extern void Zone3();
 extern void BallesIATest(Sprite1_ *spr, Sprite1_ *spr1);
 extern void BallesIA(Sprite1_ *spr);

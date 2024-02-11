@@ -7,11 +7,11 @@ const ROMHeader rom_header = {
 #else
     "SEGA MEGA DRIVE ",
 #endif
-    "(C)SGDK 2020    ",
+    "(C)SGDK 2021    ",
     "SAMPLE PROGRAM                                  ",
     "SAMPLE PROGRAM                                  ",
     "GM 00000000-00",
-    0x0000,
+    0x000,
     "JD              ",
     0x00000000,
 #if (ENABLE_BANK_SWITCH != 0)
@@ -19,12 +19,12 @@ const ROMHeader rom_header = {
 #else
     0x000FFFFF,
 #endif
-    0x00FF0000,
-    0x00FFFFFF,
+    0xE0FF0000,
+    0xE0FFFFFF,
     "RA",
     0xF820,
     0x00200000,
-    0x002001FF,
+    0x0020FFFF,
     "            ",
     "DEMONSTRATION PROGRAM                   ",
     "JUE             "
